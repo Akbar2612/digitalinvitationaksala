@@ -1,5 +1,5 @@
 import 'package:flutter/material.dart';
-import 'package:carousel_slider/carousel_slider.dart';
+import 'package:carousel_slider/carousel_slider.dart' as cs;
 
 class CarouselSection extends StatelessWidget {
   final List<String> imageUrls = [
@@ -14,8 +14,8 @@ class CarouselSection extends StatelessWidget {
       height: 400,
       child: Stack(
         children: [
-          CarouselSlider(
-            options: CarouselOptions(
+          cs.CarouselSlider(
+            options: cs.CarouselOptions(
               height: 400,
               autoPlay: true,
               autoPlayInterval: Duration(seconds: 4),
