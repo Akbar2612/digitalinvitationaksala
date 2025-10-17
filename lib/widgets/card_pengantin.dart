@@ -7,41 +7,39 @@ class CardPengantin extends StatelessWidget {
     return Container(
       margin: EdgeInsets.symmetric(horizontal: 20, vertical: 24),
       decoration: BoxDecoration(
-        gradient: LinearGradient(
-          begin: Alignment.topLeft,
-          end: Alignment.bottomRight,
-          colors: [
-            Color(0xFF2d2d2d),
-            Color(0xFF3a3a3a),
-          ],
+        color: Color(0xFF1A1A1A),
+        border: Border.all(
+          color: Color(0xFFF5F5F5),
+          width: 1.5,
         ),
-        borderRadius: BorderRadius.circular(24),
+        borderRadius: BorderRadius.circular(12),
         boxShadow: [
           BoxShadow(
-            color: Color(0xFFD4AF37).withOpacity(0.1),
-            blurRadius: 20,
-            offset: Offset(0, 10),
+            color: Colors.black.withOpacity(0.3),
+            blurRadius: 16,
+            offset: Offset(0, 8),
           ),
         ],
       ),
       child: Stack(
         children: [
-          // Decorative corner elements
+          // Decorative corner lines
           Positioned(
             top: 0,
             left: 0,
             child: Container(
-              width: 60,
-              height: 60,
+              width: 40,
+              height: 40,
               decoration: BoxDecoration(
-                gradient: LinearGradient(
-                  colors: [
-                    Color(0xFFD4AF37).withOpacity(0.3),
-                    Colors.transparent,
-                  ],
-                ),
-                borderRadius: BorderRadius.only(
-                  topLeft: Radius.circular(24),
+                border: Border(
+                  top: BorderSide(
+                    color: Color(0xFFF5F5F5),
+                    width: 1.5,
+                  ),
+                  left: BorderSide(
+                    color: Color(0xFFF5F5F5),
+                    width: 1.5,
+                  ),
                 ),
               ),
             ),
@@ -50,17 +48,18 @@ class CardPengantin extends StatelessWidget {
             bottom: 0,
             right: 0,
             child: Container(
-              width: 60,
-              height: 60,
+              width: 40,
+              height: 40,
               decoration: BoxDecoration(
-                gradient: LinearGradient(
-                  colors: [
-                    Color(0xFFD4AF37).withOpacity(0.3),
-                    Colors.transparent,
-                  ],
-                ),
-                borderRadius: BorderRadius.only(
-                  bottomRight: Radius.circular(24),
+                border: Border(
+                  bottom: BorderSide(
+                    color: Color(0xFFF5F5F5),
+                    width: 1.5,
+                  ),
+                  right: BorderSide(
+                    color: Color(0xFFF5F5F5),
+                    width: 1.5,
+                  ),
                 ),
               ),
             ),
@@ -70,33 +69,25 @@ class CardPengantin extends StatelessWidget {
             padding: EdgeInsets.all(32),
             child: Column(
               children: [
-                // Decorative line
+                // Decorative line top
                 Container(
                   width: 60,
-                  height: 3,
-                  decoration: BoxDecoration(
-                    gradient: LinearGradient(
-                      colors: [
-                        Colors.transparent,
-                        Color(0xFFD4AF37),
-                        Colors.transparent,
-                      ],
-                    ),
-                  ),
+                  height: 1.5,
+                  color: Color(0xFFF5F5F5),
                 ),
-                SizedBox(height: 20),
+                SizedBox(height: 24),
                 
                 // Title
                 Text(
                   'THE WEDDING OF',
                   style: TextStyle(
                     fontSize: 12,
-                    letterSpacing: 3,
-                    color: Color(0xFFB8B8B8),
-                    fontWeight: FontWeight.w300,
+                    letterSpacing: 2.5,
+                    color: Color(0xFFB0B0B0),
+                    fontWeight: FontWeight.w400,
                   ),
                 ),
-                SizedBox(height: 24),
+                SizedBox(height: 28),
                 
                 // Bride name
                 Text(
@@ -104,44 +95,43 @@ class CardPengantin extends StatelessWidget {
                   style: TextStyle(
                     fontSize: 32,
                     fontWeight: FontWeight.bold,
-                    color: Colors.white,
-                    letterSpacing: 1,
+                    color: Color(0xFFF5F5F5),
+                    letterSpacing: 0.5,
                   ),
                   textAlign: TextAlign.center,
                 ),
                 
-                SizedBox(height: 16),
+                SizedBox(height: 20),
                 
                 // Ampersand with decoration
                 Row(
                   mainAxisAlignment: MainAxisAlignment.center,
                   children: [
                     Container(
-                      width: 40,
+                      width: 30,
                       height: 1,
-                      color: Color(0xFFD4AF37).withOpacity(0.5),
+                      color: Color(0xFFF5F5F5),
                     ),
                     Padding(
                       padding: EdgeInsets.symmetric(horizontal: 16),
                       child: Text(
                         '&',
                         style: TextStyle(
-                          fontSize: 36,
-                          color: Color(0xFFD4AF37),
+                          fontSize: 32,
+                          color: Color(0xFFF5F5F5),
                           fontWeight: FontWeight.w300,
-                          fontStyle: FontStyle.italic,
                         ),
                       ),
                     ),
                     Container(
-                      width: 40,
+                      width: 30,
                       height: 1,
-                      color: Color(0xFFD4AF37).withOpacity(0.5),
+                      color: Color(0xFFF5F5F5),
                     ),
                   ],
                 ),
                 
-                SizedBox(height: 16),
+                SizedBox(height: 20),
                 
                 // Groom name
                 Text(
@@ -149,27 +139,19 @@ class CardPengantin extends StatelessWidget {
                   style: TextStyle(
                     fontSize: 32,
                     fontWeight: FontWeight.bold,
-                    color: Colors.white,
-                    letterSpacing: 1,
+                    color: Color(0xFFF5F5F5),
+                    letterSpacing: 0.5,
                   ),
                   textAlign: TextAlign.center,
                 ),
                 
-                SizedBox(height: 24),
+                SizedBox(height: 28),
                 
-                // Decorative line
+                // Decorative line bottom
                 Container(
                   width: 60,
-                  height: 3,
-                  decoration: BoxDecoration(
-                    gradient: LinearGradient(
-                      colors: [
-                        Colors.transparent,
-                        Color(0xFFD4AF37),
-                        Colors.transparent,
-                      ],
-                    ),
-                  ),
+                  height: 1.5,
+                  color: Color(0xFFF5F5F5),
                 ),
               ],
             ),
