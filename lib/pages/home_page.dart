@@ -1,7 +1,6 @@
 import 'package:flutter/material.dart';
 import '../widgets/card_pengantin.dart';
 import '../widgets/card_orang_tua.dart';
-import '../widgets/carousel_section.dart';
 import '../widgets/acara_section.dart';
 import '../widgets/lokasi_section.dart';
 
@@ -23,7 +22,6 @@ class HomePage extends StatelessWidget {
         child: SingleChildScrollView(
           child: Column(
             children: [
-              CarouselSection(),
               SizedBox(height: 8),
               CardPengantin(),
               CardOrangTua(),
