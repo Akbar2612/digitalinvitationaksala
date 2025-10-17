@@ -1,14 +1,16 @@
-final guestName = 'Bapak/Ibu Tamu Hormat';
-final brideName = 'S Linda Rohmana Wulansari';
-final groomName = 'Moh Akbar Aulia Firdaus';
-final parentsBride = 'Bapak Rofiu Sakim & Ibu Sariyati';
-final parentsGroom = 'Bapak Ali Basmanto & Ibu Eni Fitrianita';
-final venueAddress = 'RT.001, RW.001, Desa Gambuhan, Kecamatan Kalitengah, Kabupaten Lamongan';
-final metStory = 'Kami pertama bertemu di sebuah acara kampus pada tahun 2018...';
-final akadDate = DateTime(2025, 12, 9, 8, 0);
-final resepsiDate = DateTime(22025, 12, 9, 10, 0);
+const String brideName = 'Sarah Amelia';
+const String groomName = 'Ahmad Rizki';
 
-final List<String> photoUrls = [
-  'https://images.unsplash.com/photo-1519741497674-611481863552?w=1200',
-  'https://images.unsplash.com/photo-1529626455594-4ff0802cfb7e?w=1200',
-];
+// Data orang tua
+const String parentsBride = 'Bapak Budi Santoso & Ibu Siti Nurhaliza';
+const String parentsGroom = 'Bapak Ahmad Fauzi & Ibu Dewi Lestari';
+
+// Data acara
+const String eventDate = 'Minggu, 15 Desember 2024';
+const String eventTime = '09:00 - 12:00 WIB';
+const String eventLocation = 'Gedung Pernikahan Agung\nJl. Merdeka No. 123, Jakarta';
+
+// Data lokasi
+const String locationUrl = 'https://maps.google.com/?q=-6.200000,106.816666';
+const double latitude = -6.200000;
+const double longitude = 106.816666;

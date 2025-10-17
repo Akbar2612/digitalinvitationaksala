@@ -5,23 +5,34 @@ import '../widgets/carousel_section.dart';
 import '../widgets/acara_section.dart';
 import '../widgets/lokasi_section.dart';
 import '../widgets/qr_share_section.dart';
-import '../widgets/music_button.dart';
 
 class HomePage extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      body: SingleChildScrollView(
-        child: Column(
-          children: [
-            CarouselSection(),
-            CardPengantin(),
-            CardOrangTua(),
-            AcaraSection(),
-            LokasiSection(),
-            QRShareSection(),
-            MusicButton(),
-          ],
+      body: Container(
+        decoration: BoxDecoration(
+          gradient: LinearGradient(
+            begin: Alignment.topCenter,
+            end: Alignment.bottomCenter,
+            colors: [
+              Color(0xFF1a1a1a),
+              Color(0xFF0a0a0a),
+            ],
+          ),
+        ),
+        child: SingleChildScrollView(
+          child: Column(
+            children: [
+              CarouselSection(),
+              SizedBox(height: 8),
+              CardPengantin(),
+              CardOrangTua(),
+              AcaraSection(),
+              LokasiSection(),
+              SizedBox(height: 40),
+            ],
+          ),
         ),
       ),
     );
