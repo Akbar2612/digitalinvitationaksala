@@ -3,17 +3,19 @@ import 'theme/app_theme.dart';
 import 'pages/home_page.dart';
 
 void main() {
-  runApp(WeddingInviteApp());
+  runApp(const WeddingInviteApp());
 }
 
 class WeddingInviteApp extends StatelessWidget {
+  const WeddingInviteApp({super.key});
+
   @override
   Widget build(BuildContext context) {
     return MaterialApp(
-      title: 'Undangan Pernikahan',
-      debugShowCheckedModeBanner: false,
+      title: 'Digital Invitation',
       theme: AppTheme.lightTheme,
       home: HomePage(),
+      debugShowCheckedModeBanner: false,
     );
   }
 }
