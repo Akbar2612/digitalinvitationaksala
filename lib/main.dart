@@ -1,21 +1,24 @@
 import 'package:flutter/material.dart';
-import 'theme/app_theme.dart';
+import 'package:google_fonts/google_fonts.dart';
 import 'pages/home_page.dart';
 
 void main() {
-  runApp(const WeddingInviteApp());
+  runApp(WeddingInviteApp());
 }
 
 class WeddingInviteApp extends StatelessWidget {
-  const WeddingInviteApp({super.key});
-
   @override
   Widget build(BuildContext context) {
     return MaterialApp(
-      title: 'Digital Invitation',
-      theme: AppTheme.lightTheme,
-      home: HomePage(),
+      title: 'Undangan Pernikahan',
       debugShowCheckedModeBanner: false,
+      theme: ThemeData(
+        textTheme: GoogleFonts.poppinsTextTheme(),
+        brightness: Brightness.light,
+        primaryColor: Color(0xFFFFB6C1),
+        scaffoldBackgroundColor: Color(0xFFFFFAF0),
+      ),
+      home: HomePage(),
     );
   }
 }
