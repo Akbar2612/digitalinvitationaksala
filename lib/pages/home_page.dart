@@ -4,7 +4,6 @@ import '../widgets/card_orang_tua.dart';
 import '../widgets/carousel_section.dart';
 import '../widgets/acara_section.dart';
 import '../widgets/lokasi_section.dart';
-import '../widgets/qr_share_section.dart';
 
 class HomePage extends StatelessWidget {
   @override
