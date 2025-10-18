@@ -51,11 +51,21 @@ Positioned.fill(
   ),
 ),
         // Dark Overlay
-        Positioned.fill(
-          child: Container(
-            color: Colors.black.withOpacity(0.6),
-          ),
-        ),
+Positioned.fill(
+  child: Container(
+    decoration: const BoxDecoration(
+      gradient: LinearGradient(
+        begin: Alignment.topCenter,
+        end: Alignment.bottomCenter,
+        colors: [
+          Colors.transparent,      
+          Colors.black54,         
+        ],
+      ),
+    ),
+  ),
+),
+
         // Content
         Center(
           child: SingleChildScrollView(
