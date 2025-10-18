@@ -223,29 +223,4 @@ class _AcaraSectionState extends State<AcaraSection> {
       ],
     );
   }
-
-  Widget _buildEventDetail(String title, String time) {
-    return Column(
-      children: [
-        Text(
-          title,
-          style: GoogleFonts.roboto(
-            fontSize: 16,
-            fontWeight: FontWeight.w600,
-            color: Color(0xFFF5F5F5),
-            letterSpacing: 1,
-          ),
-        ),
-        SizedBox(height: 8),
-        Text(
-          time,
-          style: TextStyle(
-            fontSize: 12,
-            letterSpacing: 0.5,
-            color: Color(0xFFB8B8B8),
-          ),
-        ),
-      ],
-    );
-  }
 }
