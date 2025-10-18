@@ -39,20 +39,17 @@ class _HomePageState extends State<HomePage> {
   Widget _buildLandingPage(BuildContext context) {
     return Stack(
       children: [
-        // Background Image
-        Positioned.fill(
-          child: Container(
-            decoration: BoxDecoration(
-              image: DecorationImage(
-                image: NetworkImage(
-                  'https://images.unsplash.com/photo-1519741497674-611481863552?w=1200&h=1600&fit=crop',
-                ),
-                fit: BoxFit.cover,
-                opacity: 0.3,
-              ),
-            ),
-          ),
-        ),
+Positioned.fill(
+  child: Container(
+    decoration: const BoxDecoration(
+      image: DecorationImage(
+        image: AssetImage('assets/images/mainbg.jpg'),
+        fit: BoxFit.cover,
+        opacity: 0.3,
+      ),
+    ),
+  ),
+),
         // Dark Overlay
         Positioned.fill(
           child: Container(
