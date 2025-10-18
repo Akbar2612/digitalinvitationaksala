@@ -8,7 +8,6 @@
       "version": "0.1.0",
       "dependencies": [
         "audioplayers",
-        "carousel_slider",
         "flutter",
         "google_fonts",
         "intl",
@@ -131,13 +130,6 @@
         "path_provider",
         "synchronized",
         "uuid"
-      ]
-    },
-    {
-      "name": "carousel_slider",
-      "version": "4.2.1",
-      "dependencies": [
-        "flutter"
       ]
     },
     {

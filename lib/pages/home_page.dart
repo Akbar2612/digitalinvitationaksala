@@ -1,9 +1,7 @@
+import 'package:digitalinvitationaksala/pages/pengantin_page.dart';
 import 'package:flutter/material.dart';
 import 'package:google_fonts/google_fonts.dart';
 import 'package:just_audio/just_audio.dart';
-import '../widgets/card_pengantin.dart';
-import '../widgets/acara_section.dart';
-import '../widgets/lokasi_section.dart';
 import '../data/wedding_data.dart';
 
 class HomePage extends StatefulWidget {
@@ -16,18 +14,21 @@ class HomePage extends StatefulWidget {
 }
 
 class _HomePageState extends State<HomePage> with TickerProviderStateMixin {
-  bool _showInvitation = false;
-  bool _isMusicPlaying = false;
   late AnimationController _animationController;
 
   @override
   void initState() {
     super.initState();
     _animationController = AnimationController(
-      duration: const Duration(milliseconds: 2000),
+      duration: const Duration(milliseconds: 3000), // Diperpanjang dari 2000ms
       vsync: this,
     );
-    _animationController.forward();
+    // Delay sedikit sebelum mulai animasi
+    Future.delayed(Duration(milliseconds: 200), () {
+      if (mounted) {
+        _animationController.forward();
+      }
+    });
   }
 
   @override
@@ -40,29 +41,9 @@ class _HomePageState extends State<HomePage> with TickerProviderStateMixin {
     try {
       print('▶️ Playing audio...');
       await widget.audioPlayer.play();
-      setState(() {
-        _isMusicPlaying = true;
-      });
       print('✅ Audio playing');
     } catch (e) {
       print('❌ Error playing audio: $e');
-    }
-  }
-
-  Future<void> _toggleMusic() async {
-    try {
-      if (_isMusicPlaying) {
-        await widget.audioPlayer.pause();
-        print('⏸️ Audio paused');
-      } else {
-        await widget.audioPlayer.play();
-        print('▶️ Audio playing');
-      }
-      setState(() {
-        _isMusicPlaying = !_isMusicPlaying;
-      });
-    } catch (e) {
-      print('❌ Error toggling audio: $e');
     }
   }
 
@@ -89,13 +70,7 @@ class _HomePageState extends State<HomePage> with TickerProviderStateMixin {
 
   // ============ MOBILE VIEW ============
   Widget _buildMobileView() {
-    return Stack(
-      children: [
-        _showInvitation ? _buildMobileInvitation() : _buildMobileLanding(),
-        // Floating music button - only show on invitation page
-        if (_showInvitation) _buildFloatingMusicButton(),
-      ],
-    );
+    return _buildMobileLanding();
   }
 
   Widget _buildMobileLanding() {
@@ -263,8 +238,8 @@ class _HomePageState extends State<HomePage> with TickerProviderStateMixin {
         CurvedAnimation(
           parent: _animationController,
           curve: Interval(
-            (textIndex * 100) / 2000,
-            ((textIndex * 100) + 400) / 2000,
+            (textIndex * 150) / 3000, // Diperlambat (150ms interval)
+            ((textIndex * 150) + 500) / 3000, // Duration diperpanjang
             curve: Curves.easeOut,
           ),
         ),
@@ -274,8 +249,8 @@ class _HomePageState extends State<HomePage> with TickerProviderStateMixin {
           CurvedAnimation(
             parent: _animationController,
             curve: Interval(
-              (textIndex * 100) / 2000,
-              ((textIndex * 100) + 400) / 2000,
+              (textIndex * 150) / 3000,
+              ((textIndex * 150) + 500) / 3000,
               curve: Curves.easeOut,
             ),
           ),
@@ -301,8 +276,8 @@ class _HomePageState extends State<HomePage> with TickerProviderStateMixin {
         CurvedAnimation(
           parent: _animationController,
           curve: Interval(
-            (textIndex * 100) / 2000,
-            ((textIndex * 100) + 400) / 2000,
+            (textIndex * 150) / 3000, // Diperlambat
+            ((textIndex * 150) + 500) / 3000, // Duration diperpanjang
             curve: Curves.easeOut,
           ),
         ),
@@ -312,8 +287,8 @@ class _HomePageState extends State<HomePage> with TickerProviderStateMixin {
           CurvedAnimation(
             parent: _animationController,
             curve: Interval(
-              (textIndex * 100) / 2000,
-              ((textIndex * 100) + 400) / 2000,
+              (textIndex * 150) / 3000,
+              ((textIndex * 150) + 500) / 3000,
               curve: Curves.easeOut,
             ),
           ),
@@ -325,9 +300,11 @@ class _HomePageState extends State<HomePage> with TickerProviderStateMixin {
             child: ElevatedButton(
               onPressed: () {
                 _playAudio();
-                setState(() {
-                  _showInvitation = true;
-                });
+                Navigator.of(context).push(
+                  MaterialPageRoute(
+                    builder: (context) => CardPengantinPage(),
+                  ),
+                );
               },
               child: Row(
                 mainAxisSize: MainAxisSize.min,
@@ -339,56 +316,6 @@ class _HomePageState extends State<HomePage> with TickerProviderStateMixin {
           ),
         );
       },
-    );
-  }
-
-  Widget _buildMobileInvitation() {
-    return SingleChildScrollView(
-      child: Column(
-        children: [
-          SizedBox(height: 16),
-          CardPengantin(),
-          AcaraSection(),
-          LokasiSection(),
-          SizedBox(height: 40),
-        ],
-      ),
-    );
-  }
-
-  Widget _buildFloatingMusicButton() {
-    return Positioned(
-      bottom: 30,
-      right: 30,
-      child: GestureDetector(
-        onTap: _toggleMusic,
-        child: Container(
-          width: 56,
-          height: 56,
-          decoration: BoxDecoration(
-            color: Color(0xFFF5F5F5).withOpacity(0.15),
-            borderRadius: BorderRadius.circular(28),
-            border: Border.all(
-              color: Color(0xFFF5F5F5).withOpacity(0.3),
-              width: 1.5,
-            ),
-            boxShadow: [
-              BoxShadow(
-                color: Colors.black.withOpacity(0.3),
-                blurRadius: 12,
-                offset: Offset(0, 4),
-              ),
-            ],
-          ),
-          child: Center(
-            child: Icon(
-              _isMusicPlaying ? Icons.music_note : Icons.music_off,
-              color: Color(0xFFF5F5F5),
-              size: 26,
-            ),
-          ),
-        ),
-      ),
     );
   }
 
@@ -438,15 +365,15 @@ class _HomePageState extends State<HomePage> with TickerProviderStateMixin {
     required String text,
     required TextStyle style,
     required int index,
-    int totalDuration = 2000,
+    int totalDuration = 3000, // Diperpanjang dari 2000ms
   }) {
-    final delay = index * 100;
+    final delay = index * 150; // Interval delay diperlambat dari 100ms
     final animation = Tween<double>(begin: 0, end: 1).animate(
       CurvedAnimation(
         parent: _animationController,
         curve: Interval(
           delay / totalDuration,
-          (delay + 400) / totalDuration,
+          (delay + 500) / totalDuration, // Duration diperpanjang dari 400ms
           curve: Curves.easeOut,
         ),
       ),
