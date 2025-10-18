@@ -2,7 +2,6 @@ import 'package:flutter/material.dart';
 import 'package:google_fonts/google_fonts.dart';
 import 'package:just_audio/just_audio.dart';
 import '../widgets/card_pengantin.dart';
-import '../widgets/card_orang_tua.dart';
 import '../widgets/acara_section.dart';
 import '../widgets/lokasi_section.dart';
 import '../data/wedding_data.dart';
@@ -18,6 +17,7 @@ class HomePage extends StatefulWidget {
 
 class _HomePageState extends State<HomePage> with TickerProviderStateMixin {
   bool _showInvitation = false;
+  bool _isMusicPlaying = false;
   late AnimationController _animationController;
 
   @override
@@ -36,9 +36,38 @@ class _HomePageState extends State<HomePage> with TickerProviderStateMixin {
     super.dispose();
   }
 
+  Future<void> _playAudio() async {
+    try {
+      print('▶️ Playing audio...');
+      await widget.audioPlayer.play();
+      setState(() {
+        _isMusicPlaying = true;
+      });
+      print('✅ Audio playing');
+    } catch (e) {
+      print('❌ Error playing audio: $e');
+    }
+  }
+
+  Future<void> _toggleMusic() async {
+    try {
+      if (_isMusicPlaying) {
+        await widget.audioPlayer.pause();
+        print('⏸️ Audio paused');
+      } else {
+        await widget.audioPlayer.play();
+        print('▶️ Audio playing');
+      }
+      setState(() {
+        _isMusicPlaying = !_isMusicPlaying;
+      });
+    } catch (e) {
+      print('❌ Error toggling audio: $e');
+    }
+  }
+
   @override
   Widget build(BuildContext context) {
-    // Deteksi ukuran layar
     final isMobile = MediaQuery.of(context).size.width < 768;
 
     return Scaffold(
@@ -53,52 +82,27 @@ class _HomePageState extends State<HomePage> with TickerProviderStateMixin {
             ],
           ),
         ),
-        child: _showInvitation
-            ? _buildInvitationContent(isMobile)
-            : _buildLandingPage(context, isMobile),
+        child: isMobile ? _buildMobileView() : _buildDesktopNotAvailable(),
       ),
     );
   }
 
-  Widget _buildAnimatedText({
-    required String text,
-    required TextStyle style,
-    required int index,
-    int totalDuration = 2000,
-  }) {
-    final delay = index * 100;
-    final animation = Tween<double>(begin: 0, end: 1).animate(
-      CurvedAnimation(
-        parent: _animationController,
-        curve: Interval(
-          delay / totalDuration,
-          (delay + 400) / totalDuration,
-          curve: Curves.easeOut,
-        ),
-      ),
-    );
-
-    return AnimatedBuilder(
-      animation: animation,
-      builder: (context, child) {
-        return Transform.translate(
-          offset: Offset(0, 20 * (1 - animation.value)),
-          child: Opacity(
-            opacity: animation.value,
-            child: child,
-          ),
-        );
-      },
-      child: Text(text, style: style),
+  // ============ MOBILE VIEW ============
+  Widget _buildMobileView() {
+    return Stack(
+      children: [
+        _showInvitation ? _buildMobileInvitation() : _buildMobileLanding(),
+        // Floating music button - only show on invitation page
+        if (_showInvitation) _buildFloatingMusicButton(),
+      ],
     );
   }
 
-  Widget _buildLandingPage(BuildContext context, bool isMobile) {
+  Widget _buildMobileLanding() {
     int textIndex = 0;
 
     return Stack(
       children: [
-        // === Background utama ===
         Positioned.fill(
           child: Container(
             decoration: const BoxDecoration(
@@ -209,42 +213,7 @@ class _HomePageState extends State<HomePage> with TickerProviderStateMixin {
                     index: textIndex++,
                   ),
                   SizedBox(height: 16),
-                  AnimatedBuilder(
-                    animation: Tween<double>(begin: 0, end: 1).animate(
-                      CurvedAnimation(
-                        parent: _animationController,
-                        curve: Interval(
-                          (textIndex * 100) / 2000,
-                          ((textIndex * 100) + 400) / 2000,
-                          curve: Curves.easeOut,
-                        ),
-                      ),
-                    ),
-                    builder: (context, child) {
-                      final animation =
-                          Tween<double>(begin: 0, end: 1).animate(
-                        CurvedAnimation(
-                          parent: _animationController,
-                          curve: Interval(
-                            (textIndex * 100) / 2000,
-                            ((textIndex * 100) + 400) / 2000,
-                            curve: Curves.easeOut,
-                          ),
-                        ),
-                      );
-                      return Transform.translate(
-                        offset: Offset(0, 20 * (1 - animation.value)),
-                        child: Opacity(
-                          opacity: animation.value,
-                          child: Container(
-                            width: 40 * animation.value,
-                            height: 1.5,
-                            color: Color(0xFFF5F5F5),
-                          ),
-                        ),
-                      );
-                    },
-                  ),
+                  _buildDecorativeLine(textIndex),
                   SizedBox(height: 10),
                   _buildAnimatedText(
                     text: eventDate,
@@ -280,54 +249,7 @@ class _HomePageState extends State<HomePage> with TickerProviderStateMixin {
                 ],
               ),
               SizedBox(height: 8),
-              AnimatedBuilder(
-                animation: Tween<double>(begin: 0, end: 1).animate(
-                  CurvedAnimation(
-                    parent: _animationController,
-                    curve: Interval(
-                      (textIndex * 100) / 2000,
-                      ((textIndex * 100) + 400) / 2000,
-                      curve: Curves.easeOut,
-                    ),
-                  ),
-                ),
-                builder: (context, child) {
-                  final animation = Tween<double>(begin: 0, end: 1).animate(
-                    CurvedAnimation(
-                      parent: _animationController,
-                      curve: Interval(
-                        (textIndex * 100) / 2000,
-                        ((textIndex * 100) + 400) / 2000,
-                        curve: Curves.easeOut,
-                      ),
-                    ),
-                  );
-                  return Transform.translate(
-                    offset: Offset(0, 20 * (1 - animation.value)),
-                    child: Opacity(
-                      opacity: animation.value,
-                      child: ElevatedButton(
-                        onPressed: () async {
-                          try {
-                            await widget.audioPlayer.play();
-                          } catch (e) {
-                            print('Error playing audio: $e');
-                          }
-                          setState(() {
-                            _showInvitation = true;
-                          });
-                        },
-                        child: Row(
-                          mainAxisSize: MainAxisSize.min,
-                          children: [
-                            Text('Buka Undangan'),
-                          ],
-                        ),
-                      ),
-                    ),
-                  );
-                },
-              ),
+              _buildOpenInvitationButton(textIndex),
             ],
           ),
         ),
@@ -335,12 +257,89 @@ class _HomePageState extends State<HomePage> with TickerProviderStateMixin {
     );
   }
 
-  Widget _buildInvitationContent(bool isMobile) {
-    if (isMobile) {
-      return _buildMobileInvitation();
-    } else {
-      return _buildDesktopInvitation();
-    }
+  Widget _buildDecorativeLine(int textIndex) {
+    return AnimatedBuilder(
+      animation: Tween<double>(begin: 0, end: 1).animate(
+        CurvedAnimation(
+          parent: _animationController,
+          curve: Interval(
+            (textIndex * 100) / 2000,
+            ((textIndex * 100) + 400) / 2000,
+            curve: Curves.easeOut,
+          ),
+        ),
+      ),
+      builder: (context, child) {
+        final animation = Tween<double>(begin: 0, end: 1).animate(
+          CurvedAnimation(
+            parent: _animationController,
+            curve: Interval(
+              (textIndex * 100) / 2000,
+              ((textIndex * 100) + 400) / 2000,
+              curve: Curves.easeOut,
+            ),
+          ),
+        );
+        return Transform.translate(
+          offset: Offset(0, 20 * (1 - animation.value)),
+          child: Opacity(
+            opacity: animation.value,
+            child: Container(
+              width: 40 * animation.value,
+              height: 1.5,
+              color: Color(0xFFF5F5F5),
+            ),
+          ),
+        );
+      },
+    );
+  }
+
+  Widget _buildOpenInvitationButton(int textIndex) {
+    return AnimatedBuilder(
+      animation: Tween<double>(begin: 0, end: 1).animate(
+        CurvedAnimation(
+          parent: _animationController,
+          curve: Interval(
+            (textIndex * 100) / 2000,
+            ((textIndex * 100) + 400) / 2000,
+            curve: Curves.easeOut,
+          ),
+        ),
+      ),
+      builder: (context, child) {
+        final animation = Tween<double>(begin: 0, end: 1).animate(
+          CurvedAnimation(
+            parent: _animationController,
+            curve: Interval(
+              (textIndex * 100) / 2000,
+              ((textIndex * 100) + 400) / 2000,
+              curve: Curves.easeOut,
+            ),
+          ),
+        );
+        return Transform.translate(
+          offset: Offset(0, 20 * (1 - animation.value)),
+          child: Opacity(
+            opacity: animation.value,
+            child: ElevatedButton(
+              onPressed: () {
+                _playAudio();
+                setState(() {
+                  _showInvitation = true;
+                });
+              },
+              child: Row(
+                mainAxisSize: MainAxisSize.min,
+                children: [
+                  Text('Buka Undangan'),
+                ],
+              ),
+            ),
+          ),
+        );
+      },
+    );
   }
 
   Widget _buildMobileInvitation() {
@@ -349,7 +348,6 @@ class _HomePageState extends State<HomePage> with TickerProviderStateMixin {
         children: [
           SizedBox(height: 16),
           CardPengantin(),
-          CardOrangTua(),
           AcaraSection(),
           LokasiSection(),
           SizedBox(height: 40),
@@ -358,33 +356,114 @@ class _HomePageState extends State<HomePage> with TickerProviderStateMixin {
     );
   }
 
-  Widget _buildDesktopInvitation() {
-    return SingleChildScrollView(
-      child: Center(
-        child: ConstrainedBox(
-          constraints: BoxConstraints(maxWidth: 900),
-          child: Padding(
-            padding: EdgeInsets.symmetric(horizontal: 32, vertical: 24),
-            child: Column(
-              children: [
-                Row(
-                  crossAxisAlignment: CrossAxisAlignment.start,
-                  children: [
-                    Expanded(child: CardPengantin()),
-                    SizedBox(width: 32),
-                    Expanded(child: CardOrangTua()),
-                  ],
-                ),
-                SizedBox(height: 32),
-                AcaraSection(),
-                SizedBox(height: 32),
-                LokasiSection(),
-                SizedBox(height: 40),
-              ],
+  Widget _buildFloatingMusicButton() {
+    return Positioned(
+      bottom: 30,
+      right: 30,
+      child: GestureDetector(
+        onTap: _toggleMusic,
+        child: Container(
+          width: 56,
+          height: 56,
+          decoration: BoxDecoration(
+            color: Color(0xFFF5F5F5).withOpacity(0.15),
+            borderRadius: BorderRadius.circular(28),
+            border: Border.all(
+              color: Color(0xFFF5F5F5).withOpacity(0.3),
+              width: 1.5,
+            ),
+            boxShadow: [
+              BoxShadow(
+                color: Colors.black.withOpacity(0.3),
+                blurRadius: 12,
+                offset: Offset(0, 4),
+              ),
+            ],
+          ),
+          child: Center(
+            child: Icon(
+              _isMusicPlaying ? Icons.music_note : Icons.music_off,
+              color: Color(0xFFF5F5F5),
+              size: 26,
             ),
           ),
         ),
       ),
+    );
+  }
+
+  // ============ DESKTOP VIEW ============
+  Widget _buildDesktopNotAvailable() {
+    return Center(
+      child: Column(
+        mainAxisAlignment: MainAxisAlignment.center,
+        children: [
+          Icon(
+            Icons.construction,
+            size: 80,
+            color: Color(0xFFF5F5F5).withOpacity(0.5),
+          ),
+          SizedBox(height: 24),
+          Text(
+            'Versi Desktop Belum Tersedia',
+            style: GoogleFonts.playfairDisplay(
+              fontSize: 28,
+              color: Color(0xFFF5F5F5),
+              letterSpacing: 1,
+            ),
+          ),
+          SizedBox(height: 12),
+          Text(
+            'Silahkan gunakan perangkat mobile untuk mengakses undangan ini',
+            style: TextStyle(
+              fontSize: 14,
+              color: Color(0xFFB0B0B0),
+              letterSpacing: 0.5,
+            ),
+            textAlign: TextAlign.center,
+          ),
+          SizedBox(height: 32),
+          Container(
+            width: 200,
+            height: 1,
+            color: Color(0xFFF5F5F5).withOpacity(0.3),
+          ),
+        ],
+      ),
+    );
+  }
+
+  // ============ HELPER WIDGETS ============
+  Widget _buildAnimatedText({
+    required String text,
+    required TextStyle style,
+    required int index,
+    int totalDuration = 2000,
+  }) {
+    final delay = index * 100;
+    final animation = Tween<double>(begin: 0, end: 1).animate(
+      CurvedAnimation(
+        parent: _animationController,
+        curve: Interval(
+          delay / totalDuration,
+          (delay + 400) / totalDuration,
+          curve: Curves.easeOut,
+        ),
+      ),
+    );
+
+    return AnimatedBuilder(
+      animation: animation,
+      builder: (context, child) {
+        return Transform.translate(
+          offset: Offset(0, 20 * (1 - animation.value)),
+          child: Opacity(
+            opacity: animation.value,
+            child: child,
+          ),
+        );
+      },
+      child: Text(text, style: style),
     );
   }
 }

@@ -23,13 +23,24 @@ class _WeddingInviteAppState extends State<WeddingInviteApp> {
   }
 
   Future<void> _initAudioPlayer() async {
-    _audioPlayer = AudioPlayer();
     try {
-      await _audioPlayer.setAsset('assets/music/musicbg.mp3');
+      _audioPlayer = AudioPlayer();
+      print('🔊 AudioPlayer initialized');
+      
+      print('📁 Loading asset: assets/music/musicbg.mp3');
+      final duration = await _audioPlayer.setAsset('assets/music/musicbg.mp3');
+      print('✅ Asset loaded, duration: $duration');
+      
       await _audioPlayer.setLoopMode(LoopMode.all);
+      print('✅ Loop mode set');
+      
       await _audioPlayer.setVolume(0.5);
+      print('✅ Volume set to 0.5');
+      
+      print('✅ Audio player ready!');
     } catch (e) {
-      print('Error loading audio: $e');
+      print('❌ Error initializing audio: $e');
+      print('Error type: ${e.runtimeType}');
     }
   }
 
