@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:google_fonts/google_fonts.dart';
+import 'package:just_audio/just_audio.dart';
 import '../widgets/card_pengantin.dart';
 import '../widgets/card_orang_tua.dart';
 import '../widgets/acara_section.dart';
@@ -7,6 +8,10 @@ import '../widgets/lokasi_section.dart';
 import '../data/wedding_data.dart';
 
 class HomePage extends StatefulWidget {
+  final AudioPlayer audioPlayer;
+
+  HomePage({required this.audioPlayer});
+
   @override
   State<HomePage> createState() => _HomePageState();
 }
@@ -23,6 +28,15 @@ class _HomePageState extends State<HomePage> with TickerProviderStateMixin {
       vsync: this,
     );
     _animationController.forward();
+    _playAudio();
+  }
+
+  Future<void> _playAudio() async {
+    try {
+      await widget.audioPlayer.play();
+    } catch (e) {
+      print('Error playing audio: $e');
+    }
   }
 
   @override
@@ -251,7 +265,7 @@ class _HomePageState extends State<HomePage> with TickerProviderStateMixin {
                     ),
                     index: textIndex++,
                   ),
-                  SizedBox(height: 8),
+                  SizedBox(height: 5),
                   _buildAnimatedText(
                     text: eventTime,
                     style: TextStyle(
@@ -261,7 +275,7 @@ class _HomePageState extends State<HomePage> with TickerProviderStateMixin {
                     ),
                     index: textIndex++,
                   ),
-                  SizedBox(height: 8),
+                  SizedBox(height: 5),
                   _buildAnimatedText(
                     text: eventLocation,
                     style: TextStyle(

@@ -14,6 +14,12 @@
       "languageVersion": "3.4"
     },
     {
+      "name": "audio_session",
+      "rootUri": "file:///C:/Users/akbar/AppData/Local/Pub/Cache/hosted/pub.dev/audio_session-0.2.2",
+      "packageUri": "lib/",
+      "languageVersion": "3.6"
+    },
+    {
       "name": "audioplayers",
       "rootUri": "file:///C:/Users/akbar/AppData/Local/Pub/Cache/hosted/pub.dev/audioplayers-5.2.1",
       "packageUri": "lib/",
@@ -170,6 +176,24 @@
       "languageVersion": "2.19"
     },
     {
+      "name": "just_audio",
+      "rootUri": "file:///C:/Users/akbar/AppData/Local/Pub/Cache/hosted/pub.dev/just_audio-0.10.5",
+      "packageUri": "lib/",
+      "languageVersion": "3.6"
+    },
+    {
+      "name": "just_audio_platform_interface",
+      "rootUri": "file:///C:/Users/akbar/AppData/Local/Pub/Cache/hosted/pub.dev/just_audio_platform_interface-4.6.0",
+      "packageUri": "lib/",
+      "languageVersion": "2.17"
+    },
+    {
+      "name": "just_audio_web",
+      "rootUri": "file:///C:/Users/akbar/AppData/Local/Pub/Cache/hosted/pub.dev/just_audio_web-0.4.16",
+      "packageUri": "lib/",
+      "languageVersion": "3.2"
+    },
+    {
       "name": "leak_tracker",
       "rootUri": "file:///C:/Users/akbar/AppData/Local/Pub/Cache/hosted/pub.dev/leak_tracker-10.0.9",
       "packageUri": "lib/",
@@ -288,6 +312,12 @@
       "rootUri": "file:///C:/Users/akbar/AppData/Local/Pub/Cache/hosted/pub.dev/qr_flutter-4.1.0",
       "packageUri": "lib/",
       "languageVersion": "2.19"
+    },
+    {
+      "name": "rxdart",
+      "rootUri": "file:///C:/Users/akbar/AppData/Local/Pub/Cache/hosted/pub.dev/rxdart-0.28.0",
+      "packageUri": "lib/",
+      "languageVersion": "2.12"
     },
     {
       "name": "share_plus",

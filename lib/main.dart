@@ -1,12 +1,44 @@
 import 'package:flutter/material.dart';
 import 'package:google_fonts/google_fonts.dart';
+import 'package:just_audio/just_audio.dart';
 import 'pages/home_page.dart';
 
-void main() {
+void main() async {
+  WidgetsFlutterBinding.ensureInitialized();
   runApp(WeddingInviteApp());
 }
 
-class WeddingInviteApp extends StatelessWidget {
+class WeddingInviteApp extends StatefulWidget {
+  @override
+  State<WeddingInviteApp> createState() => _WeddingInviteAppState();
+}
+
+class _WeddingInviteAppState extends State<WeddingInviteApp> {
+  late AudioPlayer _audioPlayer;
+
+  @override
+  void initState() {
+    super.initState();
+    _initAudioPlayer();
+  }
+
+  Future<void> _initAudioPlayer() async {
+    _audioPlayer = AudioPlayer();
+    try {
+      await _audioPlayer.setAsset('assets/music/musicbg.mp3');
+      await _audioPlayer.setLoopMode(LoopMode.all);
+      await _audioPlayer.setVolume(0.5);
+    } catch (e) {
+      print('Error loading audio: $e');
+    }
+  }
+
+  @override
+  void dispose() {
+    _audioPlayer.dispose();
+    super.dispose();
+  }
+
   @override
   Widget build(BuildContext context) {
     return MaterialApp(
@@ -67,7 +99,7 @@ class WeddingInviteApp extends StatelessWidget {
           ),
         ),
       ),
-      home: HomePage(),
+      home: HomePage(audioPlayer: _audioPlayer),
     );
   }
 }
