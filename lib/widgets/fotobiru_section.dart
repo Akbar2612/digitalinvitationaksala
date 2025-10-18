@@ -3,25 +3,26 @@ import 'package:flutter/material.dart';
 class FotoSection extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
+    final screenWidth = MediaQuery.of(context).size.width;
+    final photoWidth = (screenWidth - 100) * 0.35;
+    final photoHeight = photoWidth * 1.43;
+    
     return Padding(
       padding: EdgeInsets.symmetric(horizontal: 20, vertical: 32),
       child: Column(
         crossAxisAlignment: CrossAxisAlignment.center,
         children: [
-          Container(
-            
-            padding: EdgeInsets.symmetric(vertical: 40, horizontal: 20),
-            child: Stack(
-              alignment: Alignment.center,
-              children: [
-                // Photos Row
-                Row(
-                  mainAxisAlignment: MainAxisAlignment.spaceEvenly,
-                  children: [
-                    // Photo Kiri (Akbar)
-                    Container(
-                      width: 140,
-                      height: 200,
+          Stack(
+            alignment: Alignment.center,
+            children: [
+              Row(
+                mainAxisAlignment: MainAxisAlignment.spaceEvenly,
+                children: [
+                  // Photo Kiri (Akbar)
+                  Flexible(
+                    child: Container(
+                      width: photoWidth,
+                      height: photoHeight,
                       decoration: BoxDecoration(
                         borderRadius: BorderRadius.circular(16),
                         boxShadow: [
@@ -50,23 +51,13 @@ class FotoSection extends StatelessWidget {
                         ),
                       ),
                     ),
-
-                    // Love Icon Tengah
-                    Container(
-  width: 60,
-  height: 60,
-  alignment: Alignment.center,
-  child: Icon(
-    Icons.favorite,
-    color: Color.fromARGB(255, 255, 255, 255),
-    size: 40,
-  ),
-),
-
-                    // Photo Kanan (Wulan)
-                    Container(
-                      width: 140,
-                      height: 200,
+                  ),
+                  SizedBox(width: 20),
+                  // Photo Kanan (Wulan)
+                  Flexible(
+                    child: Container(
+                      width: photoWidth,
+                      height: photoHeight,
                       decoration: BoxDecoration(
                         borderRadius: BorderRadius.circular(16),
                         boxShadow: [
@@ -95,10 +86,16 @@ class FotoSection extends StatelessWidget {
                         ),
                       ),
                     ),
-                  ],
-                ),
-              ],
-            ),
+                  ),
+                ],
+              ),
+              // Love Icon Tengah
+              Icon(
+                Icons.favorite,
+                color: Colors.white,
+                size: 40,
+              ),
+            ],
           ),
         ],
       ),
