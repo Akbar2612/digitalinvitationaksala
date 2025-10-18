@@ -149,80 +149,23 @@ class _HomePageState extends State<HomePage> with TickerProviderStateMixin {
                       ],
                     ),
                   ),
+                  SizedBox(height: 20),
+                  _buildStyledTamuCard(textIndex++),
                   SizedBox(height: 10),
-                  _buildAnimatedText(
-                    text: 'Kami Mengundang',
+                    _buildAnimatedText(
+                    text: 'Selasa, 09 Desember 2025',
                     style: TextStyle(
-                      fontSize: 12,
-                      letterSpacing: 1.5,
-                      color: Color(0xFFB0B0B0),
+                      fontSize: 16,
+                      color: Color.fromARGB(255, 255, 255, 255),
                       fontWeight: FontWeight.w400,
                     ),
                     index: textIndex++,
                   ),
-                  SizedBox(height: 18),
-                  _buildAnimatedText(
-                    text: 'Yth. Tamu Undangan',
-                    style: TextStyle(
-                      fontSize: 11,
-                      color: Color(0xFFB0B0B0),
-                      fontWeight: FontWeight.w400,
-                    ),
-                    index: textIndex++,
-                  ),
-                  SizedBox(height: 6),
-                  _buildAnimatedText(
-                    text: '[Nama Tamu]',
-                    style: Theme.of(context).textTheme.displayMedium?.copyWith(
-                          fontSize: 22,
-                          letterSpacing: 1,
-                          color: Color(0xFFF5F5F5),
-                        ) ??
-                        TextStyle(
-                          fontSize: 22,
-                          letterSpacing: 1,
-                          color: Color(0xFFF5F5F5),
-                        ),
-                    index: textIndex++,
-                  ),
-                  SizedBox(height: 16),
-                  _buildDecorativeLine(textIndex),
-                  SizedBox(height: 10),
-                  _buildAnimatedText(
-                    text: eventDate,
-                    style: TextStyle(
-                      fontSize: 12,
-                      color: Color(0xFFD0D0D0),
-                      letterSpacing: 0.5,
-                      fontWeight: FontWeight.w400,
-                    ),
-                    index: textIndex++,
-                  ),
-                  SizedBox(height: 5),
-                  _buildAnimatedText(
-                    text: eventTime,
-                    style: TextStyle(
-                      fontSize: 11,
-                      color: Color(0xFFB0B0B0),
-                      fontWeight: FontWeight.w400,
-                    ),
-                    index: textIndex++,
-                  ),
-                  SizedBox(height: 5),
-                  _buildAnimatedText(
-                    text: eventLocation,
-                    style: TextStyle(
-                      fontSize: 11,
-                      color: Color(0xFFB0B0B0),
-                      height: 1.6,
-                      fontWeight: FontWeight.w400,
-                    ),
-                    index: textIndex++,
-                  ),
+                  SizedBox(height: 24),
+                  _buildOpenInvitationButton(textIndex),
                 ],
               ),
-              SizedBox(height: 8),
-              _buildOpenInvitationButton(textIndex),
+              SizedBox.shrink(),
             ],
           ),
         ),
@@ -230,43 +173,92 @@ class _HomePageState extends State<HomePage> with TickerProviderStateMixin {
     );
   }
 
-  Widget _buildDecorativeLine(int textIndex) {
-    return AnimatedBuilder(
-      animation: Tween<double>(begin: 0, end: 1).animate(
-        CurvedAnimation(
-          parent: _animationController,
-          curve: Interval(
-            (textIndex * 150) / 3000,
-            ((textIndex * 150) + 500) / 3000,
-            curve: Curves.easeOut,
+Widget _buildStyledTamuCard(int textIndex) {
+  final animation = Tween<double>(begin: 0, end: 1).animate(
+    CurvedAnimation(
+      parent: _animationController,
+      curve: Interval(
+        (textIndex * 150) / 3000,
+        ((textIndex * 150) + 400) / 3000,
+        curve: Curves.easeOut,
+      ),
+    ),
+  );
+
+  return AnimatedBuilder(
+    animation: animation,
+    builder: (context, child) {
+      return Transform.translate(
+        offset: Offset(0, 20 * (1 - animation.value)),
+        child: Opacity(
+          opacity: animation.value,
+          child: child,
+        ),
+      );
+    },
+    child: Column(
+      crossAxisAlignment: CrossAxisAlignment.start,
+      mainAxisSize: MainAxisSize.min,
+      children: [
+        _buildAnimatedText(
+          text: 'Kepada Yth. Bapak/Ibu/Saudara/i',
+          style: TextStyle(
+            fontSize: 13,
+            color: Color(0xFFB0B0B0),
+            fontWeight: FontWeight.w500,
+            letterSpacing: 0.3,
+          ),
+          index: textIndex++,
+        ),
+        SizedBox(height: 8),
+        Container(
+          padding: EdgeInsets.symmetric(horizontal: 24, vertical: 16),
+          decoration: BoxDecoration(
+            border: Border.all(
+              color: Color(0xFFD4AF37),
+              width: 1.5,
+            ),
+            borderRadius: BorderRadius.circular(10),
+            gradient: LinearGradient(
+              begin: Alignment.topLeft,
+              end: Alignment.bottomRight,
+              colors: [
+                Color(0xFFD4AF37).withOpacity(0.08),
+                Color(0xFFD4AF37).withOpacity(0.03),
+              ],
+            ),
+          ),
+          child: Column(
+            crossAxisAlignment: CrossAxisAlignment.start,
+            mainAxisSize: MainAxisSize.min,
+            children: [
+              _buildAnimatedText(
+                text: 'Nama Tamu Contoh',
+                style: TextStyle(
+                  fontSize: 20,
+                  fontWeight: FontWeight.bold,
+                  color: Color(0xFFD4AF37),
+                  letterSpacing: 0.5,
+                ),
+                index: textIndex++,
+              ),
+              SizedBox(height: 6),
+              _buildAnimatedText(
+                text: 'Jl. Mawar No. 10, Bandung',
+                style: TextStyle(
+                  fontSize: 14,
+                  color: Colors.white70,
+                ),
+                index: textIndex++,
+              ),
+            ],
           ),
         ),
-      ),
-      builder: (context, child) {
-        final animation = Tween<double>(begin: 0, end: 1).animate(
-          CurvedAnimation(
-            parent: _animationController,
-            curve: Interval(
-              (textIndex * 150) / 3000,
-              ((textIndex * 150) + 500) / 3000,
-              curve: Curves.easeOut,
-            ),
-          ),
-        );
-        return Transform.translate(
-          offset: Offset(0, 20 * (1 - animation.value)),
-          child: Opacity(
-            opacity: animation.value,
-            child: Container(
-              width: 40 * animation.value,
-              height: 1.5,
-              color: Color(0xFFF5F5F5),
-            ),
-          ),
-        );
-      },
-    );
-  }
+      ],
+    ),
+  );
+}
+
 
   Widget _buildOpenInvitationButton(int textIndex) {
     return AnimatedBuilder(
@@ -296,6 +288,14 @@ class _HomePageState extends State<HomePage> with TickerProviderStateMixin {
           child: Opacity(
             opacity: animation.value,
             child: ElevatedButton(
+              style: ElevatedButton.styleFrom(
+                backgroundColor: Color(0xFFD4AF37),
+                foregroundColor: Color(0xFF1a1a1a),
+                padding: EdgeInsets.symmetric(horizontal: 32, vertical: 12),
+                shape: RoundedRectangleBorder(
+                  borderRadius: BorderRadius.circular(8),
+                ),
+              ),
               onPressed: () {
                 _playAudio();
                 Navigator.of(context).push(
@@ -306,11 +306,13 @@ class _HomePageState extends State<HomePage> with TickerProviderStateMixin {
                   ),
                 );
               },
-              child: Row(
-                mainAxisSize: MainAxisSize.min,
-                children: [
-                  Text('Buka Undangan'),
-                ],
+              child: Text(
+                'Buka Undangan',
+                style: TextStyle(
+                  fontSize: 12,
+                  fontWeight: FontWeight.w600,
+                  letterSpacing: 0.8,
+                ),
               ),
             ),
           ),
@@ -363,15 +365,15 @@ class _HomePageState extends State<HomePage> with TickerProviderStateMixin {
     required String text,
     required TextStyle style,
     required int index,
-    int totalDuration = 3000,
+    int totalDuration = 2500,
   }) {
-    final delay = index * 150;
+    final delay = index * 120;
     final animation = Tween<double>(begin: 0, end: 1).animate(
       CurvedAnimation(
         parent: _animationController,
         curve: Interval(
           delay / totalDuration,
-          (delay + 500) / totalDuration,
+          (delay + 400) / totalDuration,
           curve: Curves.easeOut,
         ),
       ),
@@ -381,7 +383,7 @@ class _HomePageState extends State<HomePage> with TickerProviderStateMixin {
       animation: animation,
       builder: (context, child) {
         return Transform.translate(
-          offset: Offset(0, 20 * (1 - animation.value)),
+          offset: Offset(0, 15 * (1 - animation.value)),
           child: Opacity(
             opacity: animation.value,
             child: child,

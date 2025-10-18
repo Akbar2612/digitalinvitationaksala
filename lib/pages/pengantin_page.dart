@@ -3,6 +3,7 @@ import 'package:digitalinvitationaksala/widgets/ayat_section.dart';
 import 'package:digitalinvitationaksala/widgets/carousel_section.dart';
 import 'package:digitalinvitationaksala/widgets/fotobiru_section.dart';
 import 'package:digitalinvitationaksala/widgets/lokasi_section.dart';
+import 'package:digitalinvitationaksala/widgets/love_story_section.dart';
 import 'package:flutter/material.dart';
 import 'package:google_fonts/google_fonts.dart';
 import 'package:just_audio/just_audio.dart';
@@ -48,6 +49,7 @@ class _CardPengantinPageState extends State<CardPengantinPage>
   final GlobalKey<State> _acaraKey = GlobalKey();
   final GlobalKey<State> _lokasiKey = GlobalKey();
   final GlobalKey<State> _fotoKey = GlobalKey();
+  final GlobalKey<State> _loveStoryKey = GlobalKey();
 
   @override
   void initState() {
@@ -441,7 +443,11 @@ class _CardPengantinPageState extends State<CardPengantinPage>
                             key: _fotoKey,
                             child: CarouselSection(),
                           ),
-                          SizedBox(height: 100), // Space untuk floating menu
+                          Container(
+                            key: _loveStoryKey,
+                            child: LoveStorySection(),
+                          ),
+                          SizedBox(height: 100), 
                         ],
                       ),
                     ),
