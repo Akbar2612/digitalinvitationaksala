@@ -20,10 +20,9 @@ class _HomePageState extends State<HomePage> with TickerProviderStateMixin {
   void initState() {
     super.initState();
     _animationController = AnimationController(
-      duration: const Duration(milliseconds: 3000), // Diperpanjang dari 2000ms
+      duration: const Duration(milliseconds: 3000),
       vsync: this,
     );
-    // Delay sedikit sebelum mulai animasi
     Future.delayed(Duration(milliseconds: 200), () {
       if (mounted) {
         _animationController.forward();
@@ -68,7 +67,6 @@ class _HomePageState extends State<HomePage> with TickerProviderStateMixin {
     );
   }
 
-  // ============ MOBILE VIEW ============
   Widget _buildMobileView() {
     return _buildMobileLanding();
   }
@@ -238,8 +236,8 @@ class _HomePageState extends State<HomePage> with TickerProviderStateMixin {
         CurvedAnimation(
           parent: _animationController,
           curve: Interval(
-            (textIndex * 150) / 3000, // Diperlambat (150ms interval)
-            ((textIndex * 150) + 500) / 3000, // Duration diperpanjang
+            (textIndex * 150) / 3000,
+            ((textIndex * 150) + 500) / 3000,
             curve: Curves.easeOut,
           ),
         ),
@@ -276,8 +274,8 @@ class _HomePageState extends State<HomePage> with TickerProviderStateMixin {
         CurvedAnimation(
           parent: _animationController,
           curve: Interval(
-            (textIndex * 150) / 3000, // Diperlambat
-            ((textIndex * 150) + 500) / 3000, // Duration diperpanjang
+            (textIndex * 150) / 3000,
+            ((textIndex * 150) + 500) / 3000,
             curve: Curves.easeOut,
           ),
         ),
@@ -302,7 +300,9 @@ class _HomePageState extends State<HomePage> with TickerProviderStateMixin {
                 _playAudio();
                 Navigator.of(context).push(
                   MaterialPageRoute(
-                    builder: (context) => CardPengantinPage(),
+                    builder: (context) => CardPengantinPage(
+                      audioPlayer: widget.audioPlayer,
+                    ),
                   ),
                 );
               },
@@ -319,7 +319,6 @@ class _HomePageState extends State<HomePage> with TickerProviderStateMixin {
     );
   }
 
-  // ============ DESKTOP VIEW ============
   Widget _buildDesktopNotAvailable() {
     return Center(
       child: Column(
@@ -360,20 +359,19 @@ class _HomePageState extends State<HomePage> with TickerProviderStateMixin {
     );
   }
 
-  // ============ HELPER WIDGETS ============
   Widget _buildAnimatedText({
     required String text,
     required TextStyle style,
     required int index,
-    int totalDuration = 3000, // Diperpanjang dari 2000ms
+    int totalDuration = 3000,
   }) {
-    final delay = index * 150; // Interval delay diperlambat dari 100ms
+    final delay = index * 150;
     final animation = Tween<double>(begin: 0, end: 1).animate(
       CurvedAnimation(
         parent: _animationController,
         curve: Interval(
           delay / totalDuration,
-          (delay + 500) / totalDuration, // Duration diperpanjang dari 400ms
+          (delay + 500) / totalDuration,
           curve: Curves.easeOut,
         ),
       ),

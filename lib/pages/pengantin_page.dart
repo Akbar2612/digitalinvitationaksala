@@ -10,6 +10,10 @@ import '../data/wedding_data.dart';
 import '../pages/home_page.dart';
 
 class CardPengantinPage extends StatefulWidget {
+  final AudioPlayer? audioPlayer;
+  
+  CardPengantinPage({this.audioPlayer});
+
   @override
   State<CardPengantinPage> createState() => _CardPengantinPageState();
 }
@@ -38,6 +42,8 @@ class _CardPengantinPageState extends State<CardPengantinPage>
 
   int _selectedIndex = 1; // Default ke PENGANTIN
   late ScrollController _scrollController;
+  bool _isMuted = false;
+  late AudioPlayer _audioPlayer;
   
   final GlobalKey<State> _acaraKey = GlobalKey();
   final GlobalKey<State> _lokasiKey = GlobalKey();
@@ -47,6 +53,10 @@ class _CardPengantinPageState extends State<CardPengantinPage>
   void initState() {
     super.initState();
     _scrollController = ScrollController();
+    
+    // Gunakan audio player dari widget atau buat baru
+    _audioPlayer = widget.audioPlayer ?? AudioPlayer();
+    
     _titleController = AnimationController(
       duration: Duration(milliseconds: 800),
       vsync: this,
@@ -144,6 +154,26 @@ class _CardPengantinPageState extends State<CardPengantinPage>
     });
   }
 
+  void _toggleMute() async {
+    setState(() {
+      _isMuted = !_isMuted;
+    });
+    
+    try {
+      if (_isMuted) {
+        print('Muting audio...');
+        await _audioPlayer.pause();
+        print('Audio paused - Muted');
+      } else {
+        print('Unmuting audio...');
+        await _audioPlayer.play();
+        print('Audio resumed - Unmuted');
+      }
+    } catch (e) {
+      print('Error toggling mute: $e');
+    }
+  }
+
   void _onMenuItemTapped(int index) {
     setState(() {
       _selectedIndex = index;
@@ -186,8 +216,6 @@ class _CardPengantinPageState extends State<CardPengantinPage>
       );
     }
   }
-
- 
 
   @override
   void dispose() {
@@ -479,6 +507,25 @@ class _CardPengantinPageState extends State<CardPengantinPage>
                     ],
                   ),
                 ),
+              ),
+            ),
+          ),
+          // Floating Mute Button
+          Positioned(
+            bottom: 120,
+            right: 20,
+            child: FloatingActionButton(
+              onPressed: _toggleMute,
+              backgroundColor: _isMuted
+                  ? Color(0xFFD4AF37)
+                  : Color(0xFF1a1a1a),
+              elevation: 8,
+              child: Icon(
+                _isMuted ? Icons.volume_off : Icons.volume_up,
+                color: _isMuted
+                    ? Color(0xFF1a1a1a)
+                    : Color(0xFFD4AF37),
+                size: 28,
               ),
             ),
           ),
