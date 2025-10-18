@@ -1,10 +1,10 @@
 {
   "roots": [
-    "aksalacreativemedia"
+    "digitalinvitationaksala"
   ],
   "packages": [
     {
-      "name": "aksalacreativemedia",
+      "name": "digitalinvitationaksala",
       "version": "0.1.0",
       "dependencies": [
         "audioplayers",
