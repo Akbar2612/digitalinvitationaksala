@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:google_fonts/google_fonts.dart';
 import '../widgets/card_pengantin.dart';
 import '../widgets/card_orang_tua.dart';
 import '../widgets/acara_section.dart';
@@ -53,209 +54,157 @@ class _HomePageState extends State<HomePage> {
         ),
         // Dark Overlay
         Positioned.fill(
-          child: Container(
-            decoration: const BoxDecoration(
-              gradient: LinearGradient(
-                begin: Alignment.topCenter,
-                end: Alignment.bottomCenter,
-                colors: [
-                  Colors.transparent,
-                  Color.fromRGBO(0, 0, 0, 0.05),
-                  Color.fromRGBO(0, 0, 0, 0.7),
-                ],
-                stops: [0.0, 0.6, 1.0],
-              ),
-            ),
-          ),
-        ),
+  child: Container(
+    decoration: const BoxDecoration(
+      gradient: LinearGradient(
+        begin: Alignment.topCenter,
+        end: Alignment.bottomCenter,
+        colors: [
+          Colors.transparent,
+          Color.fromRGBO(0, 0, 0, 0.1),
+          Colors.black,
+        ],
+        stops: [0.0, 0.6, 1.0],
+      ),
+    ),
+  ),
+),
         // Content
-        Padding(
-          padding: EdgeInsets.symmetric(horizontal: 24, vertical: 40),
+      
+          Padding(
+  padding: const EdgeInsets.only(
+    top: 250,   
+    bottom: 60,
+    left: 40,
+    right: 40,
+  ),
           child: Column(
+            crossAxisAlignment: CrossAxisAlignment.start,
             mainAxisAlignment: MainAxisAlignment.spaceBetween,
             children: [
-              // Top Section
+              SizedBox.shrink(),
               Column(
+                crossAxisAlignment: CrossAxisAlignment.start,
                 children: [
-                  // Decorative line top
-                  Container(
-                    width: 60,
-                    height: 2,
-                    color: Color(0xFFF5F5F5),
-                    margin: EdgeInsets.only(bottom: 20),
-                  ),
-                  
-                  // Invitation text
+                  Align(
+  alignment: Alignment.centerLeft,
+  child: Column(
+    crossAxisAlignment: CrossAxisAlignment.start,
+    children: [
+      Text(
+        groomnickName,
+        style: GoogleFonts.playfairDisplay(
+          fontSize: 36,
+          fontStyle: FontStyle.italic,
+          color: Color(0xFFF5F5F5),
+          fontWeight: FontWeight.w600,
+          letterSpacing: 2,
+        ),
+      ),
+      Text(
+        "& "+bridenickName,
+        style: GoogleFonts.playfairDisplay(
+          fontSize: 36,
+          fontStyle: FontStyle.italic,
+          color: Color(0xFFF5F5F5),
+          fontWeight: FontWeight.w600,
+          letterSpacing: 2,
+        ),
+      ),
+    ],
+  ),
+),
+                  SizedBox(height: 10),
+                  // Kami Mengundang
                   Text(
-                    'Kami Mengundang Anda',
-                    style: Theme.of(context).textTheme.bodyMedium?.copyWith(
-                      fontSize: 16,
-                      letterSpacing: 2,
-                      color: Color(0xFFB0B0B0),
-                    ),
-                    textAlign: TextAlign.center,
-                  ),
-                  SizedBox(height: 30),
-                  
-                  // Bride name
-                  Text(
-                    brideName,
-                    style: Theme.of(context).textTheme.displayLarge?.copyWith(
-                      fontSize: 42,
-                      letterSpacing: 1.5,
-                    ),
-                    textAlign: TextAlign.center,
-                  ),
-                  SizedBox(height: 16),
-                  
-                  // Ampersand
-                  Text(
-                    '&',
+                    'Kami Mengundang',
                     style: TextStyle(
-                      fontSize: 36,
+                      fontSize: 12,
+                      letterSpacing: 1.5,
+                      color: Color(0xFFB0B0B0),
+                      fontWeight: FontWeight.w400,
+                    ),
+                  ),
+                  SizedBox(height: 18),
+                  
+                  // Tamu
+                  Text(
+                    'Yth. Tamu Undangan',
+                    style: TextStyle(
+                      fontSize: 11,
+                      color: Color(0xFFB0B0B0),
+                      fontWeight: FontWeight.w400,
+                    ),
+                  ),
+                  SizedBox(height: 6),
+                  Text(
+                    '[Nama Tamu]',
+                    style: Theme.of(context).textTheme.displayMedium?.copyWith(
+                      fontSize: 22,
+                      letterSpacing: 1,
                       color: Color(0xFFF5F5F5),
-                      fontWeight: FontWeight.w300,
                     ),
                   ),
                   SizedBox(height: 16),
-                  
-                  // Groom name
-                  Text(
-                    groomName,
-                    style: Theme.of(context).textTheme.displayLarge?.copyWith(
-                      fontSize: 42,
-                      letterSpacing: 1.5,
-                    ),
-                    textAlign: TextAlign.center,
-                  ),
-                  SizedBox(height: 30),
                   
                   // Decorative line
                   Container(
-                    width: 60,
-                    height: 2,
+                    width: 40,
+                    height: 1.5,
                     color: Color(0xFFF5F5F5),
                   ),
-                  SizedBox(height: 30),
+                  SizedBox(height: 10),
                   
-                  // Event date
+                  // Tanggal
                   Text(
                     eventDate,
-                    style: Theme.of(context).textTheme.bodyMedium?.copyWith(
-                      fontSize: 16,
+                    style: TextStyle(
+                      fontSize: 12,
                       color: Color(0xFFD0D0D0),
                       letterSpacing: 0.5,
+                      fontWeight: FontWeight.w400,
                     ),
-                    textAlign: TextAlign.center,
                   ),
-                  SizedBox(height: 12),
+                  SizedBox(height: 8),
                   
-                  // Event time
+                  // Waktu
                   Text(
                     eventTime,
-                    style: Theme.of(context).textTheme.bodySmall?.copyWith(
-                      fontSize: 14,
+                    style: TextStyle(
+                      fontSize: 11,
                       color: Color(0xFFB0B0B0),
+                      fontWeight: FontWeight.w400,
                     ),
-                    textAlign: TextAlign.center,
                   ),
-                  SizedBox(height: 30),
+                  SizedBox(height: 8),
                   
-                  // Guest name placeholder
-                  Container(
-                    padding: EdgeInsets.all(16),
-                    decoration: BoxDecoration(
-                      border: Border.all(
-                        color: Color(0xFFF5F5F5),
-                        width: 1.5,
-                      ),
-                    ),
-                    child: Column(
-                      children: [
-                        Text(
-                          'Yth. Tamu Undangan',
-                          style: Theme.of(context).textTheme.bodyMedium?.copyWith(
-                            fontSize: 14,
-                            color: Color(0xFFB0B0B0),
-                          ),
-                        ),
-                        SizedBox(height: 8),
-                        Text(
-                          '[Nama Tamu]',
-                          style: Theme.of(context).textTheme.displayMedium?.copyWith(
-                            fontSize: 24,
-                            letterSpacing: 1,
-                          ),
-                        ),
-                      ],
+                  // Lokasi
+                  Text(
+                    eventLocation,
+                    style: TextStyle(
+                      fontSize: 11,
+                      color: Color(0xFFB0B0B0),
+                      height: 1.6,
+                      fontWeight: FontWeight.w400,
                     ),
                   ),
                 ],
               ),
+              SizedBox(height: 8),
               
-              // Bottom Section
-              Column(
-                children: [
-                  // Couple nicknames with calligraphy style
-                  Row(
-                    mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                    children: [
-                      Column(
-                        crossAxisAlignment: CrossAxisAlignment.start,
-                        children: [
-                          Text(
-                            bridenickName,
-                            style: TextStyle(
-                              fontSize: 28,
-                              fontStyle: FontStyle.italic,
-                              color: Color(0xFFF5F5F5),
-                              fontFamily: 'Playfair Display',
-                              fontWeight: FontWeight.w600,
-                              letterSpacing: 1.5,
-                            ),
-                          ),
-                          SizedBox(height: 4),
-                          Text(
-                            '&',
-                            style: TextStyle(
-                              fontSize: 18,
-                              color: Color(0xFFB0B0B0),
-                              fontWeight: FontWeight.w300,
-                            ),
-                          ),
-                          SizedBox(height: 4),
-                          Text(
-                            groomnickName,
-                            style: TextStyle(
-                              fontSize: 28,
-                              fontStyle: FontStyle.italic,
-                              color: Color(0xFFF5F5F5),
-                              fontFamily: 'Playfair Display',
-                              fontWeight: FontWeight.w600,
-                              letterSpacing: 1.5,
-                            ),
-                          ),
-                        ],
-                      ),
-                      // Open invitation button
-                      ElevatedButton(
-                        onPressed: () {
-                          setState(() {
-                            _showInvitation = true;
-                          });
-                        },
-                        child: Row(
-                          mainAxisSize: MainAxisSize.min,
-                          children: [
-                            Text('Buka Undangan'),
-                            SizedBox(width: 12),
-                            Icon(Icons.arrow_forward, size: 18),
-                          ],
-                        ),
-                      ),
-                    ],
-                  ),
-                ],
+              // Button
+              ElevatedButton(
+                onPressed: () {
+                  setState(() {
+                    _showInvitation = true;
+                  });
+                },
+                child: Row(
+                  mainAxisSize: MainAxisSize.min,
+                  children: [
+                    Text('Buka Undangan'),
+                  ],
+                ),
               ),
             ],
           ),
