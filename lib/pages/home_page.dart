@@ -28,15 +28,6 @@ class _HomePageState extends State<HomePage> with TickerProviderStateMixin {
       vsync: this,
     );
     _animationController.forward();
-    _playAudio();
-  }
-
-  Future<void> _playAudio() async {
-    try {
-      await widget.audioPlayer.play();
-    } catch (e) {
-      print('Error playing audio: $e');
-    }
   }
 
   @override
@@ -316,7 +307,12 @@ class _HomePageState extends State<HomePage> with TickerProviderStateMixin {
                     child: Opacity(
                       opacity: animation.value,
                       child: ElevatedButton(
-                        onPressed: () {
+                        onPressed: () async {
+                          try {
+                            await widget.audioPlayer.play();
+                          } catch (e) {
+                            print('Error playing audio: $e');
+                          }
                           setState(() {
                             _showInvitation = true;
                           });
