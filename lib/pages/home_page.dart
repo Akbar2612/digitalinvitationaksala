@@ -58,14 +58,15 @@ Positioned.fill(
         begin: Alignment.topCenter,
         end: Alignment.bottomCenter,
         colors: [
-          Colors.transparent,      
-          Colors.black54,         
+          Colors.transparent,
+          Color.fromRGBO(0, 0, 0, 0.05),
+          Color.fromRGBO(0, 0, 0, 0.7),
         ],
+        stops: [0.0, 0.6, 1.0],
       ),
     ),
   ),
 ),
-
         // Content
         Center(
           child: SingleChildScrollView(
