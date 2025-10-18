@@ -53,7 +53,7 @@ class _WeddingInviteAppState extends State<WeddingInviteApp> {
   @override
   Widget build(BuildContext context) {
     return MaterialApp(
-      title: 'Undangan Pernikahan',
+      title: 'Akbar & Wulan Wedding Invitation',
       debugShowCheckedModeBanner: false,
       theme: ThemeData(
         textTheme: GoogleFonts.playfairDisplayTextTheme().copyWith(
