@@ -39,48 +39,50 @@ class _HomePageState extends State<HomePage> {
   Widget _buildLandingPage(BuildContext context) {
     return Stack(
       children: [
-Positioned.fill(
-  child: Container(
-    decoration: const BoxDecoration(
-      image: DecorationImage(
-        image: AssetImage('assets/images/mainbg.jpg'),
-        fit: BoxFit.cover,
-        opacity: 0.3,
-      ),
-    ),
-  ),
-),
+        // Background Image
+        Positioned.fill(
+          child: Container(
+            decoration: const BoxDecoration(
+              image: DecorationImage(
+                image: AssetImage('assets/images/mainbg.jpg'),
+                fit: BoxFit.cover,
+                opacity: 0.3,
+              ),
+            ),
+          ),
+        ),
         // Dark Overlay
-Positioned.fill(
-  child: Container(
-    decoration: const BoxDecoration(
-      gradient: LinearGradient(
-        begin: Alignment.topCenter,
-        end: Alignment.bottomCenter,
-        colors: [
-          Colors.transparent,
-          Color.fromRGBO(0, 0, 0, 0.05),
-          Color.fromRGBO(0, 0, 0, 0.7),
-        ],
-        stops: [0.0, 0.6, 1.0],
-      ),
-    ),
-  ),
-),
+        Positioned.fill(
+          child: Container(
+            decoration: const BoxDecoration(
+              gradient: LinearGradient(
+                begin: Alignment.topCenter,
+                end: Alignment.bottomCenter,
+                colors: [
+                  Colors.transparent,
+                  Color.fromRGBO(0, 0, 0, 0.05),
+                  Color.fromRGBO(0, 0, 0, 0.7),
+                ],
+                stops: [0.0, 0.6, 1.0],
+              ),
+            ),
+          ),
+        ),
         // Content
-        Center(
-          child: SingleChildScrollView(
-            child: Padding(
-              padding: EdgeInsets.symmetric(horizontal: 24, vertical: 40),
-              child: Column(
-                mainAxisAlignment: MainAxisAlignment.center,
+        Padding(
+          padding: EdgeInsets.symmetric(horizontal: 24, vertical: 40),
+          child: Column(
+            mainAxisAlignment: MainAxisAlignment.spaceBetween,
+            children: [
+              // Top Section
+              Column(
                 children: [
                   // Decorative line top
                   Container(
                     width: 60,
                     height: 2,
                     color: Color(0xFFF5F5F5),
-                    margin: EdgeInsets.only(bottom: 30),
+                    margin: EdgeInsets.only(bottom: 20),
                   ),
                   
                   // Invitation text
@@ -93,7 +95,7 @@ Positioned.fill(
                     ),
                     textAlign: TextAlign.center,
                   ),
-                  SizedBox(height: 40),
+                  SizedBox(height: 30),
                   
                   // Bride name
                   Text(
@@ -126,15 +128,15 @@ Positioned.fill(
                     ),
                     textAlign: TextAlign.center,
                   ),
-                  SizedBox(height: 50),
+                  SizedBox(height: 30),
                   
                   // Decorative line
                   Container(
                     width: 60,
                     height: 2,
                     color: Color(0xFFF5F5F5),
-                    margin: EdgeInsets.symmetric(vertical: 30),
                   ),
+                  SizedBox(height: 30),
                   
                   // Event date
                   Text(
@@ -146,7 +148,7 @@ Positioned.fill(
                     ),
                     textAlign: TextAlign.center,
                   ),
-                  SizedBox(height: 20),
+                  SizedBox(height: 12),
                   
                   // Event time
                   Text(
@@ -157,7 +159,7 @@ Positioned.fill(
                     ),
                     textAlign: TextAlign.center,
                   ),
-                  SizedBox(height: 50),
+                  SizedBox(height: 30),
                   
                   // Guest name placeholder
                   Container(
@@ -188,35 +190,74 @@ Positioned.fill(
                       ],
                     ),
                   ),
-                  SizedBox(height: 60),
-                  
-                  // Open invitation button
-                  ElevatedButton(
-                    onPressed: () {
-                      setState(() {
-                        _showInvitation = true;
-                      });
-                    },
-                    child: Row(
-                      mainAxisSize: MainAxisSize.min,
-                      children: [
-                        Text('Buka Undangan'),
-                        SizedBox(width: 12),
-                        Icon(Icons.arrow_forward, size: 18),
-                      ],
-                    ),
-                  ),
-                  SizedBox(height: 40),
-                  
-                  // Decorative line bottom
-                  Container(
-                    width: 60,
-                    height: 2,
-                    color: Color(0xFFF5F5F5),
+                ],
+              ),
+              
+              // Bottom Section
+              Column(
+                children: [
+                  // Couple nicknames with calligraphy style
+                  Row(
+                    mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                    children: [
+                      Column(
+                        crossAxisAlignment: CrossAxisAlignment.start,
+                        children: [
+                          Text(
+                            bridenickName,
+                            style: TextStyle(
+                              fontSize: 28,
+                              fontStyle: FontStyle.italic,
+                              color: Color(0xFFF5F5F5),
+                              fontFamily: 'Playfair Display',
+                              fontWeight: FontWeight.w600,
+                              letterSpacing: 1.5,
+                            ),
+                          ),
+                          SizedBox(height: 4),
+                          Text(
+                            '&',
+                            style: TextStyle(
+                              fontSize: 18,
+                              color: Color(0xFFB0B0B0),
+                              fontWeight: FontWeight.w300,
+                            ),
+                          ),
+                          SizedBox(height: 4),
+                          Text(
+                            groomnickName,
+                            style: TextStyle(
+                              fontSize: 28,
+                              fontStyle: FontStyle.italic,
+                              color: Color(0xFFF5F5F5),
+                              fontFamily: 'Playfair Display',
+                              fontWeight: FontWeight.w600,
+                              letterSpacing: 1.5,
+                            ),
+                          ),
+                        ],
+                      ),
+                      // Open invitation button
+                      ElevatedButton(
+                        onPressed: () {
+                          setState(() {
+                            _showInvitation = true;
+                          });
+                        },
+                        child: Row(
+                          mainAxisSize: MainAxisSize.min,
+                          children: [
+                            Text('Buka Undangan'),
+                            SizedBox(width: 12),
+                            Icon(Icons.arrow_forward, size: 18),
+                          ],
+                        ),
+                      ),
+                    ],
                   ),
                 ],
               ),
-            ),
+            ],
           ),
         ),
       ],

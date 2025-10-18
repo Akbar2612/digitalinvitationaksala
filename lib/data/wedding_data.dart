@@ -1,6 +1,7 @@
 const String brideName = 'S Linda Rohmana Wulansari';
 const String groomName = 'Moh Akbar Aulia Firdaus';
-
+const String groomnickName = 'Akbar';
+const String bridenickName = 'Wulan';
 // Data orang tua
 const String parentsBride = 'Bapak Rofiu Sakim & Ibu Sariyati';
 const String parentsGroom = 'Bapak Ali Basmanto & Ibu Eni Fitrianita';
