@@ -36751,7 +36751,7 @@ j=A.T(i)
 b=A.a7K(B.a0,e,new A.mq(B.a0,s,B.j,f,f,f,f,f,f,r,o,f,f,f,f,f,f,f,f,f,f,f,f,f,f,B.zn,B.j,f,f,q,n,f,f,f,f,f,f,f,f,f,f,f,f,f,f,f,f,f,p,m),new A.ph(l),new A.pY(A.aww(f,k,new A.bb(32,14,32,14),new A.de(A.fx(4),B.t),new A.cO(j,1.5,B.P,-1))),c,d,b,f)
 d=this.d
 d===$&&A.a()
-return new A.vO(new A.kO(d,f),"Undangan Pernikahan",b,!1,f)}}
+return new A.vO(new A.kO(d,f),"Akbar & Wulan Wedding Invitation",b,!1,f)}}
 A.kO.prototype={
 an(){return new A.LA(null,null)}}
 A.LA.prototype={
