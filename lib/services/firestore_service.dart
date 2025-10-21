@@ -46,4 +46,77 @@ class FirestoreService {
       return null;
     }
   }
+
+  // ===== UCAPAN METHODS =====
+  
+  // Menambahkan ucapan baru (versi lama - untuk backward compatibility)
+  Future<void> addUcapan(String name, String ucapan) async {
+    await _db.collection('ucapan').add({
+      'name': name,
+      'ucapan': ucapan,
+      'kehadiran': 'Hadir', // default
+      'createdAt': FieldValue.serverTimestamp(),
+    });
+  }
+
+  // Menambahkan ucapan baru dengan konfirmasi kehadiran
+  Future<void> addUcapanWithKehadiran(String name, String ucapan, String kehadiran) async {
+    await _db.collection('ucapan').add({
+      'name': name,
+      'ucapan': ucapan,
+      'kehadiran': kehadiran, // 'Hadir', 'Tidak Hadir', 'Ragu'
+      'createdAt': FieldValue.serverTimestamp(),
+    });
+  }
+
+  // Mendapatkan ucapan terbatas (limit)
+  Stream<QuerySnapshot> getUcapanLimited(int limit) {
+    return _db
+        .collection('ucapan')
+        .orderBy('createdAt', descending: true)
+        .limit(limit)
+        .snapshots();
+  }
+
+  // Mendapatkan semua ucapan
+  Stream<QuerySnapshot> getAllUcapan() {
+    return _db
+        .collection('ucapan')
+        .orderBy('createdAt', descending: true)
+        .snapshots();
+  }
+
+  // Menghapus ucapan (opsional, untuk admin)
+  Future<void> deleteUcapan(String docId) async {
+    await _db.collection('ucapan').doc(docId).delete();
+  }
+
+  // Mendapatkan statistik kehadiran
+  Future<Map<String, int>> getKehadiranStats() async {
+    final snapshot = await _db.collection('ucapan').get();
+    
+    int hadir = 0;
+    int tidakHadir = 0;
+    int ragu = 0;
+    
+    for (var doc in snapshot.docs) {
+      final data = doc.data();
+      final kehadiran = data['kehadiran'] ?? 'Hadir';
+      
+      if (kehadiran == 'Hadir') {
+        hadir++;
+      } else if (kehadiran == 'Tidak Hadir') {
+        tidakHadir++;
+      } else {
+        ragu++;
+      }
+    }
+    
+    return {
+      'hadir': hadir,
+      'tidakHadir': tidakHadir,
+      'ragu': ragu,
+      'total': snapshot.docs.length,
+    };
+  }
 }

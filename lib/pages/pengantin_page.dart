@@ -3,6 +3,7 @@ import 'package:digitalinvitationaksala/widgets/ayat_section.dart';
 import 'package:digitalinvitationaksala/widgets/carousel_section.dart';
 import 'package:digitalinvitationaksala/widgets/fotobiru_section.dart';
 import 'package:digitalinvitationaksala/widgets/love_story_section.dart';
+import 'package:digitalinvitationaksala/widgets/ucapan.dart';
 import 'package:flutter/material.dart';
 import 'package:google_fonts/google_fonts.dart';
 import 'package:just_audio/just_audio.dart';
@@ -49,13 +50,12 @@ class _CardPengantinPageState extends State<CardPengantinPage>
   final GlobalKey<State> _acaraKey = GlobalKey();
   final GlobalKey<State> _loveStoryKey = GlobalKey();
   final GlobalKey<State> _fotoKey = GlobalKey();
+  final GlobalKey<State> _ucapanKey = GlobalKey();
 
   @override
   void initState() {
     super.initState();
     _scrollController = ScrollController();
-    
-    // Gunakan audio player dari widget atau buat baru
     _audioPlayer = widget.audioPlayer ?? AudioPlayer();
     
     _titleController = AnimationController(
@@ -79,7 +79,6 @@ class _CardPengantinPageState extends State<CardPengantinPage>
       CurvedAnimation(parent: _groomController, curve: Curves.easeOutCubic),
     );
 
-    // Groom Parent Animation
     _groomParentController = AnimationController(
       duration: Duration(milliseconds: 700),
       vsync: this,
@@ -93,7 +92,6 @@ class _CardPengantinPageState extends State<CardPengantinPage>
           parent: _groomParentController, curve: Curves.easeOutCubic),
     );
 
-    // Love Icon Animation
     _loveController = AnimationController(
       duration: Duration(milliseconds: 600),
       vsync: this,
@@ -198,6 +196,9 @@ class _CardPengantinPageState extends State<CardPengantinPage>
         break;
       case 4: // FOTO
         _scrollToWidget(_fotoKey);
+        break;
+              case 5: //UCAPAN
+        _scrollToWidget(_ucapanKey);
         break;
     }
   }
@@ -440,6 +441,10 @@ class _CardPengantinPageState extends State<CardPengantinPage>
                             key: _fotoKey,
                             child: CarouselSection(),
                           ),
+                          Container(
+                            key: _ucapanKey,
+                            child: UcapanSection(),
+                          ),
                           SizedBox(height: 100), 
                         ],
                       ),
@@ -508,6 +513,11 @@ class _CardPengantinPageState extends State<CardPengantinPage>
                         icon: Icons.photo_library,
                         label: 'FOTO',
                         index: 4,
+                      ),
+                        _buildMenuButton(
+                        icon: Icons.chat_sharp,
+                        label: 'UCAPAN',
+                        index: 5,
                       ),
                     ],
                   ),
