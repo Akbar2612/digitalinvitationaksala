@@ -3,11 +3,13 @@ import 'package:flutter/material.dart';
 import 'package:google_fonts/google_fonts.dart';
 import 'package:just_audio/just_audio.dart';
 import '../data/wedding_data.dart';
+import '../services/firestore_service.dart';
 
 class HomePage extends StatefulWidget {
   final AudioPlayer audioPlayer;
+  final String? guestSlug;
 
-  HomePage({required this.audioPlayer});
+  HomePage({required this.audioPlayer, this.guestSlug});
 
   @override
   State<HomePage> createState() => _HomePageState();
@@ -15,6 +17,11 @@ class HomePage extends StatefulWidget {
 
 class _HomePageState extends State<HomePage> with TickerProviderStateMixin {
   late AnimationController _animationController;
+  final _firestoreService = FirestoreService();
+  
+  String guestName = 'Tamu Undangan';
+  String guestAddress = '';
+  bool isLoading = true;
 
   @override
   void initState() {
@@ -23,11 +30,46 @@ class _HomePageState extends State<HomePage> with TickerProviderStateMixin {
       duration: const Duration(milliseconds: 3000),
       vsync: this,
     );
+    
+    _loadGuestData();
+    
     Future.delayed(Duration(milliseconds: 200), () {
       if (mounted) {
         _animationController.forward();
       }
     });
+  }
+
+  Future<void> _loadGuestData() async {
+    if (widget.guestSlug != null && widget.guestSlug!.isNotEmpty) {
+      try {
+        print('Loading guest data for slug: ${widget.guestSlug}');
+        final guestData = await _firestoreService.getGuestBySlug(widget.guestSlug!);
+        
+        if (guestData != null && mounted) {
+          setState(() {
+            guestName = guestData['name'] ?? 'Tamu Undangan';
+            guestAddress = guestData['address'] ?? '';
+            isLoading = false;
+          });
+          print('Guest data loaded: $guestName, $guestAddress');
+        } else {
+          print('Guest not found');
+          setState(() {
+            isLoading = false;
+          });
+        }
+      } catch (e) {
+        print('Error loading guest data: $e');
+        setState(() {
+          isLoading = false;
+        });
+      }
+    } else {
+      setState(() {
+        isLoading = false;
+      });
+    }
   }
 
   @override
@@ -62,7 +104,13 @@ class _HomePageState extends State<HomePage> with TickerProviderStateMixin {
             ],
           ),
         ),
-        child: isMobile ? _buildMobileView() : _buildDesktopNotAvailable(),
+        child: isLoading
+            ? Center(
+                child: CircularProgressIndicator(
+                  color: Color(0xFFD4AF37),
+                ),
+              )
+            : (isMobile ? _buildMobileView() : _buildDesktopNotAvailable()),
       ),
     );
   }
@@ -152,7 +200,7 @@ class _HomePageState extends State<HomePage> with TickerProviderStateMixin {
                   SizedBox(height: 20),
                   _buildStyledTamuCard(textIndex++),
                   SizedBox(height: 10),
-                    _buildAnimatedText(
+                  _buildAnimatedText(
                     text: 'Selasa, 09 Desember 2025',
                     style: TextStyle(
                       fontSize: 16,
@@ -173,92 +221,93 @@ class _HomePageState extends State<HomePage> with TickerProviderStateMixin {
     );
   }
 
-Widget _buildStyledTamuCard(int textIndex) {
-  final animation = Tween<double>(begin: 0, end: 1).animate(
-    CurvedAnimation(
-      parent: _animationController,
-      curve: Interval(
-        (textIndex * 150) / 3000,
-        ((textIndex * 150) + 400) / 3000,
-        curve: Curves.easeOut,
+  Widget _buildStyledTamuCard(int textIndex) {
+    final animation = Tween<double>(begin: 0, end: 1).animate(
+      CurvedAnimation(
+        parent: _animationController,
+        curve: Interval(
+          (textIndex * 150) / 3000,
+          ((textIndex * 150) + 400) / 3000,
+          curve: Curves.easeOut,
+        ),
       ),
-    ),
-  );
+    );
 
-  return AnimatedBuilder(
-    animation: animation,
-    builder: (context, child) {
-      return Transform.translate(
-        offset: Offset(0, 20 * (1 - animation.value)),
-        child: Opacity(
-          opacity: animation.value,
-          child: child,
-        ),
-      );
-    },
-    child: Column(
-      crossAxisAlignment: CrossAxisAlignment.start,
-      mainAxisSize: MainAxisSize.min,
-      children: [
-        _buildAnimatedText(
-          text: 'Kepada Yth. Bapak/Ibu/Saudara/i',
-          style: TextStyle(
-            fontSize: 13,
-            color: Color(0xFFB0B0B0),
-            fontWeight: FontWeight.w500,
-            letterSpacing: 0.3,
+    return AnimatedBuilder(
+      animation: animation,
+      builder: (context, child) {
+        return Transform.translate(
+          offset: Offset(0, 20 * (1 - animation.value)),
+          child: Opacity(
+            opacity: animation.value,
+            child: child,
           ),
-          index: textIndex++,
-        ),
-        SizedBox(height: 8),
-        Container(
-          padding: EdgeInsets.symmetric(horizontal: 24, vertical: 16),
-          decoration: BoxDecoration(
-            border: Border.all(
-              color: Color(0xFFD4AF37),
-              width: 1.5,
+        );
+      },
+      child: Column(
+        crossAxisAlignment: CrossAxisAlignment.start,
+        mainAxisSize: MainAxisSize.min,
+        children: [
+          _buildAnimatedText(
+            text: 'Kepada Yth. Bapak/Ibu/Saudara/i',
+            style: TextStyle(
+              fontSize: 13,
+              color: Color(0xFFB0B0B0),
+              fontWeight: FontWeight.w500,
+              letterSpacing: 0.3,
             ),
-            borderRadius: BorderRadius.circular(10),
-            gradient: LinearGradient(
-              begin: Alignment.topLeft,
-              end: Alignment.bottomRight,
-              colors: [
-                Color(0xFFD4AF37).withOpacity(0.08),
-                Color(0xFFD4AF37).withOpacity(0.03),
+            index: textIndex++,
+          ),
+          SizedBox(height: 8),
+          Container(
+            padding: EdgeInsets.symmetric(horizontal: 24, vertical: 16),
+            decoration: BoxDecoration(
+              border: Border.all(
+                color: Color(0xFFD4AF37),
+                width: 1.5,
+              ),
+              borderRadius: BorderRadius.circular(10),
+              gradient: LinearGradient(
+                begin: Alignment.topLeft,
+                end: Alignment.bottomRight,
+                colors: [
+                  Color(0xFFD4AF37).withOpacity(0.08),
+                  Color(0xFFD4AF37).withOpacity(0.03),
+                ],
+              ),
+            ),
+            child: Column(
+              crossAxisAlignment: CrossAxisAlignment.start,
+              mainAxisSize: MainAxisSize.min,
+              children: [
+                _buildAnimatedText(
+                  text: guestName,
+                  style: TextStyle(
+                    fontSize: 20,
+                    fontWeight: FontWeight.bold,
+                    color: Color(0xFFD4AF37),
+                    letterSpacing: 0.5,
+                  ),
+                  index: textIndex++,
+                ),
+                if (guestAddress.isNotEmpty) ...[
+                  SizedBox(height: 6),
+                  _buildAnimatedText(
+                    text: guestAddress,
+                    style: TextStyle(
+                      fontSize: 14,
+                      color: Colors.white70,
+                    ),
+                    index: textIndex++,
+                  ),
+                ],
               ],
             ),
           ),
-          child: Column(
-            crossAxisAlignment: CrossAxisAlignment.start,
-            mainAxisSize: MainAxisSize.min,
-            children: [
-              _buildAnimatedText(
-                text: 'Nama Tamu Contoh',
-                style: TextStyle(
-                  fontSize: 20,
-                  fontWeight: FontWeight.bold,
-                  color: Color(0xFFD4AF37),
-                  letterSpacing: 0.5,
-                ),
-                index: textIndex++,
-              ),
-              SizedBox(height: 6),
-              _buildAnimatedText(
-                text: 'Jl. Mawar No. 10, Bandung',
-                style: TextStyle(
-                  fontSize: 14,
-                  color: Colors.white70,
-                ),
-                index: textIndex++,
-              ),
-            ],
-          ),
-        ),
-      ],
-    ),
-  );
-}
-
+        ],
+      ),
+    );
+  }
 
   Widget _buildOpenInvitationButton(int textIndex) {
     return AnimatedBuilder(

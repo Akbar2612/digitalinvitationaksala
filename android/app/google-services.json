@@ -1,0 +1,29 @@
+{
+  "project_info": {
+    "project_number": "425075701231",
+    "project_id": "aksalainvite",
+    "storage_bucket": "aksalainvite.firebasestorage.app"
+  },
+  "client": [
+    {
+      "client_info": {
+        "mobilesdk_app_id": "1:425075701231:android:6bea012cb594188596b21a",
+        "android_client_info": {
+          "package_name": "com.example.digitalinvitationaksala"
+        }
+      },
+      "oauth_client": [],
+      "api_key": [
+        {
+          "current_key": "AIzaSyBWDU0HoWOvn3hCeGNYZ9GJPnyhLAdbXqU"
+        }
+      ],
+      "services": {
+        "appinvite_service": {
+          "other_platform_oauth_client": []
+        }
+      }
+    }
+  ],
+  "configuration_version": "1"
+}

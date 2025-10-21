@@ -5,7 +5,7 @@ class LoveStorySection extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return Padding(
-      padding: EdgeInsets.symmetric(horizontal: 20, vertical: 32),
+      padding: EdgeInsets.symmetric(horizontal: 20, vertical: 24),
       child: Column(
         crossAxisAlignment: CrossAxisAlignment.center,
         children: [
@@ -21,7 +21,7 @@ class LoveStorySection extends StatelessWidget {
             textAlign: TextAlign.center,
           ),
 
-          SizedBox(height: 8),
+          SizedBox(height: 4),
 
           // Divider Line
           Container(
@@ -38,7 +38,7 @@ class LoveStorySection extends StatelessWidget {
             ),
           ),
 
-          SizedBox(height: 16),
+          SizedBox(height: 8),
 
           // Subtitle
           Text(
@@ -52,17 +52,17 @@ class LoveStorySection extends StatelessWidget {
             textAlign: TextAlign.center,
           ),
 
-          SizedBox(height: 32),
+          SizedBox(height: 16),
 
           // Story Cards
           _buildStoryCard(
             title: 'Kencan Pertama',
             date: '17 Agustus 2021',
             description:
-                'Kami belum tahu pasti kapan rasa itu tumbuh mungkin dari senyuman yang singkat, sapaan ringan yang canggung, atau obrolan sederhana lewat pesan teks. Namun yang kami ingat, kencan pertama itu membawa arti. Bersepeda motor ke Pacet, Mojokerto, di tengah semarak HUT RI ke-76, kami menikmati alam dan suasana penuh warna. Sejak saat itu, hati kami perlahan saling terikat.',
+                'Kami belum tahu pasti kapan rasa itu tumbuh mungkin dari senyuman yang singkat, sapaan ringan yang canggung, atau obrolan sederhana lewat pesan teks. Namun yang kami ingat, kencan pertama itu membawa arti. Bersepeda motor ke Mojokerto sampai Batu, di tengah semarak HUT RI ke-76, kami menikmati alam dan suasana penuh warna. Sejak saat itu, hati kami perlahan saling terikat.',
           ),
 
-          SizedBox(height: 16),
+          SizedBox(height: 12),
 
           _buildStoryCard(
             title: 'Perjalanan Menjalin Asmara',
@@ -71,7 +71,7 @@ class LoveStorySection extends StatelessWidget {
                 'Waktu berjalan, kisah kami tumbuh bersama. Kami belajar mencintai bukan hanya dalam bahagia, tapi juga dalam perjuangan. Menemani satu sama lain melewati masa perkuliahan, organisasi, dan hiruk pikuk dunia muda. Di antara tumpukan tugas, segelas kopi, dan semangat yang tak pernah padam, kami menemukan arti saling mendukung. Kami belajar bahwa cinta bukan hanya rasa, melainkan kesediaan untuk tumbuh bersama.',
           ),
 
-          SizedBox(height: 24),
+          SizedBox(height: 12),
 
           _buildStoryCard(
             title: 'Perjumpaan dengan Orang Tua',
@@ -80,7 +80,7 @@ class LoveStorySection extends StatelessWidget {
                 'Tahun itu, cinta kami mulai melangkah lebih pasti. Kami mempertemukan dua keluarga, dua dunia yang berbeda namun disatukan oleh niat yang sama. Pertemuan itu sederhana, namun hangat. Di sana kami melihat restu, dan dalam restu itu kami menemukan ketenangan untuk melangkah lebih jauh.',
           ),
 
-          SizedBox(height: 24),
+          SizedBox(height: 12),
 
           _buildStoryCard(
             title: 'Lamaran',
@@ -89,7 +89,7 @@ class LoveStorySection extends StatelessWidget {
                 'Hari di mana niat berubah menjadi janji. Kami memutuskan untuk mengikat cinta dalam langkah yang lebih sakral. Dengan doa yang mengalun dan tatapan penuh harap, kami menyematkan komitmen bukan hanya untuk hari ini, tetapi untuk hari-hari yang akan datang.',
           ),
 
-          SizedBox(height: 24),
+          SizedBox(height: 12),
 
           _buildStoryCard(
             title: 'Akad Nikah',
@@ -98,7 +98,7 @@ class LoveStorySection extends StatelessWidget {
                 'Hari yang dinanti pun tiba. Di hadapan keluarga dan dengan ridha Allah SWT, kami mengikat janji suci untuk saling menjaga dan mencintai. Dari pertemuan yang sederhana hingga ikrar di pelaminan, kami percaya inilah takdir indah yang telah Allah tuliskan untuk kami.',
           ),
 
-          SizedBox(height: 24),
+          SizedBox(height: 12),
 
           _buildClosingCard(),
         ],
@@ -112,7 +112,7 @@ class LoveStorySection extends StatelessWidget {
     required String description,
   }) {
     return Container(
-      padding: EdgeInsets.all(24),
+      padding: EdgeInsets.all(16),
       decoration: BoxDecoration(
         color: Color(0xFFF5F5F5).withOpacity(0.05),
         borderRadius: BorderRadius.circular(12),
@@ -135,7 +135,7 @@ class LoveStorySection extends StatelessWidget {
             textAlign: TextAlign.center,
           ),
 
-          SizedBox(height: 8),
+          SizedBox(height: 4),
 
           // Date
           Text(
@@ -149,7 +149,7 @@ class LoveStorySection extends StatelessWidget {
             textAlign: TextAlign.center,
           ),
 
-          SizedBox(height: 16),
+          SizedBox(height: 10),
 
           // Divider
           Container(
@@ -157,7 +157,7 @@ class LoveStorySection extends StatelessWidget {
             color: Color(0xFFF5F5F5).withOpacity(0.1),
           ),
 
-          SizedBox(height: 16),
+          SizedBox(height: 10),
 
           // Description
           Text(
@@ -166,7 +166,7 @@ class LoveStorySection extends StatelessWidget {
               fontSize: 13,
               fontWeight: FontWeight.w400,
               color: Color(0xFFE0E0E0),
-              height: 1.8,
+              height: 1.6,
             ),
             textAlign: TextAlign.center,
           ),
@@ -177,7 +177,7 @@ class LoveStorySection extends StatelessWidget {
 
   Widget _buildClosingCard() {
     return Container(
-      padding: EdgeInsets.all(24),
+      padding: EdgeInsets.all(16),
       decoration: BoxDecoration(
         color: Color(0xFFF5F5F5).withOpacity(0.05),
         borderRadius: BorderRadius.circular(12),
@@ -200,7 +200,7 @@ class LoveStorySection extends StatelessWidget {
             textAlign: TextAlign.center,
           ),
 
-          SizedBox(height: 16),
+          SizedBox(height: 10),
 
           // Divider
           Container(
@@ -208,7 +208,7 @@ class LoveStorySection extends StatelessWidget {
             color: Color(0xFFD4AF37).withOpacity(0.3),
           ),
 
-          SizedBox(height: 16),
+          SizedBox(height: 10),
 
           // Closing Text
           Text(
@@ -217,7 +217,7 @@ class LoveStorySection extends StatelessWidget {
               fontSize: 13,
               fontWeight: FontWeight.w400,
               color: Color(0xFFE0E0E0),
-              height: 1.8,
+              height: 1.6,
             ),
             textAlign: TextAlign.center,
           ),

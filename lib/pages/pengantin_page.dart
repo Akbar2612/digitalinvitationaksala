@@ -1,8 +1,7 @@
-import 'package:digitalinvitationaksala/widgets/acara_section.dart';
+import 'package:digitalinvitationaksala/widgets/acaralokasi_section.dart';
 import 'package:digitalinvitationaksala/widgets/ayat_section.dart';
 import 'package:digitalinvitationaksala/widgets/carousel_section.dart';
 import 'package:digitalinvitationaksala/widgets/fotobiru_section.dart';
-import 'package:digitalinvitationaksala/widgets/lokasi_section.dart';
 import 'package:digitalinvitationaksala/widgets/love_story_section.dart';
 import 'package:flutter/material.dart';
 import 'package:google_fonts/google_fonts.dart';
@@ -46,10 +45,10 @@ class _CardPengantinPageState extends State<CardPengantinPage>
   bool _isMuted = false;
   late AudioPlayer _audioPlayer;
   
+  final GlobalKey<State> _pengantinKey = GlobalKey();
   final GlobalKey<State> _acaraKey = GlobalKey();
-  final GlobalKey<State> _lokasiKey = GlobalKey();
-  final GlobalKey<State> _fotoKey = GlobalKey();
   final GlobalKey<State> _loveStoryKey = GlobalKey();
+  final GlobalKey<State> _fotoKey = GlobalKey();
 
   @override
   void initState() {
@@ -189,18 +188,13 @@ class _CardPengantinPageState extends State<CardPengantinPage>
         );
         break;
       case 1: // PENGANTIN
-        // Scroll ke atas halaman
-        _scrollController.animateTo(
-          0,
-          duration: Duration(milliseconds: 800),
-          curve: Curves.easeInOut,
-        );
+        _scrollToWidget(_pengantinKey);
         break;
-      case 2: // ACARA
+      case 2: // ACARA & LOKASI
         _scrollToWidget(_acaraKey);
         break;
-      case 3: // LOKASI
-        _scrollToWidget(_lokasiKey);
+      case 3: // LOVE STORY
+        _scrollToWidget(_loveStoryKey);
         break;
       case 4: // FOTO
         _scrollToWidget(_fotoKey);
@@ -429,23 +423,22 @@ class _CardPengantinPageState extends State<CardPengantinPage>
                       color: Color(0xFF1a1a1a),
                       child: Column(
                         children: [
-                          FotoSection(),
+                          Container(
+                            key: _pengantinKey,
+                            child: FotoSection(),
+                          ),
                           AyatSuciSection(),
                           Container(
                             key: _acaraKey,
-                            child: AcaraSection(),
-                          ),
-                          Container(
-                            key: _lokasiKey,
-                            child: LokasiSection(),
-                          ),
-                          Container(
-                            key: _fotoKey,
-                            child: CarouselSection(),
+                            child: AcaraLokasiSection(),
                           ),
                           Container(
                             key: _loveStoryKey,
                             child: LoveStorySection(),
+                          ),
+                          Container(
+                            key: _fotoKey,
+                            child: CarouselSection(),
                           ),
                           SizedBox(height: 100), 
                         ],
@@ -456,24 +449,30 @@ class _CardPengantinPageState extends State<CardPengantinPage>
               ],
             ),
           ),
-          // Floating Menu
+          // Floating Menu - Updated Design
           Positioned(
             bottom: 0,
             left: 0,
             right: 0,
             child: Container(
               decoration: BoxDecoration(
-                color: Color(0xFF1a1a1a),
+                color: Color(0xFF1a1a1a).withOpacity(0.95),
                 border: Border(
                   top: BorderSide(
-                    color: Color(0xFFD4AF37).withOpacity(0.3),
-                    width: 1,
+                    color: Color(0xFFD4AF37).withOpacity(0.4),
+                    width: 2,
                   ),
                 ),
                 boxShadow: [
                   BoxShadow(
-                    color: Colors.black.withOpacity(0.5),
-                    blurRadius: 10,
+                    color: Color(0xFFD4AF37).withOpacity(0.15),
+                    blurRadius: 20,
+                    offset: Offset(0, -8),
+                    spreadRadius: 2,
+                  ),
+                  BoxShadow(
+                    color: Colors.black.withOpacity(0.6),
+                    blurRadius: 15,
                     offset: Offset(0, -5),
                   ),
                 ],
@@ -481,7 +480,7 @@ class _CardPengantinPageState extends State<CardPengantinPage>
               child: SafeArea(
                 top: false,
                 child: Padding(
-                  padding: EdgeInsets.symmetric(vertical: 12, horizontal: 8),
+                  padding: EdgeInsets.symmetric(vertical: 14, horizontal: 8),
                   child: Row(
                     mainAxisAlignment: MainAxisAlignment.spaceEvenly,
                     children: [
@@ -497,12 +496,12 @@ class _CardPengantinPageState extends State<CardPengantinPage>
                       ),
                       _buildMenuButton(
                         icon: Icons.calendar_month,
-                        label: 'ACARA',
+                        label: 'ACARA & LOKASI',
                         index: 2,
                       ),
                       _buildMenuButton(
-                        icon: Icons.location_on,
-                        label: 'LOKASI',
+                        icon: Icons.favorite_border,
+                        label: 'LOVE STORY',
                         index: 3,
                       ),
                       _buildMenuButton(
@@ -516,22 +515,56 @@ class _CardPengantinPageState extends State<CardPengantinPage>
               ),
             ),
           ),
-          // Floating Mute Button
+          // Floating Mute Button - Updated Design
           Positioned(
-            bottom: 120,
+            bottom: 130,
             right: 20,
-            child: FloatingActionButton(
-              onPressed: _toggleMute,
-              backgroundColor: _isMuted
-                  ? Color(0xFFD4AF37)
-                  : Color(0xFF1a1a1a),
-              elevation: 8,
-              child: Icon(
-                _isMuted ? Icons.volume_off : Icons.volume_up,
-                color: _isMuted
-                    ? Color(0xFF1a1a1a)
-                    : Color(0xFFD4AF37),
-                size: 28,
+            child: GestureDetector(
+              onTap: _toggleMute,
+              child: Container(
+                height: 56,
+                width: 56,
+                decoration: BoxDecoration(
+                  shape: BoxShape.circle,
+                  gradient: LinearGradient(
+                    begin: Alignment.topLeft,
+                    end: Alignment.bottomRight,
+                    colors: _isMuted
+                        ? [
+                            Color(0xFFD4AF37).withOpacity(0.9),
+                            Color(0xFFC9A227).withOpacity(0.9),
+                          ]
+                        : [
+                            Color(0xFF1a1a1a),
+                            Color(0xFF0f0f0f),
+                          ],
+                  ),
+                  border: Border.all(
+                    color: Color(0xFFD4AF37).withOpacity(_isMuted ? 0.3 : 0.6),
+                    width: 2,
+                  ),
+                  boxShadow: [
+                    BoxShadow(
+                      color: Color(0xFFD4AF37).withOpacity(_isMuted ? 0.4 : 0.2),
+                      blurRadius: 15,
+                      spreadRadius: 2,
+                    ),
+                    BoxShadow(
+                      color: Colors.black.withOpacity(0.4),
+                      blurRadius: 8,
+                      offset: Offset(0, 4),
+                    ),
+                  ],
+                ),
+                child: Center(
+                  child: Icon(
+                    _isMuted ? Icons.volume_off : Icons.volume_up,
+                    color: _isMuted
+                        ? Color(0xFF1a1a1a)
+                        : Color(0xFFD4AF37),
+                    size: 26,
+                  ),
+                ),
               ),
             ),
           ),
@@ -549,44 +582,68 @@ class _CardPengantinPageState extends State<CardPengantinPage>
 
     return InkWell(
       onTap: () => _onMenuItemTapped(index),
-      child: Column(
-        mainAxisSize: MainAxisSize.min,
-        children: [
-          Container(
-            padding: EdgeInsets.all(8),
-            decoration: BoxDecoration(
-              color: isSelected
-                  ? Color(0xFFD4AF37).withOpacity(0.2)
-                  : Colors.transparent,
-              borderRadius: BorderRadius.circular(8),
-              border: Border.all(
+      splashColor: Color(0xFFD4AF37).withOpacity(0.2),
+      highlightColor: Colors.transparent,
+      child: AnimatedContainer(
+        duration: Duration(milliseconds: 300),
+        curve: Curves.easeInOut,
+        child: Column(
+          mainAxisSize: MainAxisSize.min,
+          children: [
+            Container(
+              padding: EdgeInsets.all(10),
+              decoration: BoxDecoration(
                 color: isSelected
-                    ? Color(0xFFD4AF37)
+                    ? Color(0xFFD4AF37).withOpacity(0.15)
                     : Colors.transparent,
-                width: 1.5,
+                borderRadius: BorderRadius.circular(12),
+                border: Border.all(
+                  color: isSelected
+                      ? Color(0xFFD4AF37)
+                      : Colors.transparent,
+                  width: 1.5,
+                ),
+                boxShadow: isSelected
+                    ? [
+                        BoxShadow(
+                          color: Color(0xFFD4AF37).withOpacity(0.2),
+                          blurRadius: 8,
+                          spreadRadius: 1,
+                        ),
+                      ]
+                    : [],
+              ),
+              child: AnimatedDefaultTextStyle(
+                duration: Duration(milliseconds: 200),
+                style: TextStyle(
+                  color: isSelected
+                      ? Color(0xFFD4AF37)
+                      : Color(0xFFB0B0B0),
+                ),
+                child: Icon(
+                  icon,
+                  color: isSelected
+                      ? Color(0xFFD4AF37)
+                      : Color(0xFFB0B0B0),
+                  size: 24,
+                ),
               ),
             ),
-            child: Icon(
-              icon,
-              color: isSelected
-                  ? Color(0xFFD4AF37)
-                  : Color(0xFFB0B0B0),
-              size: 24,
+            SizedBox(height: 6),
+            AnimatedDefaultTextStyle(
+              duration: Duration(milliseconds: 200),
+              style: TextStyle(
+                fontSize: 8.5,
+                color: isSelected
+                    ? Color(0xFFD4AF37)
+                    : Color(0xFFB0B0B0),
+                fontWeight: isSelected ? FontWeight.w700 : FontWeight.w500,
+                letterSpacing: 0.8,
+              ),
+              child: Text(label),
             ),
-          ),
-          SizedBox(height: 4),
-          Text(
-            label,
-            style: TextStyle(
-              fontSize: 9,
-              color: isSelected
-                  ? Color(0xFFD4AF37)
-                  : Color(0xFFB0B0B0),
-              fontWeight: isSelected ? FontWeight.w600 : FontWeight.w400,
-              letterSpacing: 0.5,
-            ),
-          ),
-        ],
+          ],
+        ),
       ),
     );
   }
