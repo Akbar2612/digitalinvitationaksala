@@ -1,3 +1,4 @@
+import 'package:digitalinvitationaksala/data/wedding_data.dart';
 import 'package:digitalinvitationaksala/pages/home_page.dart';
 import 'package:digitalinvitationaksala/widgets/admin_kelola_komentar.dart';
 import 'package:flutter/material.dart';
@@ -50,17 +51,170 @@ class _AdminPageState extends State<AdminPage> {
 
   @override
   Widget build(BuildContext context) {
-    return Scaffold(
-      backgroundColor: Colors.white,
-      body: SafeArea(
-        child: Row(
+    return LayoutBuilder(
+      builder: (context, constraints) {
+        final bool isMobile = constraints.maxWidth < 800;
+
+        return Scaffold(
+          backgroundColor: Colors.white,
+          appBar: isMobile ? _buildMobileAppBar() : null,
+          drawer: isMobile ? _buildMobileDrawer() : null,
+          body: SafeArea(
+            child: isMobile ? _buildMobileLayout() : _buildDesktopLayout(),
+          ),
+        );
+      },
+    );
+  }
+
+  // ==================== MOBILE LAYOUT ====================
+
+  PreferredSizeWidget _buildMobileAppBar() {
+    return AppBar(
+      elevation: 2,
+      backgroundColor: darkNavy,
+      leading: Builder(
+        builder: (context) => IconButton(
+          icon: const Icon(Icons.menu, color: Colors.white),
+          onPressed: () => Scaffold.of(context).openDrawer(),
+        ),
+      ),
+      title: Column(
+        crossAxisAlignment: CrossAxisAlignment.start,
+        children: [
+          Text(
+            'AKSALA',
+            style: GoogleFonts.poppins(
+              fontSize: 16,
+              fontWeight: FontWeight.w700,
+              color: Colors.white,
+            ),
+          ),
+          Text(
+            _menuItems[_selectedIndex].title,
+            style: GoogleFonts.poppins(
+              fontSize: 11,
+              fontWeight: FontWeight.w400,
+              color: orange,
+            ),
+          ),
+        ],
+      ),
+      actions: [
+        IconButton(
+          icon: Icon(Icons.visibility, color: orange),
+          onPressed: () {
+            Navigator.push(
+              context,
+              MaterialPageRoute(
+                builder: (context) => HomePage(audioPlayer: AudioPlayer()),
+              ),
+            );
+          },
+        ),
+      ],
+    );
+  }
+
+  Widget _buildMobileDrawer() {
+    return Drawer(
+      child: Container(
+        decoration: BoxDecoration(
+          gradient: LinearGradient(
+            begin: Alignment.topLeft,
+            end: Alignment.bottomRight,
+            colors: [darkNavy, navyBlue],
+          ),
+        ),
+        child: Column(
           children: [
-            _buildSidebar(),
-            Expanded(
+            Container(
+              padding: const EdgeInsets.all(24),
               child: Column(
                 children: [
-                  _buildTopBar(),
-                  Expanded(child: _buildContent()),
+                  const SizedBox(height: 20),
+                  Container(
+                    width: 70,
+                    height: 70,
+                    decoration: BoxDecoration(
+                      shape: BoxShape.circle,
+                      gradient: LinearGradient(
+                        colors: [lightBlue, lightBlue.withOpacity(0.6)],
+                      ),
+                      border: Border.all(color: Colors.white, width: 3),
+                    ),
+                    child: const Icon(
+                      Icons.favorite,
+                      color: Colors.white,
+                      size: 32,
+                    ),
+                  ),
+                  const SizedBox(height: 12),
+                  Text(
+                    groomnickName + ' & ' + bridenickName,
+                    style: GoogleFonts.poppins(
+                      fontSize: 18,
+                      fontWeight: FontWeight.w700,
+                      color: Colors.white,
+                    ),
+                  ),
+                  const SizedBox(height: 8),
+                  Container(
+                    padding: const EdgeInsets.symmetric(
+                      horizontal: 12,
+                      vertical: 6,
+                    ),
+                    decoration: BoxDecoration(
+                      gradient: LinearGradient(colors: [orange, yellow]),
+                      borderRadius: BorderRadius.circular(20),
+                    ),
+                    child: Text(
+                      'DASHBOARD ADMIN',
+                      style: GoogleFonts.poppins(
+                        fontSize: 10,
+                        fontWeight: FontWeight.w700,
+                        color: Colors.white,
+                        letterSpacing: 1.0,
+                      ),
+                    ),
+                  ),
+                ],
+              ),
+            ),
+            const Divider(color: Colors.white30, height: 1),
+            Expanded(
+              child: ListView.builder(
+                padding: const EdgeInsets.symmetric(
+                  horizontal: 12,
+                  vertical: 16,
+                ),
+                itemCount: _menuItems.length,
+                itemBuilder: (context, index) {
+                  return _buildMobileMenuItem(index);
+                },
+              ),
+            ),
+            Container(
+              padding: const EdgeInsets.all(16),
+              child: Column(
+                children: [
+                  const Divider(color: Colors.white30),
+                  const SizedBox(height: 8),
+                  Text(
+                    'By Aksala Creative Media',
+                    style: GoogleFonts.poppins(
+                      fontSize: 11,
+                      fontWeight: FontWeight.w600,
+                      color: Colors.white,
+                    ),
+                  ),
+                  Text(
+                    '@2025',
+                    style: GoogleFonts.poppins(
+                      fontSize: 9,
+                      color: Colors.white60,
+                    ),
+                  ),
                 ],
               ),
             ),
@@ -70,7 +224,98 @@ class _AdminPageState extends State<AdminPage> {
     );
   }
 
-  Widget _buildSidebar() {
+  Widget _buildMobileMenuItem(int index) {
+    final item = _menuItems[index];
+    final isSelected = _selectedIndex == index;
+
+    return Container(
+      margin: const EdgeInsets.only(bottom: 8),
+      child: Material(
+        color: Colors.transparent,
+        child: InkWell(
+          onTap: () {
+            setState(() {
+              _selectedIndex = index;
+            });
+            Navigator.pop(context); // Close drawer
+          },
+          borderRadius: BorderRadius.circular(12),
+          child: Container(
+            padding: const EdgeInsets.symmetric(horizontal: 12, vertical: 12),
+            decoration: BoxDecoration(
+              gradient: isSelected
+                  ? LinearGradient(
+                      colors: [lightBlue, lightBlue.withOpacity(0.7)],
+                    )
+                  : null,
+              borderRadius: BorderRadius.circular(12),
+              border: Border.all(
+                color: isSelected
+                    ? Colors.white.withOpacity(0.3)
+                    : Colors.transparent,
+              ),
+            ),
+            child: Row(
+              children: [
+                Icon(
+                  item.icon,
+                  color: isSelected ? Colors.white : Colors.white70,
+                  size: 20,
+                ),
+                const SizedBox(width: 12),
+                Expanded(
+                  child: Column(
+                    crossAxisAlignment: CrossAxisAlignment.start,
+                    children: [
+                      Text(
+                        item.title,
+                        style: GoogleFonts.poppins(
+                          fontSize: 13,
+                          fontWeight: FontWeight.w600,
+                          color: isSelected ? Colors.white : Colors.white70,
+                        ),
+                      ),
+                      Text(
+                        item.subtitle,
+                        style: GoogleFonts.poppins(
+                          fontSize: 10,
+                          color: isSelected ? Colors.white70 : Colors.white54,
+                        ),
+                      ),
+                    ],
+                  ),
+                ),
+              ],
+            ),
+          ),
+        ),
+      ),
+    );
+  }
+
+  Widget _buildMobileLayout() {
+    return Container(color: lightGray.withOpacity(0.3), child: _buildContent());
+  }
+
+  // ==================== DESKTOP LAYOUT ====================
+
+  Widget _buildDesktopLayout() {
+    return Row(
+      children: [
+        _buildDesktopSidebar(),
+        Expanded(
+          child: Column(
+            children: [
+              _buildDesktopTopBar(),
+              Expanded(child: _buildContent()),
+            ],
+          ),
+        ),
+      ],
+    );
+  }
+
+  Widget _buildDesktopSidebar() {
     return Container(
       width: 280,
       decoration: BoxDecoration(
@@ -117,9 +362,8 @@ class _AdminPageState extends State<AdminPage> {
                   ),
                 ),
                 const SizedBox(height: 16),
-
                 Text(
-                  'Akbar & Wulan',
+                  groomnickName + ' & ' + bridenickName,
                   style: GoogleFonts.poppins(
                     fontSize: 20,
                     fontWeight: FontWeight.w700,
@@ -185,7 +429,7 @@ class _AdminPageState extends State<AdminPage> {
               padding: const EdgeInsets.symmetric(horizontal: 12),
               itemCount: _menuItems.length,
               itemBuilder: (context, index) {
-                return _buildMenuItem(index);
+                return _buildDesktopMenuItem(index);
               },
             ),
           ),
@@ -238,7 +482,7 @@ class _AdminPageState extends State<AdminPage> {
     );
   }
 
-  Widget _buildMenuItem(int index) {
+  Widget _buildDesktopMenuItem(int index) {
     final item = _menuItems[index];
     final isSelected = _selectedIndex == index;
 
@@ -250,9 +494,6 @@ class _AdminPageState extends State<AdminPage> {
           onTap: () {
             setState(() {
               _selectedIndex = index;
-              print(
-                "🧭 Navigasi ke halaman index $_selectedIndex (${item.title})",
-              );
             });
           },
           borderRadius: BorderRadius.circular(12),
@@ -335,7 +576,7 @@ class _AdminPageState extends State<AdminPage> {
     );
   }
 
-  Widget _buildTopBar() {
+  Widget _buildDesktopTopBar() {
     return Container(
       padding: const EdgeInsets.symmetric(horizontal: 24, vertical: 16),
       decoration: BoxDecoration(
@@ -391,7 +632,7 @@ class _AdminPageState extends State<AdminPage> {
               ],
             ),
           ),
-          SizedBox(width: 10),
+          const SizedBox(width: 10),
           InkWell(
             onTap: () {
               Navigator.push(
@@ -430,6 +671,8 @@ class _AdminPageState extends State<AdminPage> {
       ),
     );
   }
+
+  // ==================== SHARED CONTENT ====================
 
   Widget _buildContent() {
     try {
