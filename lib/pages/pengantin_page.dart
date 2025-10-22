@@ -2,6 +2,7 @@ import 'package:digitalinvitationaksala/widgets/acaralokasi_section.dart';
 import 'package:digitalinvitationaksala/widgets/ayat_section.dart';
 import 'package:digitalinvitationaksala/widgets/carousel_section.dart';
 import 'package:digitalinvitationaksala/widgets/fotobiru_section.dart';
+import 'package:digitalinvitationaksala/widgets/gift_section.dart';
 import 'package:digitalinvitationaksala/widgets/love_story_section.dart';
 import 'package:digitalinvitationaksala/widgets/ucapan.dart';
 import 'package:flutter/material.dart';
@@ -51,6 +52,7 @@ class _CardPengantinPageState extends State<CardPengantinPage>
   final GlobalKey<State> _loveStoryKey = GlobalKey();
   final GlobalKey<State> _fotoKey = GlobalKey();
   final GlobalKey<State> _ucapanKey = GlobalKey();
+  final GlobalKey<State> _giftKey = GlobalKey();
 
   @override
   void initState() {
@@ -197,8 +199,10 @@ class _CardPengantinPageState extends State<CardPengantinPage>
       case 4: // FOTO
         _scrollToWidget(_fotoKey);
         break;
-              case 5: //UCAPAN
+        case 5: //UCAPAN
         _scrollToWidget(_ucapanKey);
+        case 6: //GIFT
+        _scrollToWidget(_giftKey);
         break;
     }
   }
@@ -322,7 +326,7 @@ class _CardPengantinPageState extends State<CardPengantinPage>
                               child: Column(
                                 children: [
                                   Text(
-                                    "Putra dari " + parentsGroom,
+                                    "Putra dari Bapak " + FatherparentsGroom + " & " + MotherparentsGroom,
                                     style: TextStyle(
                                       fontSize: 11,
                                       color: Color(0xFFD0D0D0),
@@ -392,7 +396,7 @@ class _CardPengantinPageState extends State<CardPengantinPage>
                               child: Column(
                                 children: [
                                   Text(
-                                    "Putri dari " + parentsBride,
+                                    "Putri dari Bapak " + FatherparentsBride + "&" + MotherparentsBride,
                                     style: TextStyle(
                                       fontSize: 12,
                                       color: Color(0xFFD0D0D0),
@@ -444,6 +448,10 @@ class _CardPengantinPageState extends State<CardPengantinPage>
                           Container(
                             key: _ucapanKey,
                             child: UcapanSection(),
+                          ),
+                            Container(
+                            key: _giftKey,
+                            child: WeddingGiftSection(),
                           ),
                           SizedBox(height: 100), 
                         ],
@@ -518,6 +526,11 @@ class _CardPengantinPageState extends State<CardPengantinPage>
                         icon: Icons.chat_sharp,
                         label: 'UCAPAN',
                         index: 5,
+                      ),
+                        _buildMenuButton(
+                        icon: Icons.card_giftcard,
+                        label: 'WEEDING GIFT',
+                        index: 6,
                       ),
                     ],
                   ),

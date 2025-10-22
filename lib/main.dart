@@ -6,12 +6,21 @@ import 'dart:html' as html;
 import 'firebase_options.dart';
 import 'pages/home_page.dart';
 import 'pages/admin_page.dart';
+import 'data/wedding_data.dart';
 
 void main() async {
   WidgetsFlutterBinding.ensureInitialized();
+  
+  // Initialize Firebase
   await Firebase.initializeApp(
     options: DefaultFirebaseOptions.currentPlatform,
   );
+  
+  // Load wedding data dari Firestore
+  print('🔄 Loading wedding data from Firestore...');
+  await WeddingData.instance.loadFromFirestore();
+  print('✅ Wedding data loaded successfully!');
+  
   runApp(WeddingInviteApp());
 }
 

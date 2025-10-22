@@ -88,7 +88,7 @@ class _AcaraLokasiSectionState extends State<AcaraLokasiSection> {
 
           // Date
           Text(
-            eventDate,
+            ResepsiDate,
             style: GoogleFonts.roboto(
               fontSize: 20,
               fontWeight: FontWeight.w400,
@@ -122,19 +122,22 @@ class _AcaraLokasiSectionState extends State<AcaraLokasiSection> {
                 ),
               ),
               SizedBox(height: 10),
-Row(
-  mainAxisAlignment: MainAxisAlignment.center,
-  mainAxisSize: MainAxisSize.min,
-  children: [
-    _buildCountdownBox(days > 99 ? days.toString() : _padZero(days), 'Hari'),
-    SizedBox(width: 12),
-    _buildCountdownBox(_padZero(hours), 'Jam'),
-    SizedBox(width: 12),
-    _buildCountdownBox(_padZero(minutes), 'Menit'),
-    SizedBox(width: 12),
-    _buildCountdownBox(_padZero(seconds), 'Detik'),
-  ],
-)
+              Row(
+                mainAxisAlignment: MainAxisAlignment.center,
+                mainAxisSize: MainAxisSize.min,
+                children: [
+                  _buildCountdownBox(
+                    days > 99 ? days.toString() : _padZero(days),
+                    'Hari',
+                  ),
+                  SizedBox(width: 12),
+                  _buildCountdownBox(_padZero(hours), 'Jam'),
+                  SizedBox(width: 12),
+                  _buildCountdownBox(_padZero(minutes), 'Menit'),
+                  SizedBox(width: 12),
+                  _buildCountdownBox(_padZero(seconds), 'Detik'),
+                ],
+              ),
             ],
           ),
 
@@ -157,7 +160,7 @@ Row(
                     ),
                     SizedBox(height: 4),
                     Text(
-                      '08:00 Wib',
+                      AkadTime,
                       style: TextStyle(
                         fontSize: 12,
                         letterSpacing: 0.4,
@@ -186,7 +189,7 @@ Row(
                     ),
                     SizedBox(height: 4),
                     Text(
-                      '10:00 Wib',
+                      ResepsiTime,
                       style: TextStyle(
                         fontSize: 12,
                         letterSpacing: 0.4,
@@ -200,10 +203,7 @@ Row(
           ),
 
           SizedBox(height: 18),
-          Container(
-            height: 1,
-            color: Color(0xFFF5F5F5).withOpacity(0.1),
-          ),
+          Container(height: 1, color: Color(0xFFF5F5F5).withOpacity(0.1)),
 
           SizedBox(height: 18),
           Text(
@@ -218,11 +218,7 @@ Row(
           SizedBox(height: 12),
 
           // Location Icon
-          Icon(
-            Icons.location_on_outlined,
-            color: Color(0xFFF5F5F5),
-            size: 32,
-          ),
+          Icon(Icons.location_on_outlined, color: Color(0xFFF5F5F5), size: 32),
           SizedBox(height: 10),
 
           // Location details
@@ -238,7 +234,7 @@ Row(
           ),
           SizedBox(height: 2),
           Text(
-            eventLocation,
+            ResepsiLocation,
             style: GoogleFonts.roboto(
               fontSize: 12,
               color: Color(0xFFF5F5F5),

@@ -11,12 +11,36 @@ class FirestoreService {
       'address': address,
       'slug': slug,
       'link': 'https://digitalinvitationaksala.vercel.app/to$slug',
+      'isShared': false,
       'createdAt': FieldValue.serverTimestamp(),
     });
   }
 
   Stream<QuerySnapshot> getGuests() {
     return _db.collection('guests').orderBy('createdAt', descending: true).snapshots();
+  }
+
+  // Method untuk menghapus guest
+  Future<void> deleteGuest(String guestId) async {
+    try {
+      await _db.collection('guests').doc(guestId).delete();
+    } catch (e) {
+      print('Error deleting guest: $e');
+      rethrow;
+    }
+  }
+
+  // Method untuk update status share
+  Future<void> updateGuestSharedStatus(String guestId, bool isShared) async {
+    try {
+      await _db.collection('guests').doc(guestId).update({
+        'isShared': isShared,
+        'sharedAt': isShared ? FieldValue.serverTimestamp() : null,
+      });
+    } catch (e) {
+      print('Error updating guest shared status: $e');
+      rethrow;
+    }
   }
 
   Future<void> saveWeddingData(Map<String, dynamic> data) async {

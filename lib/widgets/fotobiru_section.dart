@@ -8,7 +8,7 @@ class FotoSection extends StatelessWidget {
     final photoHeight = photoWidth * 1.43;
     
     return Padding(
-      padding: EdgeInsets.symmetric(horizontal: 20, vertical: 32),
+      padding: EdgeInsets.symmetric(horizontal: 10, vertical: 32),
       child: Column(
         crossAxisAlignment: CrossAxisAlignment.center,
         children: [
