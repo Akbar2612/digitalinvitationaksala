@@ -17,10 +17,12 @@ class FirestoreService {
   }
 
   Stream<QuerySnapshot> getGuests() {
-    return _db.collection('guests').orderBy('createdAt', descending: true).snapshots();
+    return _db
+        .collection('guests')
+        .orderBy('createdAt', descending: true)
+        .snapshots();
   }
 
-  // Method untuk menghapus guest
   Future<void> deleteGuest(String guestId) async {
     try {
       await _db.collection('guests').doc(guestId).delete();
@@ -30,7 +32,6 @@ class FirestoreService {
     }
   }
 
-  // Method untuk update status share
   Future<void> updateGuestSharedStatus(String guestId, bool isShared) async {
     try {
       await _db.collection('guests').doc(guestId).update({
@@ -51,12 +52,11 @@ class FirestoreService {
     return _db.collection('wedding_data').doc('main').get();
   }
 
-  // Method baru untuk mendapatkan data guest berdasarkan slug
   Future<Map<String, dynamic>?> getGuestBySlug(String slug) async {
     try {
       print('Fetching guest with slug: $slug');
       final doc = await _db.collection('guests').doc(slug).get();
-      
+
       if (doc.exists) {
         print('Guest found: ${doc.data()}');
         return doc.data();
@@ -71,29 +71,36 @@ class FirestoreService {
     }
   }
 
-  // ===== UCAPAN METHODS =====
-  
-  // Menambahkan ucapan baru (versi lama - untuk backward compatibility)
   Future<void> addUcapan(String name, String ucapan) async {
     await _db.collection('ucapan').add({
       'name': name,
       'ucapan': ucapan,
-      'kehadiran': 'Hadir', // default
+      'kehadiran': 'Hadir',
+      'replies': [],
       'createdAt': FieldValue.serverTimestamp(),
     });
   }
 
-  // Menambahkan ucapan baru dengan konfirmasi kehadiran
-  Future<void> addUcapanWithKehadiran(String name, String ucapan, String kehadiran) async {
-    await _db.collection('ucapan').add({
-      'name': name,
-      'ucapan': ucapan,
-      'kehadiran': kehadiran, // 'Hadir', 'Tidak Hadir', 'Ragu'
-      'createdAt': FieldValue.serverTimestamp(),
-    });
+  Future<void> addUcapanWithKehadiran(
+    String name,
+    String ucapan,
+    String kehadiran,
+  ) async {
+    try {
+      await _db.collection('ucapan').add({
+        'name': name,
+        'ucapan': ucapan,
+        'kehadiran': kehadiran,
+        'replies': [],
+        'createdAt': FieldValue.serverTimestamp(),
+      });
+      print('✅ Ucapan berhasil ditambahkan');
+    } catch (e) {
+      print('❌ Error adding ucapan: $e');
+      rethrow;
+    }
   }
 
-  // Mendapatkan ucapan terbatas (limit)
   Stream<QuerySnapshot> getUcapanLimited(int limit) {
     return _db
         .collection('ucapan')
@@ -102,7 +109,6 @@ class FirestoreService {
         .snapshots();
   }
 
-  // Mendapatkan semua ucapan
   Stream<QuerySnapshot> getAllUcapan() {
     return _db
         .collection('ucapan')
@@ -110,23 +116,47 @@ class FirestoreService {
         .snapshots();
   }
 
-  // Menghapus ucapan (opsional, untuk admin)
   Future<void> deleteUcapan(String docId) async {
     await _db.collection('ucapan').doc(docId).delete();
   }
 
-  // Mendapatkan statistik kehadiran
+  Future<void> addReplyToUcapan(String docId, String replyText) async {
+    final docRef = _db.collection('ucapan').doc(docId);
+    final docSnapshot = await docRef.get();
+
+    if (docSnapshot.exists) {
+      final data = docSnapshot.data() as Map<String, dynamic>;
+      final currentReplies = data['replies'] as List<dynamic>? ?? [];
+
+      final newReply = {
+        'text': replyText,
+        'timestamp': Timestamp.now(),
+        'isAdmin': true,
+      };
+
+      await docRef.update({
+        'replies': [...currentReplies, newReply],
+      });
+    }
+  }
+
+  Future<void> deleteReply(String docId, Map<String, dynamic> reply) async {
+    await _db.collection('ucapan').doc(docId).update({
+      'replies': FieldValue.arrayRemove([reply]),
+    });
+  }
+
   Future<Map<String, int>> getKehadiranStats() async {
     final snapshot = await _db.collection('ucapan').get();
-    
+
     int hadir = 0;
     int tidakHadir = 0;
     int ragu = 0;
-    
+
     for (var doc in snapshot.docs) {
       final data = doc.data();
       final kehadiran = data['kehadiran'] ?? 'Hadir';
-      
+
       if (kehadiran == 'Hadir') {
         hadir++;
       } else if (kehadiran == 'Tidak Hadir') {
@@ -135,12 +165,133 @@ class FirestoreService {
         ragu++;
       }
     }
-    
+
     return {
       'hadir': hadir,
       'tidakHadir': tidakHadir,
       'ragu': ragu,
       'total': snapshot.docs.length,
     };
+  }
+
+  Future<void> addKisahCinta(
+    String judul,
+    String tanggal,
+    String cerita,
+  ) async {
+    try {
+      await _db.collection('kisah_cinta').add({
+        'judul': judul,
+        'tanggal': tanggal,
+        'cerita': cerita,
+        'createdAt': FieldValue.serverTimestamp(),
+      });
+    } catch (e) {
+      print('Error adding kisah cinta: $e');
+      rethrow;
+    }
+  }
+
+  Stream<QuerySnapshot> getAllKisahCinta() {
+    return _db.collection('kisah_cinta').snapshots();
+  }
+
+  Stream<QuerySnapshot> getKisahCintaLimited(int limit) {
+    return _db.collection('kisah_cinta').limit(limit).snapshots();
+  }
+
+  Future<void> updateKisahCinta(
+    String docId,
+    String judul,
+    String tanggal,
+    String cerita,
+  ) async {
+    try {
+      await _db.collection('kisah_cinta').doc(docId).update({
+        'judul': judul,
+        'tanggal': tanggal,
+        'cerita': cerita,
+        'updatedAt': FieldValue.serverTimestamp(),
+      });
+    } catch (e) {
+      print('Error updating kisah cinta: $e');
+      rethrow;
+    }
+  }
+
+  Future<void> deleteKisahCinta(String docId) async {
+    try {
+      await _db.collection('kisah_cinta').doc(docId).delete();
+    } catch (e) {
+      print('Error deleting kisah cinta: $e');
+      rethrow;
+    }
+  }
+
+  Future<DocumentSnapshot> getKisahCintaById(String docId) async {
+    try {
+      return await _db.collection('kisah_cinta').doc(docId).get();
+    } catch (e) {
+      print('Error getting kisah cinta: $e');
+      rethrow;
+    }
+  }
+
+  Future<int> getKisahCintaCount() async {
+    try {
+      final snapshot = await _db.collection('kisah_cinta').get();
+      return snapshot.docs.length;
+    } catch (e) {
+      print('Error getting kisah cinta count: $e');
+      return 0;
+    }
+  }
+
+  Future<DocumentSnapshot> getKisahCintaPenutup() async {
+    try {
+      return await _db.collection('kisah_cinta_penutup').doc('penutup').get();
+    } catch (e) {
+      print('Error getting kisah cinta penutup: $e');
+      rethrow;
+    }
+  }
+
+  Future<void> setKisahCintaPenutup(String title, String kisah) async {
+    try {
+      await _db.collection('kisah_cinta_penutup').doc('penutup').set({
+        'title': title,
+        'kisah': kisah,
+        'updatedAt': FieldValue.serverTimestamp(),
+      }, SetOptions(merge: true));
+    } catch (e) {
+      print('Error setting kisah cinta penutup: $e');
+      rethrow;
+    }
+  }
+
+  Stream<DocumentSnapshot> getKisahCintaPenutupStream() {
+    return _db.collection('kisah_cinta_penutup').doc('penutup').snapshots();
+  }
+
+  Future<bool> hasKisahCintaPenutup() async {
+    try {
+      final doc = await _db
+          .collection('kisah_cinta_penutup')
+          .doc('penutup')
+          .get();
+      return doc.exists && doc.data() != null;
+    } catch (e) {
+      print('Error checking kisah cinta penutup: $e');
+      return false;
+    }
+  }
+
+  Future<void> deleteKisahCintaPenutup() async {
+    try {
+      await _db.collection('kisah_cinta_penutup').doc('penutup').delete();
+    } catch (e) {
+      print('Error deleting kisah cinta penutup: $e');
+      rethrow;
+    }
   }
 }

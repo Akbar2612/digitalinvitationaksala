@@ -1,6 +1,7 @@
 import 'package:digitalinvitationaksala/data/wedding_data.dart';
 import 'package:digitalinvitationaksala/pages/home_page.dart';
 import 'package:digitalinvitationaksala/widgets/admin_kelola_komentar.dart';
+import 'package:digitalinvitationaksala/widgets/admin_kisah_cinta.dart';
 import 'package:flutter/material.dart';
 import 'package:google_fonts/google_fonts.dart';
 import 'package:just_audio/just_audio.dart';
@@ -46,6 +47,11 @@ class _AdminPageState extends State<AdminPage> {
       icon: Icons.chat,
       title: 'Kelola Komentar',
       subtitle: 'Balas dan Hapus Komentar',
+    ),
+    MenuItem(
+      icon: Icons.favorite,
+      title: 'Kisah Cinta',
+      subtitle: 'Kelola Kisah Cinta',
     ),
   ];
 
@@ -149,7 +155,25 @@ class _AdminPageState extends State<AdminPage> {
                       size: 32,
                     ),
                   ),
-                  const SizedBox(height: 12),
+                  SizedBox(height: 12),
+                  Text(
+                    'Selamat Datang',
+                    style: GoogleFonts.lobster(
+                      fontSize: 18,
+                      fontWeight: FontWeight.w700,
+                      color: Colors.white,
+                    ),
+                  ),
+                  SizedBox(height: 12),
+                  Text(
+                    'Selamat Datang',
+                    style: GoogleFonts.lobster(
+                      fontSize: 18,
+                      fontWeight: FontWeight.w300,
+                      color: Colors.white,
+                    ),
+                  ),
+                  SizedBox(height: 12),
                   Text(
                     groomnickName + ' & ' + bridenickName,
                     style: GoogleFonts.poppins(
@@ -362,6 +386,15 @@ class _AdminPageState extends State<AdminPage> {
                   ),
                 ),
                 const SizedBox(height: 16),
+                Text(
+                  'Selamat Datang',
+                  style: GoogleFonts.lobster(
+                    fontSize: 18,
+                    fontWeight: FontWeight.w300,
+                    color: Colors.white,
+                  ),
+                ),
+                SizedBox(height: 12),
                 Text(
                   groomnickName + ' & ' + bridenickName,
                   style: GoogleFonts.poppins(
@@ -708,6 +741,15 @@ class _AdminPageState extends State<AdminPage> {
           break;
         case 3:
           content = AdminKelolaKomentar(
+            navyBlue: navyBlue,
+            lightBlue: lightBlue,
+            orange: orange,
+            yellow: yellow,
+            lightGray: lightGray,
+          );
+          break;
+        case 4:
+          content = AdminKisahCinta(
             navyBlue: navyBlue,
             lightBlue: lightBlue,
             orange: orange,

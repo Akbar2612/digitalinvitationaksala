@@ -1,7 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:google_fonts/google_fonts.dart';
 import 'package:cloud_firestore/cloud_firestore.dart';
-import 'package:flutter/services.dart';
 import '../services/firestore_service.dart';
 
 class AdminKelolaKomentar extends StatefulWidget {
@@ -27,7 +26,7 @@ class AdminKelolaKomentar extends StatefulWidget {
 class _AdminKelolaKomentarState extends State<AdminKelolaKomentar> {
   final FirestoreService _firestoreService = FirestoreService();
   final TextEditingController _searchController = TextEditingController();
-  
+
   String _searchQuery = '';
   String _filterKehadiran = 'Semua';
   bool _isLoading = false;
@@ -46,9 +45,7 @@ class _AdminKelolaKomentarState extends State<AdminKelolaKomentar> {
         const SizedBox(height: 24),
         _buildFilterSection(),
         const SizedBox(height: 24),
-        Expanded(
-          child: _buildKomentarList(),
-        ),
+        Expanded(child: _buildKomentarList()),
       ],
     );
   }
@@ -75,7 +72,10 @@ class _AdminKelolaKomentarState extends State<AdminKelolaKomentar> {
                 padding: const EdgeInsets.all(12),
                 decoration: BoxDecoration(
                   gradient: LinearGradient(
-                    colors: [widget.lightBlue, widget.lightBlue.withOpacity(0.7)],
+                    colors: [
+                      widget.lightBlue,
+                      widget.lightBlue.withOpacity(0.7),
+                    ],
                   ),
                   borderRadius: BorderRadius.circular(12),
                   boxShadow: [
@@ -182,7 +182,12 @@ class _AdminKelolaKomentarState extends State<AdminKelolaKomentar> {
     );
   }
 
-  Widget _buildStatCard(String label, String value, IconData icon, Color color) {
+  Widget _buildStatCard(
+    String label,
+    String value,
+    IconData icon,
+    Color color,
+  ) {
     return Container(
       padding: const EdgeInsets.all(16),
       decoration: BoxDecoration(
@@ -211,10 +216,7 @@ class _AdminKelolaKomentarState extends State<AdminKelolaKomentar> {
           ),
           Text(
             label,
-            style: GoogleFonts.poppins(
-              fontSize: 11,
-              color: Colors.grey[600],
-            ),
+            style: GoogleFonts.poppins(fontSize: 11, color: Colors.grey[600]),
             textAlign: TextAlign.center,
           ),
         ],
@@ -240,7 +242,11 @@ class _AdminKelolaKomentarState extends State<AdminKelolaKomentar> {
               decoration: InputDecoration(
                 hintText: 'Cari nama atau ucapan...',
                 hintStyle: GoogleFonts.poppins(color: Colors.grey[400]),
-                prefixIcon: Icon(Icons.search, color: widget.lightBlue, size: 20),
+                prefixIcon: Icon(
+                  Icons.search,
+                  color: widget.lightBlue,
+                  size: 20,
+                ),
                 suffixIcon: _searchQuery.isNotEmpty
                     ? IconButton(
                         icon: const Icon(Icons.clear, size: 20),
@@ -254,7 +260,10 @@ class _AdminKelolaKomentarState extends State<AdminKelolaKomentar> {
                     : null,
                 filled: true,
                 fillColor: Colors.white,
-                contentPadding: const EdgeInsets.symmetric(horizontal: 16, vertical: 14),
+                contentPadding: const EdgeInsets.symmetric(
+                  horizontal: 16,
+                  vertical: 14,
+                ),
                 border: OutlineInputBorder(
                   borderRadius: BorderRadius.circular(10),
                   borderSide: BorderSide(color: widget.lightGray, width: 1.5),
@@ -288,10 +297,10 @@ class _AdminKelolaKomentarState extends State<AdminKelolaKomentar> {
                 fontWeight: FontWeight.w600,
               ),
               items: ['Semua', 'Hadir', 'Tidak Hadir', 'Ragu']
-                  .map((filter) => DropdownMenuItem(
-                        value: filter,
-                        child: Text(filter),
-                      ))
+                  .map(
+                    (filter) =>
+                        DropdownMenuItem(value: filter, child: Text(filter)),
+                  )
                   .toList(),
               onChanged: (value) {
                 setState(() {
@@ -368,14 +377,14 @@ class _AdminKelolaKomentarState extends State<AdminKelolaKomentar> {
             );
           }
 
-          // Filter data
           var filteredDocs = snapshot.data!.docs.where((doc) {
             final data = doc.data() as Map<String, dynamic>;
             final name = (data['name'] ?? '').toString().toLowerCase();
             final ucapan = (data['ucapan'] ?? '').toString().toLowerCase();
             final kehadiran = data['kehadiran'] ?? 'Hadir';
 
-            bool matchSearch = _searchQuery.isEmpty ||
+            bool matchSearch =
+                _searchQuery.isEmpty ||
                 name.contains(_searchQuery) ||
                 ucapan.contains(_searchQuery);
 
@@ -390,11 +399,7 @@ class _AdminKelolaKomentarState extends State<AdminKelolaKomentar> {
               child: Column(
                 mainAxisAlignment: MainAxisAlignment.center,
                 children: [
-                  Icon(
-                    Icons.search_off,
-                    size: 64,
-                    color: Colors.grey[300],
-                  ),
+                  Icon(Icons.search_off, size: 64, color: Colors.grey[300]),
                   const SizedBox(height: 16),
                   Text(
                     'Tidak ada hasil',
@@ -428,6 +433,7 @@ class _AdminKelolaKomentarState extends State<AdminKelolaKomentar> {
     final ucapan = data['ucapan'] ?? '';
     final kehadiran = data['kehadiran'] ?? 'Hadir';
     final timestamp = data['createdAt'] as Timestamp?;
+    final replies = data['replies'] as List<dynamic>? ?? [];
 
     Color kehadiranColor;
     IconData kehadiranIcon;
@@ -484,7 +490,10 @@ class _AdminKelolaKomentarState extends State<AdminKelolaKomentar> {
                   padding: const EdgeInsets.all(10),
                   decoration: BoxDecoration(
                     gradient: LinearGradient(
-                      colors: [widget.lightBlue, widget.lightBlue.withOpacity(0.7)],
+                      colors: [
+                        widget.lightBlue,
+                        widget.lightBlue.withOpacity(0.7),
+                      ],
                     ),
                     shape: BoxShape.circle,
                   ),
@@ -519,7 +528,10 @@ class _AdminKelolaKomentarState extends State<AdminKelolaKomentar> {
                   ),
                 ),
                 Container(
-                  padding: const EdgeInsets.symmetric(horizontal: 12, vertical: 6),
+                  padding: const EdgeInsets.symmetric(
+                    horizontal: 12,
+                    vertical: 6,
+                  ),
                   decoration: BoxDecoration(
                     color: kehadiranColor.withOpacity(0.1),
                     borderRadius: BorderRadius.circular(20),
@@ -544,7 +556,7 @@ class _AdminKelolaKomentarState extends State<AdminKelolaKomentar> {
               ],
             ),
           ),
-          
+
           // Ucapan
           Padding(
             padding: const EdgeInsets.all(16),
@@ -557,6 +569,83 @@ class _AdminKelolaKomentarState extends State<AdminKelolaKomentar> {
               ),
             ),
           ),
+
+          // Balasan Admin (Jika Ada)
+          if (replies.isNotEmpty)
+            Container(
+              margin: const EdgeInsets.symmetric(horizontal: 16),
+              padding: const EdgeInsets.all(12),
+              decoration: BoxDecoration(
+                color: widget.lightBlue.withOpacity(0.05),
+                borderRadius: BorderRadius.circular(8),
+                border: Border.all(
+                  color: widget.lightBlue.withOpacity(0.2),
+                  width: 1,
+                ),
+              ),
+              child: Column(
+                crossAxisAlignment: CrossAxisAlignment.start,
+                children: [
+                  Row(
+                    children: [
+                      Icon(
+                        Icons.admin_panel_settings,
+                        size: 16,
+                        color: widget.lightBlue,
+                      ),
+                      const SizedBox(width: 6),
+                      Text(
+                        'Balasan Admin',
+                        style: GoogleFonts.poppins(
+                          fontSize: 12,
+                          fontWeight: FontWeight.w600,
+                          color: widget.lightBlue,
+                        ),
+                      ),
+                    ],
+                  ),
+                  ...replies.map((reply) {
+                    final replyData = reply as Map<String, dynamic>;
+                    final replyText = replyData['text'] ?? '';
+                    final replyTimestamp = replyData['timestamp'] as Timestamp?;
+
+                    return Container(
+                      margin: const EdgeInsets.only(top: 8),
+                      padding: const EdgeInsets.all(10),
+                      decoration: BoxDecoration(
+                        color: Colors.white,
+                        borderRadius: BorderRadius.circular(6),
+                        border: Border.all(color: widget.lightGray),
+                      ),
+                      child: Column(
+                        crossAxisAlignment: CrossAxisAlignment.start,
+                        children: [
+                          Text(
+                            replyText,
+                            style: GoogleFonts.poppins(
+                              fontSize: 13,
+                              color: Colors.grey[700],
+                            ),
+                          ),
+                          if (replyTimestamp != null) ...[
+                            const SizedBox(height: 6),
+                            Text(
+                              _formatTimestamp(replyTimestamp),
+                              style: GoogleFonts.poppins(
+                                fontSize: 10,
+                                color: Colors.grey[500],
+                              ),
+                            ),
+                          ],
+                        ],
+                      ),
+                    );
+                  }).toList(),
+                ],
+              ),
+            ),
+
+          const SizedBox(height: 12),
 
           // Action Buttons
           Container(
@@ -572,7 +661,7 @@ class _AdminKelolaKomentarState extends State<AdminKelolaKomentar> {
               mainAxisAlignment: MainAxisAlignment.end,
               children: [
                 OutlinedButton.icon(
-                  onPressed: () => _showReplyDialog(name, ucapan),
+                  onPressed: () => _showReplyDialog(docId, name, ucapan),
                   icon: const Icon(Icons.reply, size: 16),
                   label: Text(
                     'Balas',
@@ -584,7 +673,10 @@ class _AdminKelolaKomentarState extends State<AdminKelolaKomentar> {
                   style: OutlinedButton.styleFrom(
                     foregroundColor: widget.lightBlue,
                     side: BorderSide(color: widget.lightBlue, width: 1.5),
-                    padding: const EdgeInsets.symmetric(horizontal: 16, vertical: 8),
+                    padding: const EdgeInsets.symmetric(
+                      horizontal: 16,
+                      vertical: 8,
+                    ),
                     shape: RoundedRectangleBorder(
                       borderRadius: BorderRadius.circular(8),
                     ),
@@ -604,7 +696,10 @@ class _AdminKelolaKomentarState extends State<AdminKelolaKomentar> {
                   style: ElevatedButton.styleFrom(
                     backgroundColor: Colors.red,
                     foregroundColor: Colors.white,
-                    padding: const EdgeInsets.symmetric(horizontal: 16, vertical: 8),
+                    padding: const EdgeInsets.symmetric(
+                      horizontal: 16,
+                      vertical: 8,
+                    ),
                     shape: RoundedRectangleBorder(
                       borderRadius: BorderRadius.circular(8),
                     ),
@@ -619,10 +714,13 @@ class _AdminKelolaKomentarState extends State<AdminKelolaKomentar> {
     );
   }
 
-  void _showReplyDialog(String name, String ucapan) {
+  void _showReplyDialog(String docId, String name, String ucapan) {
+    final TextEditingController replyController = TextEditingController();
+
     showDialog(
       context: context,
       builder: (context) => AlertDialog(
+        backgroundColor: Colors.white,
         shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(16)),
         title: Row(
           children: [
@@ -638,71 +736,83 @@ class _AdminKelolaKomentarState extends State<AdminKelolaKomentar> {
             ),
           ],
         ),
-        content: Column(
-          mainAxisSize: MainAxisSize.min,
-          crossAxisAlignment: CrossAxisAlignment.start,
-          children: [
-            Container(
-              padding: const EdgeInsets.all(12),
-              decoration: BoxDecoration(
-                color: widget.lightGray.withOpacity(0.5),
-                borderRadius: BorderRadius.circular(8),
-              ),
-              child: Column(
-                crossAxisAlignment: CrossAxisAlignment.start,
-                children: [
-                  Text(
-                    'Dari: $name',
-                    style: GoogleFonts.poppins(
-                      fontSize: 13,
-                      fontWeight: FontWeight.w600,
-                      color: widget.navyBlue,
+        content: SingleChildScrollView(
+          child: Column(
+            mainAxisSize: MainAxisSize.min,
+            crossAxisAlignment: CrossAxisAlignment.start,
+            children: [
+              Container(
+                padding: const EdgeInsets.all(12),
+                decoration: BoxDecoration(
+                  color: widget.lightGray.withOpacity(0.5),
+                  borderRadius: BorderRadius.circular(8),
+                ),
+                child: Column(
+                  crossAxisAlignment: CrossAxisAlignment.start,
+                  children: [
+                    Text(
+                      'Dari: $name',
+                      style: GoogleFonts.poppins(
+                        fontSize: 13,
+                        fontWeight: FontWeight.w600,
+                        color: widget.navyBlue,
+                      ),
                     ),
-                  ),
-                  const SizedBox(height: 8),
-                  Text(
-                    ucapan,
-                    style: GoogleFonts.poppins(
-                      fontSize: 12,
-                      color: Colors.grey[600],
-                      fontStyle: FontStyle.italic,
+                    const SizedBox(height: 8),
+                    Text(
+                      ucapan,
+                      style: GoogleFonts.poppins(
+                        fontSize: 12,
+                        color: Colors.grey[600],
+                        fontStyle: FontStyle.italic,
+                      ),
                     ),
-                  ),
-                ],
-              ),
-            ),
-            const SizedBox(height: 16),
-            Text(
-              'Salin template balasan ke clipboard:',
-              style: GoogleFonts.poppins(
-                fontSize: 13,
-                color: Colors.grey[700],
-              ),
-            ),
-            const SizedBox(height: 12),
-            Container(
-              width: double.infinity,
-              padding: const EdgeInsets.all(12),
-              decoration: BoxDecoration(
-                color: Colors.grey[100],
-                borderRadius: BorderRadius.circular(8),
-                border: Border.all(color: widget.lightGray),
-              ),
-              child: SelectableText(
-                'Terima kasih atas ucapan dan doa restu dari $name. Semoga kita semua selalu dalam lindungan-Nya. 🤲',
-                style: GoogleFonts.poppins(
-                  fontSize: 13,
-                  color: widget.navyBlue,
+                  ],
                 ),
               ),
-            ),
-          ],
+              const SizedBox(height: 16),
+              Text(
+                'Tulis balasan Anda:',
+                style: GoogleFonts.poppins(
+                  fontSize: 13,
+                  fontWeight: FontWeight.w500,
+                  color: Colors.grey[700],
+                ),
+              ),
+              const SizedBox(height: 8),
+              TextField(
+                controller: replyController,
+                maxLines: 4,
+                decoration: InputDecoration(
+                  hintText:
+                      'Terima kasih atas ucapan dan doa restu dari $name...',
+                  hintStyle: GoogleFonts.poppins(
+                    fontSize: 13,
+                    color: Colors.grey[400],
+                  ),
+                  border: OutlineInputBorder(
+                    borderRadius: BorderRadius.circular(8),
+                    borderSide: BorderSide(color: widget.lightGray),
+                  ),
+                  focusedBorder: OutlineInputBorder(
+                    borderRadius: BorderRadius.circular(8),
+                    borderSide: BorderSide(color: widget.lightBlue, width: 2),
+                  ),
+                  contentPadding: const EdgeInsets.all(12),
+                ),
+                style: GoogleFonts.poppins(fontSize: 13),
+              ),
+            ],
+          ),
         ),
         actions: [
           TextButton(
-            onPressed: () => Navigator.pop(context),
+            onPressed: () {
+              replyController.dispose();
+              Navigator.pop(context);
+            },
             child: Text(
-              'Tutup',
+              'Batal',
               style: GoogleFonts.poppins(
                 color: Colors.grey[600],
                 fontWeight: FontWeight.w600,
@@ -710,16 +820,25 @@ class _AdminKelolaKomentarState extends State<AdminKelolaKomentar> {
             ),
           ),
           ElevatedButton.icon(
-            onPressed: () {
-              final replyText =
-                  'Terima kasih atas ucapan dan doa restu dari $name. Semoga kita semua selalu dalam lindungan-Nya. 🤲';
-              Clipboard.setData(ClipboardData(text: replyText));
-              Navigator.pop(context);
-              _showSuccessSnackbar('Template balasan berhasil disalin!');
+            onPressed: () async {
+              final replyText = replyController.text.trim();
+              if (replyText.isEmpty) {
+                _showErrorSnackbar('Balasan tidak boleh kosong');
+                return;
+              }
+
+              try {
+                await _firestoreService.addReplyToUcapan(docId, replyText);
+                replyController.dispose();
+                Navigator.pop(context);
+                _showSuccessSnackbar('Balasan berhasil dikirim!');
+              } catch (e) {
+                _showErrorSnackbar('Gagal mengirim balasan: ${e.toString()}');
+              }
             },
-            icon: const Icon(Icons.copy, size: 16),
+            icon: const Icon(Icons.send, size: 16),
             label: Text(
-              'Salin Template',
+              'Kirim Balasan',
               style: GoogleFonts.poppins(
                 fontSize: 13,
                 fontWeight: FontWeight.w600,
@@ -760,12 +879,11 @@ class _AdminKelolaKomentarState extends State<AdminKelolaKomentar> {
         ),
         content: RichText(
           text: TextSpan(
-            style: GoogleFonts.poppins(
-              fontSize: 14,
-              color: Colors.grey[700],
-            ),
+            style: GoogleFonts.poppins(fontSize: 14, color: Colors.grey[700]),
             children: [
-              const TextSpan(text: 'Apakah Anda yakin ingin menghapus komentar dari '),
+              const TextSpan(
+                text: 'Apakah Anda yakin ingin menghapus komentar dari ',
+              ),
               TextSpan(
                 text: name,
                 style: const TextStyle(fontWeight: FontWeight.w600),
@@ -880,15 +998,10 @@ class _AdminKelolaKomentarState extends State<AdminKelolaKomentar> {
 
     ScaffoldMessenger.of(context).showSnackBar(
       SnackBar(
-        content: Text(
-          message,
-          style: GoogleFonts.poppins(fontSize: 13),
-        ),
+        content: Text(message, style: GoogleFonts.poppins(fontSize: 13)),
         backgroundColor: const Color(0xFF10B981),
         behavior: SnackBarBehavior.floating,
-        shape: RoundedRectangleBorder(
-          borderRadius: BorderRadius.circular(8),
-        ),
+        shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(8)),
         margin: const EdgeInsets.all(16),
         duration: const Duration(seconds: 3),
       ),
@@ -900,15 +1013,10 @@ class _AdminKelolaKomentarState extends State<AdminKelolaKomentar> {
 
     ScaffoldMessenger.of(context).showSnackBar(
       SnackBar(
-        content: Text(
-          message,
-          style: GoogleFonts.poppins(fontSize: 13),
-        ),
+        content: Text(message, style: GoogleFonts.poppins(fontSize: 13)),
         backgroundColor: const Color(0xFFEF4444),
         behavior: SnackBarBehavior.floating,
-        shape: RoundedRectangleBorder(
-          borderRadius: BorderRadius.circular(8),
-        ),
+        shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(8)),
         margin: const EdgeInsets.all(16),
         duration: const Duration(seconds: 4),
       ),

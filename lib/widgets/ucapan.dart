@@ -1,3 +1,4 @@
+import 'package:digitalinvitationaksala/data/wedding_data.dart';
 import 'package:digitalinvitationaksala/services/firestore_service.dart';
 import 'package:flutter/material.dart';
 import 'package:google_fonts/google_fonts.dart';
@@ -13,7 +14,7 @@ class _UcapanSectionState extends State<UcapanSection> {
   final TextEditingController _ucapanController = TextEditingController();
   final FirestoreService _firestoreService = FirestoreService();
   bool _isSubmitting = false;
-  String _selectedKehadiran = 'Hadir'; // Default value
+  String _selectedKehadiran = 'Hadir';
 
   @override
   void dispose() {
@@ -23,7 +24,7 @@ class _UcapanSectionState extends State<UcapanSection> {
   }
 
   Future<void> _submitUcapan() async {
-    if (_nameController.text.trim().isEmpty || 
+    if (_nameController.text.trim().isEmpty ||
         _ucapanController.text.trim().isEmpty) {
       ScaffoldMessenger.of(context).showSnackBar(
         SnackBar(
@@ -82,7 +83,7 @@ class _UcapanSectionState extends State<UcapanSection> {
       child: Container(
         padding: EdgeInsets.symmetric(horizontal: 14, vertical: 8),
         decoration: BoxDecoration(
-          color: isSelected 
+          color: isSelected
               ? Color(0xFFF5F5F5).withOpacity(0.15)
               : Color(0xFFF5F5F5).withOpacity(0.05),
           borderRadius: BorderRadius.circular(8),
@@ -96,11 +97,7 @@ class _UcapanSectionState extends State<UcapanSection> {
         child: Row(
           mainAxisSize: MainAxisSize.min,
           children: [
-            Icon(
-              icon,
-              size: 16,
-              color: Color(0xFFF5F5F5),
-            ),
+            Icon(icon, size: 16, color: Color(0xFFF5F5F5)),
             SizedBox(width: 6),
             Text(
               label,
@@ -116,12 +113,18 @@ class _UcapanSectionState extends State<UcapanSection> {
     );
   }
 
-  Widget _buildUcapanItem(Map<String, dynamic> data, {bool showDivider = true}) {
+  Widget _buildUcapanItem(
+    Map<String, dynamic> data, {
+    bool showDivider = true,
+  }) {
     final kehadiran = data['kehadiran'] ?? 'Hadir';
-    
+    final repliesData = data['replies'];
+    final replies = repliesData is List ? repliesData : [];
+    final timestamp = data['createdAt'] as Timestamp?;
+
     IconData statusIcon;
     Color statusColor;
-    
+
     if (kehadiran == 'Hadir') {
       statusIcon = Icons.check_circle;
       statusColor = Colors.green;
@@ -136,74 +139,164 @@ class _UcapanSectionState extends State<UcapanSection> {
     return Column(
       children: [
         Padding(
-          padding: EdgeInsets.symmetric(vertical: 16, horizontal: 20),
-          child: Row(
+          padding: EdgeInsets.symmetric(vertical: 12, horizontal: 20),
+          child: Column(
             crossAxisAlignment: CrossAxisAlignment.start,
             children: [
-              // Avatar Circle
-              Container(
-                width: 36,
-                height: 36,
-                decoration: BoxDecoration(
-                  color: Color(0xFFF5F5F5).withOpacity(0.1),
-                  shape: BoxShape.circle,
-                ),
-                child: Center(
-                  child: Text(
-                    (data['name'] ?? 'A')[0].toUpperCase(),
-                    style: GoogleFonts.robotoSlab(
-                      fontSize: 16,
-                      fontWeight: FontWeight.w600,
-                      color: Color(0xFFF5F5F5),
+              Row(
+                crossAxisAlignment: CrossAxisAlignment.start,
+                children: [
+                  Container(
+                    width: 36,
+                    height: 36,
+                    decoration: BoxDecoration(
+                      color: Color(0xFFF5F5F5).withOpacity(0.1),
+                      shape: BoxShape.circle,
                     ),
-                  ),
-                ),
-              ),
-              
-              SizedBox(width: 12),
-              
-              // Content
-              Expanded(
-                child: Column(
-                  crossAxisAlignment: CrossAxisAlignment.start,
-                  children: [
-                    // Nama dan Status Icon
-                    Row(
-                      children: [
-                        Expanded(
-                          child: Text(
-                            data['name'] ?? 'Anonymous',
-                            style: GoogleFonts.robotoSlab(
-                              fontSize: 15,
-                              fontWeight: FontWeight.w600,
-                              color: Color(0xFFF5F5F5),
-                              letterSpacing: 0.2,
-                            ),
-                          ),
+                    child: Center(
+                      child: Text(
+                        (data['name'] ?? 'A')[0].toUpperCase(),
+                        style: GoogleFonts.robotoSlab(
+                          fontSize: 16,
+                          fontWeight: FontWeight.w600,
+                          color: Color(0xFFF5F5F5),
                         ),
-                        Icon(
-                          statusIcon,
-                          color: statusColor,
-                          size: 18,
-                        ),
-                      ],
-                    ),
-                    
-                    SizedBox(height: 6),
-                    
-                    // Ucapan
-                    Text(
-                      data['ucapan'] ?? '',
-                      style: GoogleFonts.roboto(
-                        fontSize: 13,
-                        fontWeight: FontWeight.w400,
-                        color: Color(0xFFE0E0E0),
-                        height: 1.4,
                       ),
                     ),
-                  ],
-                ),
+                  ),
+
+                  SizedBox(width: 12),
+
+                  Expanded(
+                    child: Column(
+                      crossAxisAlignment: CrossAxisAlignment.start,
+                      children: [
+                        Row(
+                          children: [
+                            Expanded(
+                              child: Text(
+                                data['name'] ?? 'Anonymous',
+                                style: GoogleFonts.robotoSlab(
+                                  fontSize: 15,
+                                  fontWeight: FontWeight.w600,
+                                  color: Color(0xFFF5F5F5),
+                                  letterSpacing: 0.2,
+                                ),
+                              ),
+                            ),
+                            Icon(statusIcon, color: statusColor, size: 18),
+                          ],
+                        ),
+
+                        SizedBox(height: 4),
+
+                        Text(
+                          data['ucapan'] ?? '',
+                          style: GoogleFonts.roboto(
+                            fontSize: 13,
+                            fontWeight: FontWeight.w400,
+                            color: Color(0xFFE0E0E0),
+                            height: 1.4,
+                          ),
+                        ),
+
+                        if (timestamp != null) ...[
+                          SizedBox(height: 4),
+                          Text(
+                            _formatTimestamp(timestamp),
+                            style: GoogleFonts.roboto(
+                              fontSize: 10,
+                              color: Color(0xFFE0E0E0).withOpacity(0.5),
+                            ),
+                          ),
+                        ],
+                      ],
+                    ),
+                  ),
+                ],
               ),
+
+              if (replies.isNotEmpty) ...[
+                SizedBox(height: 10),
+                Container(
+                  margin: EdgeInsets.only(left: 48),
+                  padding: EdgeInsets.all(10),
+                  decoration: BoxDecoration(
+                    color: Color(0xFFF5F5F5).withOpacity(0.08),
+                    borderRadius: BorderRadius.circular(8),
+                    border: Border.all(
+                      color: Color(0xFFF5F5F5).withOpacity(0.15),
+                      width: 1,
+                    ),
+                  ),
+                  child: Column(
+                    crossAxisAlignment: CrossAxisAlignment.start,
+                    children: replies.map((reply) {
+                      if (reply is! Map) {
+                        return SizedBox.shrink();
+                      }
+
+                      final replyData = reply as Map<String, dynamic>;
+                      final replyText = replyData['text'] ?? '';
+                      final replyTimestamp =
+                          replyData['timestamp'] as Timestamp?;
+
+                      return Padding(
+                        padding: EdgeInsets.only(
+                          bottom: replies.last == reply ? 0 : 8,
+                        ),
+                        child: Row(
+                          crossAxisAlignment: CrossAxisAlignment.start,
+                          children: [
+                            Icon(
+                              Icons.favorite,
+                              size: 14,
+                              color: Color(0xFFF5F5F5).withOpacity(0.7),
+                            ),
+                            SizedBox(width: 8),
+                            Expanded(
+                              child: Column(
+                                crossAxisAlignment: CrossAxisAlignment.start,
+                                children: [
+                                  Text(
+                                    groomnickName + ' & ' + bridenickName,
+                                    style: GoogleFonts.roboto(
+                                      fontSize: 11,
+                                      fontWeight: FontWeight.w600,
+                                      color: Color(0xFFF5F5F5).withOpacity(0.7),
+                                    ),
+                                  ),
+                                  SizedBox(height: 3),
+                                  Text(
+                                    replyText,
+                                    style: GoogleFonts.roboto(
+                                      fontSize: 12,
+                                      color: Color(0xFFE0E0E0),
+                                      height: 1.3,
+                                    ),
+                                  ),
+                                  if (replyTimestamp != null) ...[
+                                    SizedBox(height: 3),
+                                    Text(
+                                      _formatTimestamp(replyTimestamp),
+                                      style: GoogleFonts.roboto(
+                                        fontSize: 10,
+                                        color: Color(
+                                          0xFFE0E0E0,
+                                        ).withOpacity(0.5),
+                                      ),
+                                    ),
+                                  ],
+                                ],
+                              ),
+                            ),
+                          ],
+                        ),
+                      );
+                    }).toList(),
+                  ),
+                ),
+              ],
             ],
           ),
         ),
@@ -216,6 +309,24 @@ class _UcapanSectionState extends State<UcapanSection> {
           ),
       ],
     );
+  }
+
+  String _formatTimestamp(Timestamp timestamp) {
+    final date = timestamp.toDate();
+    final now = DateTime.now();
+    final difference = now.difference(date);
+
+    if (difference.inDays > 7) {
+      return '${date.day}/${date.month}/${date.year}';
+    } else if (difference.inDays > 0) {
+      return '${difference.inDays} hari yang lalu';
+    } else if (difference.inHours > 0) {
+      return '${difference.inHours} jam yang lalu';
+    } else if (difference.inMinutes > 0) {
+      return '${difference.inMinutes} menit yang lalu';
+    } else {
+      return 'Baru saja';
+    }
   }
 
   @override
@@ -235,9 +346,9 @@ class _UcapanSectionState extends State<UcapanSection> {
               letterSpacing: 0.5,
             ),
           ),
-          
+
           SizedBox(height: 6),
-          
+
           Text(
             'Berikan ucapan dan doa terbaik untuk kami',
             style: GoogleFonts.roboto(
@@ -323,11 +434,17 @@ class _UcapanSectionState extends State<UcapanSection> {
                 Row(
                   children: [
                     Expanded(
-                      child: _buildKehadiranChip('Hadir', Icons.check_circle_outline),
+                      child: _buildKehadiranChip(
+                        'Hadir',
+                        Icons.check_circle_outline,
+                      ),
                     ),
                     SizedBox(width: 8),
                     Expanded(
-                      child: _buildKehadiranChip('Tidak Hadir', Icons.cancel_outlined),
+                      child: _buildKehadiranChip(
+                        'Tidak Hadir',
+                        Icons.cancel_outlined,
+                      ),
                     ),
                     SizedBox(width: 8),
                     Expanded(
@@ -438,9 +555,7 @@ class _UcapanSectionState extends State<UcapanSection> {
                   ),
                   child: Text(
                     'Terjadi kesalahan',
-                    style: GoogleFonts.roboto(
-                      color: Colors.red,
-                    ),
+                    style: GoogleFonts.roboto(color: Colors.red),
                     textAlign: TextAlign.center,
                   ),
                 );
@@ -491,7 +606,6 @@ class _UcapanSectionState extends State<UcapanSection> {
                 );
               }
 
-              // SATU CONTAINER untuk semua ucapan
               return Container(
                 decoration: BoxDecoration(
                   color: Color(0xFFF5F5F5).withOpacity(0.05),
@@ -503,7 +617,8 @@ class _UcapanSectionState extends State<UcapanSection> {
                 ),
                 child: Column(
                   children: List.generate(ucapanDocs.length, (index) {
-                    final data = ucapanDocs[index].data() as Map<String, dynamic>;
+                    final data =
+                        ucapanDocs[index].data() as Map<String, dynamic>;
                     final isLast = index == ucapanDocs.length - 1;
                     return _buildUcapanItem(data, showDivider: !isLast);
                   }),
@@ -522,9 +637,7 @@ class _UcapanSectionState extends State<UcapanSection> {
                 backgroundColor: Color(0xFF1A1A1A),
                 isScrollControlled: true,
                 shape: RoundedRectangleBorder(
-                  borderRadius: BorderRadius.vertical(
-                    top: Radius.circular(20),
-                  ),
+                  borderRadius: BorderRadius.vertical(top: Radius.circular(20)),
                 ),
                 builder: (context) => DraggableScrollableSheet(
                   initialChildSize: 0.7,
@@ -533,7 +646,10 @@ class _UcapanSectionState extends State<UcapanSection> {
                   expand: false,
                   builder: (context, scrollController) {
                     return Container(
-                      padding: EdgeInsets.symmetric(horizontal: 20, vertical: 16),
+                      padding: EdgeInsets.symmetric(
+                        horizontal: 20,
+                        vertical: 16,
+                      ),
                       child: Column(
                         children: [
                           // Handle
@@ -545,9 +661,9 @@ class _UcapanSectionState extends State<UcapanSection> {
                               borderRadius: BorderRadius.circular(2),
                             ),
                           ),
-                          
+
                           SizedBox(height: 16),
-                          
+
                           Text(
                             'Semua Ucapan',
                             style: GoogleFonts.robotoSlab(
@@ -556,9 +672,9 @@ class _UcapanSectionState extends State<UcapanSection> {
                               color: Color(0xFFF5F5F5),
                             ),
                           ),
-                          
+
                           SizedBox(height: 16),
-                          
+
                           Expanded(
                             child: StreamBuilder<QuerySnapshot>(
                               stream: _firestoreService.getAllUcapan(),
@@ -589,10 +705,15 @@ class _UcapanSectionState extends State<UcapanSection> {
                                     itemCount: allUcapan.length,
                                     padding: EdgeInsets.zero,
                                     itemBuilder: (context, index) {
-                                      final data = allUcapan[index].data() 
-                                          as Map<String, dynamic>;
-                                      final isLast = index == allUcapan.length - 1;
-                                      return _buildUcapanItem(data, showDivider: !isLast);
+                                      final data =
+                                          allUcapan[index].data()
+                                              as Map<String, dynamic>;
+                                      final isLast =
+                                          index == allUcapan.length - 1;
+                                      return _buildUcapanItem(
+                                        data,
+                                        showDivider: !isLast,
+                                      );
                                     },
                                   ),
                                 );

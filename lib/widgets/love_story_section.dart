@@ -1,7 +1,11 @@
 import 'package:flutter/material.dart';
 import 'package:google_fonts/google_fonts.dart';
+import 'package:cloud_firestore/cloud_firestore.dart';
+import '../services/firestore_service.dart';
 
 class LoveStorySection extends StatelessWidget {
+  final FirestoreService _firestoreService = FirestoreService();
+
   @override
   Widget build(BuildContext context) {
     return Padding(
@@ -54,53 +58,119 @@ class LoveStorySection extends StatelessWidget {
 
           SizedBox(height: 16),
 
-          // Story Cards
-          _buildStoryCard(
-            title: 'Kencan Pertama',
-            date: '17 Agustus 2021',
-            description:
-                'Kami belum tahu pasti kapan rasa itu tumbuh mungkin dari senyuman yang singkat, sapaan ringan yang canggung, atau obrolan sederhana lewat pesan teks. Namun yang kami ingat, kencan pertama itu membawa arti. Bersepeda motor ke Mojokerto sampai Batu, di tengah semarak HUT RI ke-76, kami menikmati alam dan suasana penuh warna. Sejak saat itu, hati kami perlahan saling terikat.',
+          // Story Cards from Firestore
+          StreamBuilder<QuerySnapshot>(
+            stream: _firestoreService.getAllKisahCinta(),
+            builder: (context, snapshot) {
+              if (snapshot.connectionState == ConnectionState.waiting) {
+                return Center(
+                  child: Padding(
+                    padding: EdgeInsets.all(40),
+                    child: CircularProgressIndicator(
+                      color: Color(0xFFD4AF37),
+                      strokeWidth: 2,
+                    ),
+                  ),
+                );
+              }
+
+              if (snapshot.hasError) {
+                return Center(
+                  child: Padding(
+                    padding: EdgeInsets.all(20),
+                    child: Text(
+                      'Terjadi kesalahan memuat kisah cinta',
+                      style: TextStyle(color: Color(0xFFB0B0B0), fontSize: 13),
+                      textAlign: TextAlign.center,
+                    ),
+                  ),
+                );
+              }
+
+              if (!snapshot.hasData || snapshot.data!.docs.isEmpty) {
+                return SizedBox.shrink();
+              }
+
+              // Sort stories by createdAt timestamp (oldest first)
+              final stories = snapshot.data!.docs;
+              stories.sort((a, b) {
+                final aData = a.data() as Map<String, dynamic>;
+                final bData = b.data() as Map<String, dynamic>;
+                final aTimestamp = aData['createdAt'] as Timestamp?;
+                final bTimestamp = bData['createdAt'] as Timestamp?;
+
+                if (aTimestamp == null && bTimestamp == null) return 0;
+                if (aTimestamp == null) return 1;
+                if (bTimestamp == null) return -1;
+
+                return aTimestamp.compareTo(bTimestamp);
+              });
+
+              return Column(
+                children: [
+                  // Loop through all stories
+                  ...stories.map((doc) {
+                    final data = doc.data() as Map<String, dynamic>;
+                    final judul = data['judul'] ?? '';
+                    final tanggal = data['tanggal'] ?? '';
+                    final cerita = data['cerita'] ?? '';
+
+                    return Column(
+                      children: [
+                        _buildStoryCard(
+                          title: judul,
+                          date: tanggal,
+                          description: cerita,
+                        ),
+                        SizedBox(height: 12),
+                      ],
+                    );
+                  }).toList(),
+
+                  // Closing Card from Firestore
+                  FutureBuilder<DocumentSnapshot>(
+                    future: _firestoreService.getKisahCintaPenutup(),
+                    builder: (context, penutupSnapshot) {
+                      if (penutupSnapshot.connectionState ==
+                          ConnectionState.waiting) {
+                        return Center(
+                          child: Padding(
+                            padding: EdgeInsets.all(20),
+                            child: CircularProgressIndicator(
+                              color: Color(0xFFD4AF37),
+                              strokeWidth: 2,
+                            ),
+                          ),
+                        );
+                      }
+
+                      if (penutupSnapshot.hasError ||
+                          !penutupSnapshot.hasData ||
+                          !penutupSnapshot.data!.exists) {
+                        return SizedBox.shrink();
+                      }
+
+                      final penutupData =
+                          penutupSnapshot.data!.data() as Map<String, dynamic>?;
+
+                      if (penutupData == null ||
+                          penutupData['title'] == null ||
+                          penutupData['kisah'] == null ||
+                          penutupData['title'].toString().isEmpty ||
+                          penutupData['kisah'].toString().isEmpty) {
+                        return SizedBox.shrink();
+                      }
+
+                      final title = penutupData['title'] as String;
+                      final kisah = penutupData['kisah'] as String;
+
+                      return _buildClosingCard(title: title, kisah: kisah);
+                    },
+                  ),
+                ],
+              );
+            },
           ),
-
-          SizedBox(height: 12),
-
-          _buildStoryCard(
-            title: 'Perjalanan Menjalin Asmara',
-            date: '2021 • 2022 • 2023 • 2024',
-            description:
-                'Waktu berjalan, kisah kami tumbuh bersama. Kami belajar mencintai bukan hanya dalam bahagia, tapi juga dalam perjuangan. Menemani satu sama lain melewati masa perkuliahan, organisasi, dan hiruk pikuk dunia muda. Di antara tumpukan tugas, segelas kopi, dan semangat yang tak pernah padam, kami menemukan arti saling mendukung. Kami belajar bahwa cinta bukan hanya rasa, melainkan kesediaan untuk tumbuh bersama.',
-          ),
-
-          SizedBox(height: 12),
-
-          _buildStoryCard(
-            title: 'Perjumpaan dengan Orang Tua',
-            date: '2024',
-            description:
-                'Tahun itu, cinta kami mulai melangkah lebih pasti. Kami mempertemukan dua keluarga, dua dunia yang berbeda namun disatukan oleh niat yang sama. Pertemuan itu sederhana, namun hangat. Di sana kami melihat restu, dan dalam restu itu kami menemukan ketenangan untuk melangkah lebih jauh.',
-          ),
-
-          SizedBox(height: 12),
-
-          _buildStoryCard(
-            title: 'Lamaran',
-            date: '24 Februari 2025',
-            description:
-                'Hari di mana niat berubah menjadi janji. Kami memutuskan untuk mengikat cinta dalam langkah yang lebih sakral. Dengan doa yang mengalun dan tatapan penuh harap, kami menyematkan komitmen bukan hanya untuk hari ini, tetapi untuk hari-hari yang akan datang.',
-          ),
-
-          SizedBox(height: 12),
-
-          _buildStoryCard(
-            title: 'Akad Nikah',
-            date: '09 Desember 2025',
-            description:
-                'Hari yang dinanti pun tiba. Di hadapan keluarga dan dengan ridha Allah SWT, kami mengikat janji suci untuk saling menjaga dan mencintai. Dari pertemuan yang sederhana hingga ikrar di pelaminan, kami percaya inilah takdir indah yang telah Allah tuliskan untuk kami.',
-          ),
-
-          SizedBox(height: 12),
-
-          _buildClosingCard(),
         ],
       ),
     );
@@ -116,10 +186,7 @@ class LoveStorySection extends StatelessWidget {
       decoration: BoxDecoration(
         color: Color(0xFFF5F5F5).withOpacity(0.05),
         borderRadius: BorderRadius.circular(12),
-        border: Border.all(
-          color: Color(0xFFF5F5F5).withOpacity(0.1),
-          width: 1,
-        ),
+        border: Border.all(color: Color(0xFFF5F5F5).withOpacity(0.1), width: 1),
       ),
       child: Column(
         children: [
@@ -152,10 +219,7 @@ class LoveStorySection extends StatelessWidget {
           SizedBox(height: 10),
 
           // Divider
-          Container(
-            height: 1,
-            color: Color(0xFFF5F5F5).withOpacity(0.1),
-          ),
+          Container(height: 1, color: Color(0xFFF5F5F5).withOpacity(0.1)),
 
           SizedBox(height: 10),
 
@@ -175,7 +239,7 @@ class LoveStorySection extends StatelessWidget {
     );
   }
 
-  Widget _buildClosingCard() {
+  Widget _buildClosingCard({required String title, required String kisah}) {
     return Container(
       padding: EdgeInsets.all(16),
       decoration: BoxDecoration(
@@ -190,7 +254,7 @@ class LoveStorySection extends StatelessWidget {
         children: [
           // Title
           Text(
-            'Selamanya...',
+            title,
             style: GoogleFonts.lobster(
               fontSize: 28,
               fontWeight: FontWeight.w300,
@@ -203,16 +267,13 @@ class LoveStorySection extends StatelessWidget {
           SizedBox(height: 10),
 
           // Divider
-          Container(
-            height: 1,
-            color: Color(0xFFD4AF37).withOpacity(0.3),
-          ),
+          Container(height: 1, color: Color(0xFFD4AF37).withOpacity(0.3)),
 
           SizedBox(height: 10),
 
           // Closing Text
           Text(
-            'Cinta bagi kami bukan sekadar rasa yang hadir, melainkan perjalanan jiwa untuk saling memahami dan bertumbuh. Ia tak diukur dari panjangnya waktu, tetapi dari ketulusan yang terus diperbarui setiap hari.\n\nKami percaya, cinta sejati bukan tentang memiliki, melainkan tentang merawat dengan sabar, dengan doa, dan dengan kesetiaan. Sebab pada akhirnya, cinta bukan sekadar takdir yang ditemukan, melainkan amanah yang dijaga hingga akhir waktu.\n\nDan dalam setiap langkah ke depan, kami ingin terus memilih satu sama lain dengan hati yang sama, dalam ridha Allah SWT, untuk selamanya.',
+            kisah,
             style: TextStyle(
               fontSize: 13,
               fontWeight: FontWeight.w400,
