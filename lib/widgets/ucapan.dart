@@ -81,7 +81,7 @@ class _UcapanSectionState extends State<UcapanSection> {
         });
       },
       child: Container(
-        padding: EdgeInsets.symmetric(horizontal: 14, vertical: 8),
+        padding: EdgeInsets.symmetric(horizontal: 10, vertical: 7),
         decoration: BoxDecoration(
           color: isSelected
               ? Color(0xFFF5F5F5).withOpacity(0.15)
@@ -96,15 +96,19 @@ class _UcapanSectionState extends State<UcapanSection> {
         ),
         child: Row(
           mainAxisSize: MainAxisSize.min,
+          mainAxisAlignment: MainAxisAlignment.center,
           children: [
-            Icon(icon, size: 16, color: Color(0xFFF5F5F5)),
-            SizedBox(width: 6),
-            Text(
-              label,
-              style: GoogleFonts.roboto(
-                fontSize: 12,
-                fontWeight: isSelected ? FontWeight.w600 : FontWeight.w400,
-                color: Color(0xFFF5F5F5),
+            Icon(icon, size: 14, color: Color(0xFFF5F5F5)),
+            SizedBox(width: 4),
+            Flexible(
+              child: Text(
+                label,
+                style: GoogleFonts.roboto(
+                  fontSize: 10,
+                  fontWeight: isSelected ? FontWeight.w600 : FontWeight.w400,
+                  color: Color(0xFFF5F5F5),
+                ),
+                overflow: TextOverflow.ellipsis,
               ),
             ),
           ],
@@ -128,7 +132,7 @@ class _UcapanSectionState extends State<UcapanSection> {
     if (kehadiran == 'Hadir') {
       statusIcon = Icons.check_circle;
       statusColor = Colors.green;
-    } else if (kehadiran == 'Tidak Hadir') {
+    } else if (kehadiran == 'Tidak') {
       statusIcon = Icons.cancel;
       statusColor = Colors.red;
     } else {
@@ -139,7 +143,7 @@ class _UcapanSectionState extends State<UcapanSection> {
     return Column(
       children: [
         Padding(
-          padding: EdgeInsets.symmetric(vertical: 12, horizontal: 20),
+          padding: EdgeInsets.symmetric(vertical: 10, horizontal: 16),
           child: Column(
             crossAxisAlignment: CrossAxisAlignment.start,
             children: [
@@ -147,8 +151,8 @@ class _UcapanSectionState extends State<UcapanSection> {
                 crossAxisAlignment: CrossAxisAlignment.start,
                 children: [
                   Container(
-                    width: 36,
-                    height: 36,
+                    width: 32,
+                    height: 32,
                     decoration: BoxDecoration(
                       color: Color(0xFFF5F5F5).withOpacity(0.1),
                       shape: BoxShape.circle,
@@ -156,8 +160,8 @@ class _UcapanSectionState extends State<UcapanSection> {
                     child: Center(
                       child: Text(
                         (data['name'] ?? 'A')[0].toUpperCase(),
-                        style: GoogleFonts.robotoSlab(
-                          fontSize: 16,
+                        style: GoogleFonts.roboto(
+                          fontSize: 14,
                           fontWeight: FontWeight.w600,
                           color: Color(0xFFF5F5F5),
                         ),
@@ -165,7 +169,7 @@ class _UcapanSectionState extends State<UcapanSection> {
                     ),
                   ),
 
-                  SizedBox(width: 12),
+                  SizedBox(width: 10),
 
                   Expanded(
                     child: Column(
@@ -176,24 +180,26 @@ class _UcapanSectionState extends State<UcapanSection> {
                             Expanded(
                               child: Text(
                                 data['name'] ?? 'Anonymous',
-                                style: GoogleFonts.robotoSlab(
-                                  fontSize: 15,
+                                style: GoogleFonts.roboto(
+                                  fontSize: 13,
                                   fontWeight: FontWeight.w600,
                                   color: Color(0xFFF5F5F5),
                                   letterSpacing: 0.2,
                                 ),
+                                overflow: TextOverflow.ellipsis,
                               ),
                             ),
-                            Icon(statusIcon, color: statusColor, size: 18),
+                            SizedBox(width: 6),
+                            Icon(statusIcon, color: statusColor, size: 16),
                           ],
                         ),
 
-                        SizedBox(height: 4),
+                        SizedBox(height: 3),
 
                         Text(
                           data['ucapan'] ?? '',
                           style: GoogleFonts.roboto(
-                            fontSize: 13,
+                            fontSize: 11,
                             fontWeight: FontWeight.w400,
                             color: Color(0xFFE0E0E0),
                             height: 1.4,
@@ -201,11 +207,11 @@ class _UcapanSectionState extends State<UcapanSection> {
                         ),
 
                         if (timestamp != null) ...[
-                          SizedBox(height: 4),
+                          SizedBox(height: 3),
                           Text(
                             _formatTimestamp(timestamp),
                             style: GoogleFonts.roboto(
-                              fontSize: 10,
+                              fontSize: 9,
                               color: Color(0xFFE0E0E0).withOpacity(0.5),
                             ),
                           ),
@@ -217,10 +223,10 @@ class _UcapanSectionState extends State<UcapanSection> {
               ),
 
               if (replies.isNotEmpty) ...[
-                SizedBox(height: 10),
+                SizedBox(height: 8),
                 Container(
-                  margin: EdgeInsets.only(left: 48),
-                  padding: EdgeInsets.all(10),
+                  margin: EdgeInsets.only(left: 42),
+                  padding: EdgeInsets.all(8),
                   decoration: BoxDecoration(
                     color: Color(0xFFF5F5F5).withOpacity(0.08),
                     borderRadius: BorderRadius.circular(8),
@@ -243,17 +249,17 @@ class _UcapanSectionState extends State<UcapanSection> {
 
                       return Padding(
                         padding: EdgeInsets.only(
-                          bottom: replies.last == reply ? 0 : 8,
+                          bottom: replies.last == reply ? 0 : 6,
                         ),
                         child: Row(
                           crossAxisAlignment: CrossAxisAlignment.start,
                           children: [
                             Icon(
                               Icons.favorite,
-                              size: 14,
+                              size: 12,
                               color: Color(0xFFF5F5F5).withOpacity(0.7),
                             ),
-                            SizedBox(width: 8),
+                            SizedBox(width: 6),
                             Expanded(
                               child: Column(
                                 crossAxisAlignment: CrossAxisAlignment.start,
@@ -261,26 +267,26 @@ class _UcapanSectionState extends State<UcapanSection> {
                                   Text(
                                     groomnickName + ' & ' + bridenickName,
                                     style: GoogleFonts.roboto(
-                                      fontSize: 11,
+                                      fontSize: 10,
                                       fontWeight: FontWeight.w600,
                                       color: Color(0xFFF5F5F5).withOpacity(0.7),
                                     ),
                                   ),
-                                  SizedBox(height: 3),
+                                  SizedBox(height: 2),
                                   Text(
                                     replyText,
                                     style: GoogleFonts.roboto(
-                                      fontSize: 12,
+                                      fontSize: 10,
                                       color: Color(0xFFE0E0E0),
                                       height: 1.3,
                                     ),
                                   ),
                                   if (replyTimestamp != null) ...[
-                                    SizedBox(height: 3),
+                                    SizedBox(height: 2),
                                     Text(
                                       _formatTimestamp(replyTimestamp),
                                       style: GoogleFonts.roboto(
-                                        fontSize: 10,
+                                        fontSize: 9,
                                         color: Color(
                                           0xFFE0E0E0,
                                         ).withOpacity(0.5),
@@ -305,7 +311,7 @@ class _UcapanSectionState extends State<UcapanSection> {
             height: 1,
             thickness: 1,
             color: Color(0xFFF5F5F5).withOpacity(0.08),
-            indent: 68,
+            indent: 58,
           ),
       ],
     );
@@ -319,11 +325,11 @@ class _UcapanSectionState extends State<UcapanSection> {
     if (difference.inDays > 7) {
       return '${date.day}/${date.month}/${date.year}';
     } else if (difference.inDays > 0) {
-      return '${difference.inDays} hari yang lalu';
+      return '${difference.inDays} hari lalu';
     } else if (difference.inHours > 0) {
-      return '${difference.inHours} jam yang lalu';
+      return '${difference.inHours} jam lalu';
     } else if (difference.inMinutes > 0) {
-      return '${difference.inMinutes} menit yang lalu';
+      return '${difference.inMinutes} menit lalu';
     } else {
       return 'Baru saja';
     }
@@ -332,18 +338,18 @@ class _UcapanSectionState extends State<UcapanSection> {
   @override
   Widget build(BuildContext context) {
     return Padding(
-      padding: EdgeInsets.symmetric(horizontal: 20, vertical: 28),
+      padding: EdgeInsets.symmetric(horizontal: 10, vertical: 24),
       child: Column(
         crossAxisAlignment: CrossAxisAlignment.center,
         children: [
           // Title
           Text(
             'Ucapan & Doa',
-            style: GoogleFonts.robotoSlab(
-              fontSize: 26,
-              fontWeight: FontWeight.w600,
+            style: GoogleFonts.lobster(
+              fontSize: 24,
+              fontWeight: FontWeight.w300,
               color: Color(0xFFF5F5F5),
-              letterSpacing: 0.5,
+              letterSpacing: 1.0,
             ),
           ),
 
@@ -352,18 +358,18 @@ class _UcapanSectionState extends State<UcapanSection> {
           Text(
             'Berikan ucapan dan doa terbaik untuk kami',
             style: GoogleFonts.roboto(
-              fontSize: 13,
+              fontSize: 11,
               fontWeight: FontWeight.w400,
               color: Color(0xFFE0E0E0),
             ),
             textAlign: TextAlign.center,
           ),
 
-          SizedBox(height: 24),
+          SizedBox(height: 20),
 
           // Form Input
           Container(
-            padding: EdgeInsets.all(20),
+            padding: EdgeInsets.all(16),
             decoration: BoxDecoration(
               color: Color(0xFFF5F5F5).withOpacity(0.05),
               borderRadius: BorderRadius.circular(12),
@@ -379,13 +385,13 @@ class _UcapanSectionState extends State<UcapanSection> {
                 TextField(
                   controller: _nameController,
                   style: GoogleFonts.roboto(
-                    fontSize: 13,
+                    fontSize: 12,
                     color: Color(0xFFF5F5F5),
                   ),
                   decoration: InputDecoration(
                     hintText: 'Nama Anda',
                     hintStyle: GoogleFonts.roboto(
-                      fontSize: 13,
+                      fontSize: 12,
                       color: Color(0xFFE0E0E0).withOpacity(0.5),
                     ),
                     filled: true,
@@ -409,26 +415,26 @@ class _UcapanSectionState extends State<UcapanSection> {
                       ),
                     ),
                     contentPadding: EdgeInsets.symmetric(
-                      horizontal: 14,
-                      vertical: 12,
+                      horizontal: 12,
+                      vertical: 10,
                     ),
                     isDense: true,
                   ),
                 ),
 
-                SizedBox(height: 12),
+                SizedBox(height: 10),
 
                 // Konfirmasi Kehadiran Label
                 Text(
                   'Konfirmasi Kehadiran',
                   style: GoogleFonts.roboto(
-                    fontSize: 12,
+                    fontSize: 11,
                     fontWeight: FontWeight.w500,
                     color: Color(0xFFF5F5F5).withOpacity(0.8),
                   ),
                 ),
 
-                SizedBox(height: 8),
+                SizedBox(height: 6),
 
                 // Kehadiran Options
                 Row(
@@ -439,34 +445,34 @@ class _UcapanSectionState extends State<UcapanSection> {
                         Icons.check_circle_outline,
                       ),
                     ),
-                    SizedBox(width: 8),
+                    SizedBox(width: 6),
                     Expanded(
                       child: _buildKehadiranChip(
-                        'Tidak Hadir',
+                        'Tidak',
                         Icons.cancel_outlined,
                       ),
                     ),
-                    SizedBox(width: 8),
+                    SizedBox(width: 6),
                     Expanded(
                       child: _buildKehadiranChip('Ragu', Icons.help_outline),
                     ),
                   ],
                 ),
 
-                SizedBox(height: 12),
+                SizedBox(height: 10),
 
                 // Ucapan Input
                 TextField(
                   controller: _ucapanController,
                   maxLines: 3,
                   style: GoogleFonts.roboto(
-                    fontSize: 13,
+                    fontSize: 12,
                     color: Color(0xFFF5F5F5),
                   ),
                   decoration: InputDecoration(
                     hintText: 'Tulis ucapan dan doa Anda...',
                     hintStyle: GoogleFonts.roboto(
-                      fontSize: 13,
+                      fontSize: 12,
                       color: Color(0xFFE0E0E0).withOpacity(0.5),
                     ),
                     filled: true,
@@ -490,13 +496,13 @@ class _UcapanSectionState extends State<UcapanSection> {
                       ),
                     ),
                     contentPadding: EdgeInsets.symmetric(
-                      horizontal: 14,
-                      vertical: 12,
+                      horizontal: 12,
+                      vertical: 10,
                     ),
                   ),
                 ),
 
-                SizedBox(height: 16),
+                SizedBox(height: 12),
 
                 // Submit Button
                 SizedBox(
@@ -506,7 +512,7 @@ class _UcapanSectionState extends State<UcapanSection> {
                     style: ElevatedButton.styleFrom(
                       backgroundColor: Color(0xFFF5F5F5).withOpacity(0.9),
                       foregroundColor: Color(0xFF1A1A1A),
-                      padding: EdgeInsets.symmetric(vertical: 12),
+                      padding: EdgeInsets.symmetric(vertical: 10),
                       shape: RoundedRectangleBorder(
                         borderRadius: BorderRadius.circular(8),
                       ),
@@ -514,8 +520,8 @@ class _UcapanSectionState extends State<UcapanSection> {
                     ),
                     child: _isSubmitting
                         ? SizedBox(
-                            height: 18,
-                            width: 18,
+                            height: 16,
+                            width: 16,
                             child: CircularProgressIndicator(
                               strokeWidth: 2,
                               valueColor: AlwaysStoppedAnimation<Color>(
@@ -526,7 +532,7 @@ class _UcapanSectionState extends State<UcapanSection> {
                         : Text(
                             'Kirim Ucapan',
                             style: GoogleFonts.roboto(
-                              fontSize: 13,
+                              fontSize: 12,
                               fontWeight: FontWeight.w600,
                             ),
                           ),
@@ -536,7 +542,7 @@ class _UcapanSectionState extends State<UcapanSection> {
             ),
           ),
 
-          SizedBox(height: 20),
+          SizedBox(height: 16),
 
           // List Ucapan dalam Satu Container
           StreamBuilder<QuerySnapshot>(
@@ -544,7 +550,7 @@ class _UcapanSectionState extends State<UcapanSection> {
             builder: (context, snapshot) {
               if (snapshot.hasError) {
                 return Container(
-                  padding: EdgeInsets.all(20),
+                  padding: EdgeInsets.all(16),
                   decoration: BoxDecoration(
                     color: Color(0xFFF5F5F5).withOpacity(0.05),
                     borderRadius: BorderRadius.circular(12),
@@ -555,7 +561,7 @@ class _UcapanSectionState extends State<UcapanSection> {
                   ),
                   child: Text(
                     'Terjadi kesalahan',
-                    style: GoogleFonts.roboto(color: Colors.red),
+                    style: GoogleFonts.roboto(color: Colors.red, fontSize: 11),
                     textAlign: TextAlign.center,
                   ),
                 );
@@ -586,7 +592,7 @@ class _UcapanSectionState extends State<UcapanSection> {
 
               if (ucapanDocs.isEmpty) {
                 return Container(
-                  padding: EdgeInsets.all(20),
+                  padding: EdgeInsets.all(16),
                   decoration: BoxDecoration(
                     color: Color(0xFFF5F5F5).withOpacity(0.05),
                     borderRadius: BorderRadius.circular(12),
@@ -598,7 +604,7 @@ class _UcapanSectionState extends State<UcapanSection> {
                   child: Text(
                     'Belum ada ucapan. Jadilah yang pertama!',
                     style: GoogleFonts.roboto(
-                      fontSize: 13,
+                      fontSize: 11,
                       color: Color(0xFFE0E0E0),
                     ),
                     textAlign: TextAlign.center,
@@ -627,7 +633,7 @@ class _UcapanSectionState extends State<UcapanSection> {
             },
           ),
 
-          SizedBox(height: 12),
+          SizedBox(height: 10),
 
           // Button Lihat Semua
           TextButton(
@@ -666,10 +672,11 @@ class _UcapanSectionState extends State<UcapanSection> {
 
                           Text(
                             'Semua Ucapan',
-                            style: GoogleFonts.robotoSlab(
-                              fontSize: 22,
-                              fontWeight: FontWeight.w600,
+                            style: GoogleFonts.lobster(
+                              fontSize: 20,
+                              fontWeight: FontWeight.w300,
                               color: Color(0xFFF5F5F5),
+                              letterSpacing: 1.0,
                             ),
                           ),
 
@@ -730,7 +737,7 @@ class _UcapanSectionState extends State<UcapanSection> {
             child: Text(
               'Lihat Semua Ucapan',
               style: GoogleFonts.roboto(
-                fontSize: 13,
+                fontSize: 11,
                 fontWeight: FontWeight.w500,
                 color: Color(0xFFF5F5F5),
                 decoration: TextDecoration.underline,

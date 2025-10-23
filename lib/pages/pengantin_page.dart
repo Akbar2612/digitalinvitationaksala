@@ -250,365 +250,384 @@ class _CardPengantinPageState extends State<CardPengantinPage>
 
   @override
   Widget build(BuildContext context) {
-    final mockupContext = MockupContext.of(context);
-    final isInsideMockup = mockupContext?.isInsideMockup ?? false;
+    final fixedWidth = MediaQuery.of(context).size.width;
+    final fixedHeight = MediaQuery.of(context).size.height;
 
-    final effectiveWidth = isInsideMockup
-        ? 360.0
-        : MediaQuery.of(context).size.width;
-
-    return MediaQuery(
-      data: MediaQuery.of(context).copyWith(
-        size: Size(effectiveWidth, MediaQuery.of(context).size.height),
-      ),
-      child: Scaffold(
-        body: Stack(
-          children: [
-            SingleChildScrollView(
-              controller: _scrollController,
-              physics: AlwaysScrollableScrollPhysics(),
-              child: Stack(
-                children: [
-                  Container(
-                    height: MediaQuery.of(context).size.height,
-                    decoration: BoxDecoration(
-                      gradient: LinearGradient(
-                        begin: Alignment.topCenter,
-                        end: Alignment.bottomCenter,
-                        colors: [
-                          Color(0xFF2a2a2a),
-                          Color(0xFF1a1a1a),
-                          Color(0xFF0a0a0a),
-                        ],
-                      ),
-                      image: DecorationImage(
-                        image: AssetImage('assets/images/secondbg.jpg'),
-                        fit: BoxFit.cover,
-                        opacity: 0.3,
-                      ),
-                    ),
-                    child: Container(
-                      decoration: BoxDecoration(
-                        gradient: LinearGradient(
-                          begin: Alignment.topCenter,
-                          end: Alignment.bottomCenter,
-                          colors: [
-                            Colors.black.withOpacity(0.3),
-                            Colors.black.withOpacity(0.5),
-                            Color(0xFF1a1a1a).withOpacity(1),
-                          ],
-                          stops: [0.0, 0.5, 1.0],
-                        ),
-                      ),
-                    ),
-                  ),
-                  // Content
-                  Column(
+    return Center(
+      child: Container(
+        width: fixedWidth,
+        height: fixedHeight,
+        constraints: BoxConstraints(
+          maxWidth: fixedWidth,
+          maxHeight: fixedHeight,
+        ),
+        child: MediaQuery(
+          data: MediaQuery.of(
+            context,
+          ).copyWith(size: Size(fixedWidth, fixedHeight)),
+          child: Scaffold(
+            body: Stack(
+              children: [
+                SingleChildScrollView(
+                  controller: _scrollController,
+                  physics: AlwaysScrollableScrollPhysics(),
+                  child: Stack(
                     children: [
                       Container(
-                        height: MediaQuery.of(context).size.height,
-                        padding: EdgeInsets.symmetric(horizontal: 20),
-                        child: Column(
-                          mainAxisAlignment: MainAxisAlignment.center,
-                          children: [
-                            SizedBox(height: 160),
-                            FadeTransition(
-                              opacity: _titleOpacity,
-                              child: Text(
-                                'The Highest Happiness On Earth\nIs The Happiness Of Marriage',
-                                style: TextStyle(
-                                  fontSize: 11,
-                                  letterSpacing: 2.8,
-                                  color: Color(0xFFB0B0B0),
-                                  fontWeight: FontWeight.w400,
-                                ),
-                                textAlign: TextAlign.center,
-                              ),
+                        height: fixedHeight,
+                        decoration: BoxDecoration(
+                          gradient: LinearGradient(
+                            begin: Alignment.topCenter,
+                            end: Alignment.bottomCenter,
+                            colors: [
+                              Color(0xFF2a2a2a),
+                              Color(0xFF1a1a1a),
+                              Color(0xFF0a0a0a),
+                            ],
+                          ),
+                          image: DecorationImage(
+                            image: AssetImage('assets/images/secondbg.jpg'),
+                            fit: BoxFit.cover,
+                            opacity: 0.3,
+                          ),
+                        ),
+                        child: Container(
+                          decoration: BoxDecoration(
+                            gradient: LinearGradient(
+                              begin: Alignment.topCenter,
+                              end: Alignment.bottomCenter,
+                              colors: [
+                                Colors.black.withOpacity(0.3),
+                                Colors.black.withOpacity(0.5),
+                                Color(0xFF1a1a1a).withOpacity(1),
+                              ],
+                              stops: [0.0, 0.5, 1.0],
                             ),
-                            SizedBox(height: 16),
-
-                            // Groom name
-                            SlideTransition(
-                              position: _groomSlide,
-                              child: FadeTransition(
-                                opacity: _groomOpacity,
-                                child: Text(
-                                  groomName,
-                                  style: GoogleFonts.lobster(
-                                    fontSize: 32,
-                                    fontWeight: FontWeight.w300,
-                                    color: Color(0xFFF5F5F5),
-                                    letterSpacing: 1,
-                                  ),
-                                  textAlign: TextAlign.center,
-                                ),
-                              ),
-                            ),
-
-                            SizedBox(height: 6),
-
-                            // Groom Parents
-                            SlideTransition(
-                              position: _groomParentSlide,
-                              child: FadeTransition(
-                                opacity: _groomParentOpacity,
-                                child: Column(
-                                  children: [
-                                    Text(
-                                      "Putra dari Bapak " +
-                                          FatherparentsGroom +
-                                          " & " +
-                                          MotherparentsGroom,
-                                      style: TextStyle(
-                                        fontSize: 11,
-                                        color: Color(0xFFD0D0D0),
-                                        letterSpacing: 0.5,
-                                        height: 1.4,
-                                      ),
-                                      textAlign: TextAlign.center,
-                                    ),
-                                    SizedBox(height: 4),
-                                    Text(
-                                      "Desa Mlati, Kecamatan Kedungpring, Kabupaten Lamongan",
-                                      style: TextStyle(
-                                        fontSize: 11,
-                                        color: Color(0xFFD0D0D0),
-                                        letterSpacing: 0.5,
-                                        height: 1.4,
-                                      ),
-                                      textAlign: TextAlign.center,
-                                    ),
-                                  ],
-                                ),
-                              ),
-                            ),
-
-                            SizedBox(height: 20),
-
-                            // Love Icon
-                            SlideTransition(
-                              position: _loveSlide,
-                              child: FadeTransition(
-                                opacity: _loveOpacity,
-                                child: Icon(
-                                  Icons.favorite,
-                                  color: Color(0xFFD4AF37),
-                                  size: 32,
-                                ),
-                              ),
-                            ),
-
-                            SizedBox(height: 20),
-
-                            // Bride name
-                            SlideTransition(
-                              position: _brideSlide,
-                              child: FadeTransition(
-                                opacity: _brideOpacity,
-                                child: Text(
-                                  brideName,
-                                  style: GoogleFonts.lobster(
-                                    fontSize: 32,
-                                    fontWeight: FontWeight.w300,
-                                    color: Color(0xFFF5F5F5),
-                                    letterSpacing: 1,
-                                  ),
-                                  textAlign: TextAlign.center,
-                                ),
-                              ),
-                            ),
-
-                            SizedBox(height: 6),
-
-                            // Bride Parents
-                            SlideTransition(
-                              position: _brideParentSlide,
-                              child: FadeTransition(
-                                opacity: _brideParentOpacity,
-                                child: Column(
-                                  children: [
-                                    Text(
-                                      "Putri dari Bapak " +
-                                          FatherparentsBride +
-                                          "&" +
-                                          MotherparentsBride,
-                                      style: TextStyle(
-                                        fontSize: 12,
-                                        color: Color(0xFFD0D0D0),
-                                        letterSpacing: 0.5,
-                                        height: 1.4,
-                                      ),
-                                      textAlign: TextAlign.center,
-                                    ),
-                                    SizedBox(height: 4),
-                                    Text(
-                                      "Desa Gambuhan, Kecamatan Kalitengah, Kabupaten Lamongan",
-                                      style: TextStyle(
-                                        fontSize: 10,
-                                        color: Color(0xFFD0D0D0),
-                                        letterSpacing: 0.5,
-                                        height: 1.4,
-                                      ),
-                                      textAlign: TextAlign.center,
-                                    ),
-                                  ],
-                                ),
-                              ),
-                            ),
-                          ],
+                          ),
                         ),
                       ),
-                      Container(
-                        padding: EdgeInsets.all(20),
-                        color: Color(0xFF1a1a1a),
-                        child: Column(
-                          children: [
-                            Container(key: _pengantinKey, child: FotoSection()),
-                            AyatSuciSection(),
-                            Container(
-                              key: _acaraKey,
-                              child: AcaraLokasiSection(),
+                      // Content
+                      Column(
+                        children: [
+                          Container(
+                            height: fixedHeight,
+                            padding: EdgeInsets.symmetric(horizontal: 20),
+                            child: Column(
+                              mainAxisAlignment: MainAxisAlignment.center,
+                              children: [
+                                SizedBox(height: 180),
+                                FadeTransition(
+                                  opacity: _titleOpacity,
+                                  child: Text(
+                                    'The Highest Happiness On Earth\nIs The Happiness Of Marriage',
+                                    style: TextStyle(
+                                      fontSize: 10,
+                                      letterSpacing: 2.8,
+                                      color: Color(0xFFB0B0B0),
+                                      fontWeight: FontWeight.w400,
+                                    ),
+                                    textAlign: TextAlign.center,
+                                  ),
+                                ),
+                                SizedBox(height: 16),
+
+                                // Groom name
+                                SlideTransition(
+                                  position: _groomSlide,
+                                  child: FadeTransition(
+                                    opacity: _groomOpacity,
+                                    child: Text(
+                                      groomName,
+                                      style: GoogleFonts.lobster(
+                                        fontSize: 24,
+                                        fontWeight: FontWeight.w300,
+                                        color: Color(0xFFF5F5F5),
+                                        letterSpacing: 1,
+                                      ),
+                                      textAlign: TextAlign.center,
+                                    ),
+                                  ),
+                                ),
+
+                                SizedBox(height: 6),
+
+                                // Groom Parents
+                                SlideTransition(
+                                  position: _groomParentSlide,
+                                  child: FadeTransition(
+                                    opacity: _groomParentOpacity,
+                                    child: Column(
+                                      children: [
+                                        Text(
+                                          "Putra dari Bapak " +
+                                              FatherparentsGroom +
+                                              " & " +
+                                              MotherparentsGroom,
+                                          style: TextStyle(
+                                            fontSize: 10,
+                                            color: Color(0xFFD0D0D0),
+                                            letterSpacing: 0.5,
+                                            height: 1.4,
+                                          ),
+                                          textAlign: TextAlign.center,
+                                        ),
+                                        SizedBox(height: 4),
+                                        Text(
+                                          "Desa Mlati, Kecamatan Kedungpring, Kabupaten Lamongan",
+                                          style: TextStyle(
+                                            fontSize: 9,
+                                            color: Color(0xFFD0D0D0),
+                                            letterSpacing: 0.5,
+                                            height: 1.4,
+                                          ),
+                                          textAlign: TextAlign.center,
+                                        ),
+                                      ],
+                                    ),
+                                  ),
+                                ),
+
+                                SizedBox(height: 16),
+
+                                // Love Icon
+                                SlideTransition(
+                                  position: _loveSlide,
+                                  child: FadeTransition(
+                                    opacity: _loveOpacity,
+                                    child: Icon(
+                                      Icons.favorite,
+                                      color: Color(0xFFD4AF37),
+                                      size: 24,
+                                    ),
+                                  ),
+                                ),
+
+                                SizedBox(height: 16),
+
+                                // Bride name
+                                SlideTransition(
+                                  position: _brideSlide,
+                                  child: FadeTransition(
+                                    opacity: _brideOpacity,
+                                    child: Text(
+                                      brideName,
+                                      style: GoogleFonts.lobster(
+                                        fontSize: 24,
+                                        fontWeight: FontWeight.w300,
+                                        color: Color(0xFFF5F5F5),
+                                        letterSpacing: 1,
+                                      ),
+                                      textAlign: TextAlign.center,
+                                    ),
+                                  ),
+                                ),
+
+                                SizedBox(height: 6),
+
+                                // Bride Parents
+                                SlideTransition(
+                                  position: _brideParentSlide,
+                                  child: FadeTransition(
+                                    opacity: _brideParentOpacity,
+                                    child: Column(
+                                      children: [
+                                        Text(
+                                          "Putri dari Bapak " +
+                                              FatherparentsBride +
+                                              "&" +
+                                              MotherparentsBride,
+                                          style: TextStyle(
+                                            fontSize: 10,
+                                            color: Color(0xFFD0D0D0),
+                                            letterSpacing: 0.5,
+                                            height: 1.4,
+                                          ),
+                                          textAlign: TextAlign.center,
+                                        ),
+                                        SizedBox(height: 4),
+                                        Text(
+                                          "Desa Gambuhan, Kecamatan Kalitengah, Kabupaten Lamongan",
+                                          style: TextStyle(
+                                            fontSize: 9,
+                                            color: Color(0xFFD0D0D0),
+                                            letterSpacing: 0.5,
+                                            height: 1.4,
+                                          ),
+                                          textAlign: TextAlign.center,
+                                        ),
+                                      ],
+                                    ),
+                                  ),
+                                ),
+                              ],
                             ),
-                            Container(
-                              key: _loveStoryKey,
-                              child: LoveStorySection(),
+                          ),
+                          Container(
+                            padding: EdgeInsets.only(left: 20, right: 20),
+                            color: Color(0xFF1a1a1a),
+                            child: Column(
+                              children: [
+                                Container(
+                                  key: _pengantinKey,
+                                  child: FotoSection(),
+                                ),
+                                AyatSuciSection(),
+                                Container(
+                                  key: _acaraKey,
+                                  child: AcaraLokasiSection(),
+                                ),
+                                Container(
+                                  key: _loveStoryKey,
+                                  child: LoveStorySection(),
+                                ),
+                                Container(
+                                  key: _fotoKey,
+                                  child: CarouselSection(),
+                                ),
+                                Container(
+                                  key: _ucapanKey,
+                                  child: UcapanSection(),
+                                ),
+                                Container(
+                                  key: _giftKey,
+                                  child: WeddingGiftSection(),
+                                ),
+                                SizedBox(height: 16),
+                                Container(child: FooterSection()),
+                                SizedBox(height: 100),
+                              ],
                             ),
-                            Container(key: _fotoKey, child: CarouselSection()),
-                            Container(key: _ucapanKey, child: UcapanSection()),
-                            Container(
-                              key: _giftKey,
-                              child: WeddingGiftSection(),
-                            ),
-                            SizedBox(height: 16),
-                            Container(child: FooterSection()),
-                            SizedBox(height: 100),
-                          ],
-                        ),
+                          ),
+                        ],
                       ),
                     ],
                   ),
-                ],
-              ),
-            ),
-            // Floating Menu
-            Positioned(
-              bottom: 0,
-              left: 0,
-              right: 0,
-              child: Container(
-                decoration: BoxDecoration(
-                  color: Color(0xFF1a1a1a).withOpacity(0.95),
-                  border: Border(
-                    top: BorderSide(
-                      color: Color(0xFFD4AF37).withOpacity(0.4),
-                      width: 2,
-                    ),
-                  ),
-                  boxShadow: [
-                    BoxShadow(
-                      color: Color(0xFFD4AF37).withOpacity(0.15),
-                      blurRadius: 20,
-                      offset: Offset(0, -8),
-                      spreadRadius: 2,
-                    ),
-                  ],
                 ),
-                child: SafeArea(
-                  top: false,
-                  child: Padding(
-                    padding: EdgeInsets.symmetric(vertical: 14, horizontal: 8),
-                    child: Row(
-                      mainAxisAlignment: MainAxisAlignment.spaceEvenly,
-                      children: [
-                        _buildMenuButton(
-                          icon: Icons.home,
-                          label: 'HOME',
-                          index: 0,
+                Positioned(
+                  bottom: 0,
+                  left: 0,
+                  right: 0,
+                  child: Container(
+                    decoration: BoxDecoration(
+                      color: Color(0xFF1a1a1a),
+                      border: Border(
+                        top: BorderSide(
+                          color: Color(0xFFD4AF37).withOpacity(0.4),
+                          width: 2,
                         ),
-                        _buildMenuButton(
-                          icon: Icons.favorite,
-                          label: 'PENGANTIN',
-                          index: 1,
-                        ),
-                        _buildMenuButton(
-                          icon: Icons.calendar_month,
-                          label: 'ACARA & LOKASI',
-                          index: 2,
-                        ),
-                        _buildMenuButton(
-                          icon: Icons.favorite_border,
-                          label: 'LOVE STORY',
-                          index: 3,
-                        ),
-                        _buildMenuButton(
-                          icon: Icons.photo_library,
-                          label: 'FOTO',
-                          index: 4,
-                        ),
-                        _buildMenuButton(
-                          icon: Icons.chat_sharp,
-                          label: 'UCAPAN',
-                          index: 5,
-                        ),
-                        _buildMenuButton(
-                          icon: Icons.card_giftcard,
-                          label: 'WEEDING GIFT',
-                          index: 6,
+                      ),
+                      boxShadow: [
+                        BoxShadow(
+                          color: Color(0xFFD4AF37).withOpacity(0.15),
+                          blurRadius: 20,
+                          offset: Offset(0, -8),
+                          spreadRadius: 2,
                         ),
                       ],
                     ),
-                  ),
-                ),
-              ),
-            ),
-            // Floating Mute Button
-            Positioned(
-              bottom: 130,
-              right: 20,
-              child: GestureDetector(
-                onTap: _toggleMute,
-                child: Container(
-                  height: 56,
-                  width: 56,
-                  decoration: BoxDecoration(
-                    shape: BoxShape.circle,
-                    gradient: LinearGradient(
-                      begin: Alignment.topLeft,
-                      end: Alignment.bottomRight,
-                      colors: _isMuted
-                          ? [
-                              Color(0xFFD4AF37).withOpacity(0.9),
-                              Color(0xFFC9A227).withOpacity(0.9),
-                            ]
-                          : [Color(0xFF1a1a1a), Color(0xFF0f0f0f)],
-                    ),
-                    border: Border.all(
-                      color: Color(
-                        0xFFD4AF37,
-                      ).withOpacity(_isMuted ? 0.3 : 0.6),
-                      width: 2,
-                    ),
-                    boxShadow: [
-                      BoxShadow(
-                        color: Color(
-                          0xFFD4AF37,
-                        ).withOpacity(_isMuted ? 0.4 : 0.2),
-                        blurRadius: 15,
-                        spreadRadius: 2,
+                    child: SafeArea(
+                      top: false,
+                      child: Padding(
+                        padding: EdgeInsets.symmetric(
+                          vertical: 8,
+                          horizontal: 8,
+                        ),
+                        child: Row(
+                          mainAxisAlignment: MainAxisAlignment.spaceEvenly,
+                          children: [
+                            _buildMenuButton(
+                              icon: Icons.home,
+                              label: 'HOME',
+                              index: 0,
+                            ),
+                            _buildMenuButton(
+                              icon: Icons.favorite,
+                              label: 'PENGANTIN',
+                              index: 1,
+                            ),
+                            _buildMenuButton(
+                              icon: Icons.calendar_month,
+                              label: 'ACARA\n& LOKASI',
+                              index: 2,
+                            ),
+                            _buildMenuButton(
+                              icon: Icons.favorite_border,
+                              label: 'LOVE\nSTORY',
+                              index: 3,
+                            ),
+                            _buildMenuButton(
+                              icon: Icons.photo_library,
+                              label: 'FOTO',
+                              index: 4,
+                            ),
+                            _buildMenuButton(
+                              icon: Icons.chat_sharp,
+                              label: 'UCAPAN',
+                              index: 5,
+                            ),
+                            _buildMenuButton(
+                              icon: Icons.card_giftcard,
+                              label: 'WEEDING\nGIFT',
+                              index: 6,
+                            ),
+                          ],
+                        ),
                       ),
-                    ],
-                  ),
-                  child: Center(
-                    child: Icon(
-                      _isMuted ? Icons.volume_off : Icons.volume_up,
-                      color: _isMuted ? Color(0xFF1a1a1a) : Color(0xFFD4AF37),
-                      size: 26,
                     ),
                   ),
                 ),
-              ),
+                // Floating Mute Button
+                Positioned(
+                  bottom: 100,
+                  right: 20,
+                  child: GestureDetector(
+                    onTap: _toggleMute,
+                    child: Container(
+                      height: 40,
+                      width: 40,
+                      decoration: BoxDecoration(
+                        shape: BoxShape.circle,
+                        gradient: LinearGradient(
+                          begin: Alignment.topLeft,
+                          end: Alignment.bottomRight,
+                          colors: _isMuted
+                              ? [
+                                  Color(0xFFD4AF37).withOpacity(0.9),
+                                  Color(0xFFC9A227).withOpacity(0.9),
+                                ]
+                              : [Color(0xFF1a1a1a), Color(0xFF0f0f0f)],
+                        ),
+                        border: Border.all(
+                          color: Color(
+                            0xFFD4AF37,
+                          ).withOpacity(_isMuted ? 0.3 : 0.6),
+                          width: 2,
+                        ),
+                        boxShadow: [
+                          BoxShadow(
+                            color: Color(
+                              0xFFD4AF37,
+                            ).withOpacity(_isMuted ? 0.4 : 0.2),
+                            blurRadius: 15,
+                            spreadRadius: 2,
+                          ),
+                        ],
+                      ),
+                      child: Center(
+                        child: Icon(
+                          _isMuted ? Icons.volume_off : Icons.volume_up,
+                          color: _isMuted
+                              ? Color(0xFF1a1a1a)
+                              : Color(0xFFD4AF37),
+                          size: 18,
+                        ),
+                      ),
+                    ),
+                  ),
+                ),
+              ],
             ),
-          ],
+          ),
         ),
       ),
     );
@@ -632,7 +651,7 @@ class _CardPengantinPageState extends State<CardPengantinPage>
           mainAxisSize: MainAxisSize.min,
           children: [
             Container(
-              padding: EdgeInsets.all(10),
+              padding: EdgeInsets.all(8),
               decoration: BoxDecoration(
                 color: isSelected
                     ? Color(0xFFD4AF37).withOpacity(0.15)
@@ -655,18 +674,19 @@ class _CardPengantinPageState extends State<CardPengantinPage>
               child: Icon(
                 icon,
                 color: isSelected ? Color(0xFFD4AF37) : Color(0xFFB0B0B0),
-                size: 24,
+                size: 18,
               ),
             ),
             SizedBox(height: 6),
             Text(
               label,
               style: TextStyle(
-                fontSize: 8.5,
+                fontSize: 6,
                 color: isSelected ? Color(0xFFD4AF37) : Color(0xFFB0B0B0),
                 fontWeight: isSelected ? FontWeight.w700 : FontWeight.w500,
                 letterSpacing: 0.8,
               ),
+              textAlign: TextAlign.center,
             ),
           ],
         ),

@@ -57,7 +57,7 @@ class _AcaraLokasiSectionState extends State<AcaraLokasiSection> {
     final seconds = _timeLeft.inSeconds.remainder(60);
 
     return Padding(
-      padding: EdgeInsets.symmetric(horizontal: 20, vertical: 16),
+      padding: EdgeInsets.symmetric(horizontal: 10, vertical: 16),
       child: Column(
         crossAxisAlignment: CrossAxisAlignment.center,
         children: [
@@ -65,32 +65,32 @@ class _AcaraLokasiSectionState extends State<AcaraLokasiSection> {
           Text(
             'Acara Pernikahan',
             style: GoogleFonts.lobster(
-              fontSize: 32,
+              fontSize: 24,
               fontWeight: FontWeight.w300,
               color: Color(0xFFF5F5F5),
-              letterSpacing: 1.2,
+              letterSpacing: 1.0,
             ),
           ),
-          SizedBox(height: 12),
+          SizedBox(height: 10),
 
           // Date with intro text
           Text(
             'Dengan memohon rahmat dan ridho Allah SWT, kami mengharap kehadiran Bapak / Ibu / Saudara / i pada acara pernikahan kami',
             style: GoogleFonts.roboto(
-              fontSize: 12,
+              fontSize: 11,
               fontWeight: FontWeight.w400,
               color: Color(0xFFB8B8B8),
               height: 1.5,
             ),
             textAlign: TextAlign.center,
           ),
-          SizedBox(height: 14),
+          SizedBox(height: 12),
 
           // Date
           Text(
             ResepsiDate,
             style: GoogleFonts.roboto(
-              fontSize: 20,
+              fontSize: 16,
               fontWeight: FontWeight.w400,
               color: Color(0xFFF5F5F5),
               letterSpacing: 0.5,
@@ -100,28 +100,28 @@ class _AcaraLokasiSectionState extends State<AcaraLokasiSection> {
           Text(
             "18 Jumadil Akhir 1447 H",
             style: GoogleFonts.roboto(
-              fontSize: 12,
+              fontSize: 11,
               fontWeight: FontWeight.w300,
               color: Color(0xFFB8B8B8),
               letterSpacing: 0.5,
             ),
             textAlign: TextAlign.center,
           ),
-          SizedBox(height: 14),
+          SizedBox(height: 12),
 
           // Countdown Section
           Column(
             children: [
               Text(
                 'Menuju Hari Bahagia',
-                style: TextStyle(
-                  fontSize: 12,
-                  letterSpacing: 1.5,
+                style: GoogleFonts.roboto(
+                  fontSize: 11,
+                  letterSpacing: 1.2,
                   color: Color(0xFFB0B0B0),
                   fontWeight: FontWeight.w300,
                 ),
               ),
-              SizedBox(height: 10),
+              SizedBox(height: 8),
               Row(
                 mainAxisAlignment: MainAxisAlignment.center,
                 mainAxisSize: MainAxisSize.min,
@@ -130,18 +130,18 @@ class _AcaraLokasiSectionState extends State<AcaraLokasiSection> {
                     days > 99 ? days.toString() : _padZero(days),
                     'Hari',
                   ),
-                  SizedBox(width: 12),
+                  SizedBox(width: 10),
                   _buildCountdownBox(_padZero(hours), 'Jam'),
-                  SizedBox(width: 12),
+                  SizedBox(width: 10),
                   _buildCountdownBox(_padZero(minutes), 'Menit'),
-                  SizedBox(width: 12),
+                  SizedBox(width: 10),
                   _buildCountdownBox(_padZero(seconds), 'Detik'),
                 ],
               ),
             ],
           ),
 
-          SizedBox(height: 16),
+          SizedBox(height: 14),
 
           Row(
             mainAxisAlignment: MainAxisAlignment.spaceEvenly,
@@ -152,7 +152,7 @@ class _AcaraLokasiSectionState extends State<AcaraLokasiSection> {
                     Text(
                       'Akad Nikah',
                       style: GoogleFonts.lobster(
-                        fontSize: 16,
+                        fontSize: 14,
                         fontWeight: FontWeight.w400,
                         color: Color(0xFFF5F5F5),
                         letterSpacing: 0.5,
@@ -161,8 +161,8 @@ class _AcaraLokasiSectionState extends State<AcaraLokasiSection> {
                     SizedBox(height: 4),
                     Text(
                       AkadTime,
-                      style: TextStyle(
-                        fontSize: 12,
+                      style: GoogleFonts.roboto(
+                        fontSize: 11,
                         letterSpacing: 0.4,
                         color: Color(0xFFB8B8B8),
                       ),
@@ -181,7 +181,7 @@ class _AcaraLokasiSectionState extends State<AcaraLokasiSection> {
                     Text(
                       'Resepsi',
                       style: GoogleFonts.lobster(
-                        fontSize: 16,
+                        fontSize: 14,
                         fontWeight: FontWeight.w400,
                         color: Color(0xFFF5F5F5),
                         letterSpacing: 0.5,
@@ -190,8 +190,8 @@ class _AcaraLokasiSectionState extends State<AcaraLokasiSection> {
                     SizedBox(height: 4),
                     Text(
                       ResepsiTime,
-                      style: TextStyle(
-                        fontSize: 12,
+                      style: GoogleFonts.roboto(
+                        fontSize: 11,
                         letterSpacing: 0.4,
                         color: Color(0xFFB8B8B8),
                       ),
@@ -202,30 +202,30 @@ class _AcaraLokasiSectionState extends State<AcaraLokasiSection> {
             ],
           ),
 
-          SizedBox(height: 18),
+          SizedBox(height: 16),
           Container(height: 1, color: Color(0xFFF5F5F5).withOpacity(0.1)),
 
-          SizedBox(height: 18),
+          SizedBox(height: 16),
           Text(
             'Lokasi Acara',
             style: GoogleFonts.lobster(
-              fontSize: 32,
+              fontSize: 24,
               fontWeight: FontWeight.w300,
               color: Color(0xFFF5F5F5),
-              letterSpacing: 1.2,
+              letterSpacing: 1.0,
             ),
           ),
-          SizedBox(height: 12),
+          SizedBox(height: 10),
 
           // Location Icon
-          Icon(Icons.location_on_outlined, color: Color(0xFFF5F5F5), size: 32),
-          SizedBox(height: 10),
+          Icon(Icons.location_on_outlined, color: Color(0xFFF5F5F5), size: 28),
+          SizedBox(height: 8),
 
           // Location details
           Text(
             'Rumah Mempelai Wanita',
             style: GoogleFonts.roboto(
-              fontSize: 16,
+              fontSize: 14,
               color: Color(0xFFD4AF37),
               height: 1.5,
               fontWeight: FontWeight.w400,
@@ -236,7 +236,7 @@ class _AcaraLokasiSectionState extends State<AcaraLokasiSection> {
           Text(
             ResepsiLocation,
             style: GoogleFonts.roboto(
-              fontSize: 12,
+              fontSize: 11,
               color: Color(0xFFF5F5F5),
               height: 1.5,
               fontWeight: FontWeight.w400,
@@ -249,11 +249,11 @@ class _AcaraLokasiSectionState extends State<AcaraLokasiSection> {
           // Button
           ElevatedButton.icon(
             onPressed: _openMaps,
-            icon: Icon(Icons.directions),
+            icon: Icon(Icons.directions, size: 16),
             label: Text(
               'BUKA GOOGLE MAPS',
-              style: TextStyle(
-                fontSize: 12,
+              style: GoogleFonts.roboto(
+                fontSize: 11,
                 fontWeight: FontWeight.w600,
                 letterSpacing: 0.8,
               ),
@@ -279,8 +279,8 @@ class _AcaraLokasiSectionState extends State<AcaraLokasiSection> {
     return Column(
       children: [
         Container(
-          width: 52,
-          height: 52,
+          width: 48,
+          height: 48,
           decoration: BoxDecoration(
             color: Color(0xFFF5F5F5),
             borderRadius: BorderRadius.circular(8),
@@ -296,7 +296,7 @@ class _AcaraLokasiSectionState extends State<AcaraLokasiSection> {
             child: Text(
               value,
               style: GoogleFonts.roboto(
-                fontSize: 20,
+                fontSize: 18,
                 fontWeight: FontWeight.w600,
                 color: Color(0xFF1a1a1a),
               ),
@@ -306,7 +306,7 @@ class _AcaraLokasiSectionState extends State<AcaraLokasiSection> {
         SizedBox(height: 4),
         Text(
           label,
-          style: TextStyle(
+          style: GoogleFonts.roboto(
             fontSize: 10,
             letterSpacing: 0.6,
             color: Color(0xFFB8B8B8),

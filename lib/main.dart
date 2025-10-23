@@ -10,17 +10,15 @@ import 'data/wedding_data.dart';
 
 void main() async {
   WidgetsFlutterBinding.ensureInitialized();
-  
+
   // Initialize Firebase
-  await Firebase.initializeApp(
-    options: DefaultFirebaseOptions.currentPlatform,
-  );
-  
+  await Firebase.initializeApp(options: DefaultFirebaseOptions.currentPlatform);
+
   // Load wedding data dari Firestore
   print('🔄 Loading wedding data from Firestore...');
   await WeddingData.instance.loadFromFirestore();
   print('✅ Wedding data loaded successfully!');
-  
+
   runApp(WeddingInviteApp());
 }
 
@@ -43,7 +41,7 @@ class _WeddingInviteAppState extends State<WeddingInviteApp> {
   void _extractGuestFromUrl() {
     final path = html.window.location.pathname;
     print('Current URL path: $path');
-    
+
     // Extract slug dari URL seperti /toAkbar
     if (path != null && path.startsWith('/to') && path.length > 3) {
       guestSlug = path.substring(3); // Hapus '/to'
@@ -94,15 +92,9 @@ class _WeddingInviteAppState extends State<WeddingInviteApp> {
             color: Color(0xFFF5F5F5),
             fontWeight: FontWeight.bold,
           ),
-          headlineSmall: GoogleFonts.playfairDisplay(
-            color: Color(0xFFF5F5F5),
-          ),
-          bodyMedium: GoogleFonts.lato(
-            color: Color(0xFFD0D0D0),
-          ),
-          bodySmall: GoogleFonts.lato(
-            color: Color(0xFFB0B0B0),
-          ),
+          headlineSmall: GoogleFonts.playfairDisplay(color: Color(0xFFF5F5F5)),
+          bodyMedium: GoogleFonts.lato(color: Color(0xFFD0D0D0)),
+          bodySmall: GoogleFonts.lato(color: Color(0xFFB0B0B0)),
         ),
         brightness: Brightness.dark,
         primaryColor: Color(0xFFF5F5F5),
@@ -140,9 +132,7 @@ class _WeddingInviteAppState extends State<WeddingInviteApp> {
         ),
       ),
       home: _getHomePage(),
-      routes: {
-        '/admin': (context) => const AdminPage(),
-      },
+      routes: {'/admin': (context) => const AdminPage()},
     );
   }
 
@@ -152,11 +142,8 @@ class _WeddingInviteAppState extends State<WeddingInviteApp> {
     if (path == '/admin') {
       return const AdminPage();
     }
-    
+
     // Return HomePage dengan guest slug
-    return HomePage(
-      audioPlayer: _audioPlayer,
-      guestSlug: guestSlug,
-    );
+    return HomePage(audioPlayer: _audioPlayer, guestSlug: guestSlug);
   }
 }

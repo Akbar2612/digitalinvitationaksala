@@ -26,42 +26,39 @@ class AyatSuciSection extends StatelessWidget {
                 Text(
                   'وَمِنْ آيَاتِهِ أَنْ خَلَقَ لَكُم مِّنْ أَنفُسِكُمْ أَزْوَاجًا لِّتَسْكُنُوا إِلَيْهَا وَجَعَلَ بَيْنَكُم مَّوَدَّةً وَرَحْمَةً ۚ إِنَّ فِي ذَٰلِكَ لَآيَاتٍ لِّقَوْمٍ يَتَفَكَّرُونَ',
                   style: GoogleFonts.lateef(
-                    fontSize: 24,
+                    fontSize: 16,
                     fontWeight: FontWeight.w400,
                     color: Color(0xFFF5F5F5),
-                    height: 2.0,
+                    height: 1.4,
                   ),
                   textAlign: TextAlign.center,
                   textDirection: TextDirection.rtl,
                 ),
 
-                SizedBox(height: 24),
+                SizedBox(height: 16),
 
                 // Divider
-                Container(
-                  height: 1,
-                  color: Color(0xFFF5F5F5).withOpacity(0.1),
-                ),
+                Container(height: 1, color: Color(0xFFF5F5F5).withOpacity(0.1)),
 
-                SizedBox(height: 24),
+                SizedBox(height: 16),
                 Text(
                   '"Dan di antara tanda-tanda kekuasaan-Nya ialah Dia menciptakan untuk kamu istri-istri dari jenismu sendiri, supaya kamu cenderung dan merasa tenteram kepadanya, dan dijadikan-Nya di antara kamu rasa kasih sayang. Sesungguhnya pada yang demikian itu benar-benar terdapat tanda-tanda bagi kaum yang berfikir."',
                   style: GoogleFonts.roboto(
-                    fontSize: 14,
+                    fontSize: 12,
                     fontWeight: FontWeight.w400,
                     color: Color(0xFFE0E0E0),
-                    height: 1.8,
+                    height: 1.4,
                   ),
                   textAlign: TextAlign.center,
                 ),
 
-                SizedBox(height: 24),
+                SizedBox(height: 16),
 
                 // Surah Reference
                 Text(
                   'QS. Ar-Rum: 21',
                   style: GoogleFonts.robotoSlab(
-                    fontSize: 16,
+                    fontSize: 12,
                     fontWeight: FontWeight.w600,
                     color: Color(0xFFF5F5F5),
                     letterSpacing: 0.5,

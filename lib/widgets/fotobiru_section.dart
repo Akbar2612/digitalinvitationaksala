@@ -6,9 +6,9 @@ class FotoSection extends StatelessWidget {
     final screenWidth = MediaQuery.of(context).size.width;
     final photoWidth = (screenWidth - 100) * 0.35;
     final photoHeight = photoWidth * 1.43;
-    
+
     return Padding(
-      padding: EdgeInsets.symmetric(horizontal: 10, vertical: 32),
+      padding: EdgeInsets.symmetric(horizontal: 10, vertical: 10),
       child: Column(
         crossAxisAlignment: CrossAxisAlignment.center,
         children: [
@@ -18,7 +18,6 @@ class FotoSection extends StatelessWidget {
               Row(
                 mainAxisAlignment: MainAxisAlignment.spaceEvenly,
                 children: [
-                  // Photo Kiri (Akbar)
                   Flexible(
                     child: Container(
                       width: photoWidth,
@@ -53,7 +52,6 @@ class FotoSection extends StatelessWidget {
                     ),
                   ),
                   SizedBox(width: 20),
-                  // Photo Kanan (Wulan)
                   Flexible(
                     child: Container(
                       width: photoWidth,
@@ -89,12 +87,7 @@ class FotoSection extends StatelessWidget {
                   ),
                 ],
               ),
-              // Love Icon Tengah
-              Icon(
-                Icons.favorite,
-                color: Colors.white,
-                size: 40,
-              ),
+              Icon(Icons.favorite, color: Colors.white, size: 40),
             ],
           ),
         ],

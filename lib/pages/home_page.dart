@@ -81,7 +81,6 @@ class _HomePageState extends State<HomePage> with TickerProviderStateMixin {
         await precacheImage(AssetImage('assets/images/mainbg.jpg'), context);
       }
 
-      // Wait a bit to ensure smooth transition
       await Future.delayed(Duration(milliseconds: 300));
 
       if (mounted) {
@@ -89,7 +88,6 @@ class _HomePageState extends State<HomePage> with TickerProviderStateMixin {
           isImagesLoaded = true;
         });
 
-        // Start animation after images loaded
         Future.delayed(Duration(milliseconds: 200), () {
           if (mounted) {
             _animationController.forward();
@@ -98,7 +96,6 @@ class _HomePageState extends State<HomePage> with TickerProviderStateMixin {
       }
     } catch (e) {
       print('Error preloading images: $e');
-      // If preload fails, show content anyway
       if (mounted) {
         setState(() {
           isImagesLoaded = true;
@@ -161,7 +158,6 @@ class _HomePageState extends State<HomePage> with TickerProviderStateMixin {
     final isMobile = MediaQuery.of(context).size.width < 768;
 
     if (isMobile) {
-      // Di mobile, navigate seperti biasa
       Navigator.of(context).push(
         MaterialPageRoute(
           builder: (context) =>
@@ -169,11 +165,17 @@ class _HomePageState extends State<HomePage> with TickerProviderStateMixin {
         ),
       );
     } else {
-      // Di desktop, update mockup content dengan MockupContext wrapper
+      // Di desktop, update mockup content dengan ukuran terkunci
       setState(() {
         _mockupContent = MockupContext(
           isInsideMockup: true,
-          child: CardPengantinPage(audioPlayer: widget.audioPlayer),
+          child: MediaQuery(
+            data: MediaQuery.of(context).copyWith(
+              size: Size(340, 680), // Ukuran mockup yang tetap
+              devicePixelRatio: 2.0,
+            ),
+            child: CardPengantinPage(audioPlayer: widget.audioPlayer),
+          ),
         );
       });
     }
@@ -228,11 +230,9 @@ class _HomePageState extends State<HomePage> with TickerProviderStateMixin {
 
     return Stack(
       children: [
-        // Background Image Desktop - Split dengan Dissolve
         Positioned.fill(
           child: Row(
             children: [
-              // Background Kiri
               Expanded(
                 child: Container(
                   decoration: const BoxDecoration(
@@ -245,7 +245,6 @@ class _HomePageState extends State<HomePage> with TickerProviderStateMixin {
                   ),
                 ),
               ),
-              // Background Kanan
               Expanded(
                 child: Container(
                   decoration: const BoxDecoration(
@@ -261,8 +260,6 @@ class _HomePageState extends State<HomePage> with TickerProviderStateMixin {
             ],
           ),
         ),
-
-        // Dissolve Effect di Tengah
         Positioned.fill(
           child: Center(
             child: Container(
@@ -288,8 +285,6 @@ class _HomePageState extends State<HomePage> with TickerProviderStateMixin {
             ),
           ),
         ),
-
-        // Gradient Overlay
         Positioned.fill(
           child: Container(
             decoration: BoxDecoration(
@@ -304,14 +299,11 @@ class _HomePageState extends State<HomePage> with TickerProviderStateMixin {
             ),
           ),
         ),
-
-        // Content
         Center(
           child: Row(
             mainAxisAlignment: MainAxisAlignment.center,
             crossAxisAlignment: CrossAxisAlignment.center,
             children: [
-              // Left Side - Wedding Info
               Expanded(
                 child: Padding(
                   padding: const EdgeInsets.symmetric(horizontal: 60),
@@ -370,11 +362,7 @@ class _HomePageState extends State<HomePage> with TickerProviderStateMixin {
                   ),
                 ),
               ),
-
-              // Center - Phone Mockup
               _buildPhoneMockup(),
-
-              // Right Side - Spacer
               Expanded(child: SizedBox()),
             ],
           ),
@@ -383,32 +371,40 @@ class _HomePageState extends State<HomePage> with TickerProviderStateMixin {
     );
   }
 
-  // MOCKUP TANPA ANIMASI - dengan dynamic content
   Widget _buildPhoneMockup() {
     return Container(
       width: 340,
-      height: 680,
-      decoration: BoxDecoration(
-        color: Colors.black,
-        borderRadius: BorderRadius.circular(40),
-        border: Border.all(color: Color(0xFF2a2a2a), width: 8),
-        boxShadow: [
-          BoxShadow(
-            color: Color(0xFF1a1a1a).withOpacity(0.8),
-            blurRadius: 30,
-            spreadRadius: 5,
-            offset: Offset(0, 10),
-          ),
-        ],
-      ),
-      child: ClipRRect(
-        borderRadius: BorderRadius.circular(32),
-        child: _mockupContent ?? _buildMobileLandingStatic(),
+      height: 740,
+      padding: EdgeInsets.symmetric(vertical: 20),
+      child: Container(
+        decoration: BoxDecoration(
+          color: Colors.black,
+          borderRadius: BorderRadius.circular(40),
+          border: Border.all(color: Color(0xFF2a2a2a), width: 8),
+          boxShadow: [
+            BoxShadow(
+              color: Color(0xFF1a1a1a).withOpacity(0.8),
+              blurRadius: 30,
+              spreadRadius: 5,
+              offset: Offset(0, 10),
+            ),
+          ],
+        ),
+        child: ClipRRect(
+          borderRadius: BorderRadius.circular(32),
+          child:
+              _mockupContent ??
+              MediaQuery(
+                data: MediaQuery.of(
+                  context,
+                ).copyWith(size: Size(340, 680), devicePixelRatio: 3.0),
+                child: _buildMobileLandingStatic(),
+              ),
+        ),
       ),
     );
   }
 
-  // VERSI STATIC TANPA ANIMASI UNTUK MOCKUP
   Widget _buildMobileLandingStatic() {
     return Stack(
       children: [

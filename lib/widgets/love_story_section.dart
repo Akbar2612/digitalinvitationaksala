@@ -9,7 +9,7 @@ class LoveStorySection extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return Padding(
-      padding: EdgeInsets.symmetric(horizontal: 20, vertical: 24),
+      padding: EdgeInsets.symmetric(horizontal: 10, vertical: 24),
       child: Column(
         crossAxisAlignment: CrossAxisAlignment.center,
         children: [
@@ -17,10 +17,10 @@ class LoveStorySection extends StatelessWidget {
           Text(
             'Our Love Story',
             style: GoogleFonts.lobster(
-              fontSize: 32,
+              fontSize: 24,
               fontWeight: FontWeight.w300,
               color: Color(0xFFF5F5F5),
-              letterSpacing: 1,
+              letterSpacing: 1.0,
             ),
             textAlign: TextAlign.center,
           ),
@@ -47,8 +47,8 @@ class LoveStorySection extends StatelessWidget {
           // Subtitle
           Text(
             'The journey of our beautiful love',
-            style: TextStyle(
-              fontSize: 12,
+            style: GoogleFonts.roboto(
+              fontSize: 11,
               color: Color(0xFFB0B0B0),
               letterSpacing: 0.5,
               fontWeight: FontWeight.w300,
@@ -80,7 +80,10 @@ class LoveStorySection extends StatelessWidget {
                     padding: EdgeInsets.all(20),
                     child: Text(
                       'Terjadi kesalahan memuat kisah cinta',
-                      style: TextStyle(color: Color(0xFFB0B0B0), fontSize: 13),
+                      style: GoogleFonts.roboto(
+                        color: Color(0xFFB0B0B0),
+                        fontSize: 11,
+                      ),
                       textAlign: TextAlign.center,
                     ),
                   ),
@@ -194,7 +197,7 @@ class LoveStorySection extends StatelessWidget {
           Text(
             title,
             style: GoogleFonts.lobster(
-              fontSize: 24,
+              fontSize: 18,
               fontWeight: FontWeight.w300,
               color: Color(0xFFF5F5F5),
               letterSpacing: 0.8,
@@ -207,10 +210,10 @@ class LoveStorySection extends StatelessWidget {
           // Date
           Text(
             date,
-            style: TextStyle(
-              fontSize: 12,
+            style: GoogleFonts.roboto(
+              fontSize: 11,
               color: Color(0xFFD4AF37),
-              letterSpacing: 1,
+              letterSpacing: 1.0,
               fontWeight: FontWeight.w600,
             ),
             textAlign: TextAlign.center,
@@ -226,8 +229,8 @@ class LoveStorySection extends StatelessWidget {
           // Description
           Text(
             description,
-            style: TextStyle(
-              fontSize: 13,
+            style: GoogleFonts.roboto(
+              fontSize: 12,
               fontWeight: FontWeight.w400,
               color: Color(0xFFE0E0E0),
               height: 1.6,
@@ -256,10 +259,10 @@ class LoveStorySection extends StatelessWidget {
           Text(
             title,
             style: GoogleFonts.lobster(
-              fontSize: 28,
+              fontSize: 20,
               fontWeight: FontWeight.w300,
               color: Color(0xFFD4AF37),
-              letterSpacing: 1,
+              letterSpacing: 1.0,
             ),
             textAlign: TextAlign.center,
           ),
@@ -274,8 +277,8 @@ class LoveStorySection extends StatelessWidget {
           // Closing Text
           Text(
             kisah,
-            style: TextStyle(
-              fontSize: 13,
+            style: GoogleFonts.roboto(
+              fontSize: 12,
               fontWeight: FontWeight.w400,
               color: Color(0xFFE0E0E0),
               height: 1.6,
