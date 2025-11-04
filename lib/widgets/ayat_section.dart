@@ -1,3 +1,4 @@
+import 'package:digitalinvitationaksala/shared/flowerside.dart';
 import 'package:flutter/material.dart';
 import 'package:google_fonts/google_fonts.dart';
 
@@ -9,63 +10,97 @@ class AyatSuciSection extends StatelessWidget {
       child: Column(
         crossAxisAlignment: CrossAxisAlignment.center,
         children: [
-          // Combined Container
-          Container(
-            padding: EdgeInsets.all(24),
-            decoration: BoxDecoration(
-              color: Color(0xFFF5F5F5).withOpacity(0.05),
-              borderRadius: BorderRadius.circular(12),
-              border: Border.all(
-                color: Color(0xFFF5F5F5).withOpacity(0.1),
-                width: 1,
+          // ✨ Dibungkus Stack untuk bisa pakai Positioned
+          Stack(
+            clipBehavior: Clip.none,
+            children: [
+              // Combined Container
+              Container(
+                padding: EdgeInsets.all(24),
+                decoration: BoxDecoration(
+                  color: Color(0xFFF5F5F5).withOpacity(0.05),
+                  borderRadius: BorderRadius.circular(12),
+                  border: Border.all(
+                    color: Color(0xFFF5F5F5).withOpacity(0.1),
+                    width: 1,
+                  ),
+                ),
+
+                child: Column(
+                  children: [
+                    // Arabic Text
+                    Text(
+                      'وَمِنْ آيَاتِهِ أَنْ خَلَقَ لَكُم مِّنْ أَنفُسِكُمْ أَزْوَاجًا لِّتَسْكُنُوا إِلَيْهَا وَجَعَلَ بَيْنَكُم مَّوَدَّةً وَرَحْمَةً ۚ إِنَّ فِي ذَٰلِكَ لَآيَاتٍ لِّقَوْمٍ يَتَفَكَّرُونَ',
+                      style: GoogleFonts.lateef(
+                        fontSize: 16,
+                        fontWeight: FontWeight.w400,
+                        color: Color(0xFFF5F5F5),
+                        height: 1.4,
+                      ),
+                      textAlign: TextAlign.center,
+                      textDirection: TextDirection.rtl,
+                    ),
+
+                    SizedBox(height: 16),
+
+                    // Divider
+                    Container(
+                      height: 1,
+                      color: Color(0xFFF5F5F5).withOpacity(0.1),
+                    ),
+
+                    SizedBox(height: 16),
+
+                    Text(
+                      '"Dan di antara tanda-tanda kekuasaan-Nya ialah Dia menciptakan untuk kamu istri-istri dari jenismu sendiri, supaya kamu cenderung dan merasa tenteram kepadanya, dan dijadikan-Nya di antara kamu rasa kasih sayang. Sesungguhnya pada yang demikian itu benar-benar terdapat tanda-tanda bagi kaum yang berfikir."',
+                      style: GoogleFonts.roboto(
+                        fontSize: 12,
+                        fontWeight: FontWeight.w400,
+                        color: Color(0xFFE0E0E0),
+                        height: 1.4,
+                      ),
+                      textAlign: TextAlign.center,
+                    ),
+
+                    SizedBox(height: 16),
+
+                    // Surah Reference
+                    Text(
+                      'QS. Ar-Rum: 21',
+                      style: GoogleFonts.robotoSlab(
+                        fontSize: 12,
+                        fontWeight: FontWeight.w600,
+                        color: Color(0xFFF5F5F5),
+                        letterSpacing: 0.5,
+                      ),
+                    ),
+                  ],
+                ),
               ),
-            ),
-            child: Column(
-              children: [
-                // Arabic Text
-                Text(
-                  'وَمِنْ آيَاتِهِ أَنْ خَلَقَ لَكُم مِّنْ أَنفُسِكُمْ أَزْوَاجًا لِّتَسْكُنُوا إِلَيْهَا وَجَعَلَ بَيْنَكُم مَّوَدَّةً وَرَحْمَةً ۚ إِنَّ فِي ذَٰلِكَ لَآيَاتٍ لِّقَوْمٍ يَتَفَكَّرُونَ',
-                  style: GoogleFonts.lateef(
-                    fontSize: 16,
-                    fontWeight: FontWeight.w400,
-                    color: Color(0xFFF5F5F5),
-                    height: 1.4,
-                  ),
-                  textAlign: TextAlign.center,
-                  textDirection: TextDirection.rtl,
-                ),
 
-                SizedBox(height: 16),
-
-                // Divider
-                Container(height: 1, color: Color(0xFFF5F5F5).withOpacity(0.1)),
-
-                SizedBox(height: 16),
-                Text(
-                  '"Dan di antara tanda-tanda kekuasaan-Nya ialah Dia menciptakan untuk kamu istri-istri dari jenismu sendiri, supaya kamu cenderung dan merasa tenteram kepadanya, dan dijadikan-Nya di antara kamu rasa kasih sayang. Sesungguhnya pada yang demikian itu benar-benar terdapat tanda-tanda bagi kaum yang berfikir."',
-                  style: GoogleFonts.roboto(
-                    fontSize: 12,
-                    fontWeight: FontWeight.w400,
-                    color: Color(0xFFE0E0E0),
-                    height: 1.4,
-                  ),
-                  textAlign: TextAlign.center,
-                ),
-
-                SizedBox(height: 16),
-
-                // Surah Reference
-                Text(
-                  'QS. Ar-Rum: 21',
-                  style: GoogleFonts.robotoSlab(
-                    fontSize: 12,
-                    fontWeight: FontWeight.w600,
-                    color: Color(0xFFF5F5F5),
-                    letterSpacing: 0.5,
+              Positioned(
+                top: -50,
+                right: -100,
+                child: Transform.rotate(
+                  angle: 180,
+                  child: FlowerCornerDecoration(
+                    size: 150,
+                    delay: Duration(milliseconds: 500),
                   ),
                 ),
-              ],
-            ),
+              ),
+              Positioned(
+                bottom: -50,
+                left: -100,
+                child: Transform.rotate(
+                  angle: 45,
+                  child: FlowerCornerDecoration(
+                    size: 150,
+                    delay: Duration(milliseconds: 500),
+                  ),
+                ),
+              ),
+            ],
           ),
         ],
       ),

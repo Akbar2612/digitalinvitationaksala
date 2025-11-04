@@ -8,10 +8,13 @@
       "version": "0.1.0",
       "dependencies": [
         "audioplayers",
+        "auto_size_text",
+        "carousel_slider",
         "cloud_firestore",
         "excel",
         "file_picker",
         "firebase_core",
+        "flip_card",
         "flutter",
         "flutter_inappwebview",
         "google_fonts",
@@ -19,6 +22,7 @@
         "just_audio",
         "lottie",
         "lucide_icons",
+        "page_flip",
         "path_provider",
         "qr_flutter",
         "responsive_sizer",
@@ -57,6 +61,34 @@
         "test_api",
         "vector_math",
         "vm_service"
+      ]
+    },
+    {
+      "name": "page_flip",
+      "version": "0.2.5+1",
+      "dependencies": [
+        "flutter"
+      ]
+    },
+    {
+      "name": "auto_size_text",
+      "version": "3.0.0",
+      "dependencies": [
+        "flutter"
+      ]
+    },
+    {
+      "name": "carousel_slider",
+      "version": "5.1.1",
+      "dependencies": [
+        "flutter"
+      ]
+    },
+    {
+      "name": "flip_card",
+      "version": "0.7.0",
+      "dependencies": [
+        "flutter"
       ]
     },
     {

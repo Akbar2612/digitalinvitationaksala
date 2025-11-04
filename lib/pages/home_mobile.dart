@@ -1,4 +1,4 @@
-import 'package:digitalinvitationaksala/shared/flower1.dart';
+import 'package:digitalinvitationaksala/shared/flowerside.dart';
 import 'package:flutter/material.dart';
 import 'package:google_fonts/google_fonts.dart';
 import '../../data/wedding_data.dart';

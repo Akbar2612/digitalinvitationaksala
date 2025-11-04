@@ -1,14 +1,11 @@
 import 'package:digitalinvitationaksala/pages/home_desktop.dart';
-import 'package:digitalinvitationaksala/pages/pengantin_page.dart'
-    show CardPengantinPage;
+import 'package:digitalinvitationaksala/pages/pengantin_mobile.dart';
+import 'package:digitalinvitationaksala/pages/pengantin_desktop.dart';
 import 'package:flutter/material.dart';
 import 'package:just_audio/just_audio.dart';
-// ignore: unused_import
-import 'package:digitalinvitationaksala/data/wedding_data.dart';
 import 'package:digitalinvitationaksala/services/firestore_service.dart';
 import 'package:digitalinvitationaksala/pages/home_mobile.dart';
 
-// Context provider untuk mendeteksi apakah di dalam mockup
 class MockupContext extends InheritedWidget {
   final bool isInsideMockup;
 
@@ -162,15 +159,15 @@ class _HomePageState extends State<HomePage> with TickerProviderStateMixin {
     final isMobile = MediaQuery.of(context).size.width < 768;
 
     if (isMobile) {
-      // Mobile: Navigate to new page
+      // Mobile: Navigate to PengantinMobile directly
       Navigator.of(context).push(
         MaterialPageRoute(
           builder: (context) =>
-              CardPengantinPage(audioPlayer: widget.audioPlayer),
+              PengantinMobilePage(audioPlayer: widget.audioPlayer),
         ),
       );
     } else {
-      // Desktop: Update mockup content
+      // Desktop: Update mockup content to show PengantinDesktop
       setState(() {
         _mockupContent = MockupContext(
           isInsideMockup: true,
@@ -178,7 +175,7 @@ class _HomePageState extends State<HomePage> with TickerProviderStateMixin {
             data: MediaQuery.of(
               context,
             ).copyWith(size: Size(340, 680), devicePixelRatio: 2.0),
-            child: CardPengantinPage(audioPlayer: widget.audioPlayer),
+            child: PengantinDesktopPage(audioPlayer: widget.audioPlayer),
           ),
         );
       });
@@ -241,6 +238,204 @@ class _HomePageState extends State<HomePage> with TickerProviderStateMixin {
             ),
           ),
         ],
+      ),
+    );
+  }
+}
+
+// Wrapper page untuk PengantinMobile
+class PengantinMobilePage extends StatefulWidget {
+  final AudioPlayer audioPlayer;
+
+  const PengantinMobilePage({Key? key, required this.audioPlayer})
+    : super(key: key);
+
+  @override
+  State<PengantinMobilePage> createState() => _PengantinMobilePageState();
+}
+
+class _PengantinMobilePageState extends State<PengantinMobilePage> {
+  final ScrollController _scrollController = ScrollController();
+  int _selectedIndex = 0;
+  bool _isMuted = false;
+
+  final GlobalKey _pengantinKey = GlobalKey();
+  final GlobalKey _acaraKey = GlobalKey();
+  final GlobalKey _loveStoryKey = GlobalKey();
+  final GlobalKey _fotoKey = GlobalKey();
+  final GlobalKey _ucapanKey = GlobalKey();
+  final GlobalKey _giftKey = GlobalKey();
+
+  @override
+  void dispose() {
+    _scrollController.dispose();
+    super.dispose();
+  }
+
+  void _scrollToSection(int index) {
+    GlobalKey? targetKey;
+    switch (index) {
+      case 0:
+        targetKey = _pengantinKey;
+        break;
+      case 1:
+        targetKey = _acaraKey;
+        break;
+      case 2:
+        targetKey = _loveStoryKey;
+        break;
+      case 3:
+        targetKey = _fotoKey;
+        break;
+      case 4:
+        targetKey = _ucapanKey;
+        break;
+      case 5:
+        targetKey = _giftKey;
+        break;
+    }
+
+    if (targetKey?.currentContext != null) {
+      Scrollable.ensureVisible(
+        targetKey!.currentContext!,
+        duration: Duration(milliseconds: 500),
+        curve: Curves.easeInOut,
+      );
+    }
+  }
+
+  void _onMenuItemTapped(int index) {
+    setState(() {
+      _selectedIndex = index;
+    });
+    _scrollToSection(index);
+  }
+
+  void _toggleMute() {
+    setState(() {
+      _isMuted = !_isMuted;
+    });
+    if (_isMuted) {
+      widget.audioPlayer.pause();
+    } else {
+      widget.audioPlayer.play();
+    }
+  }
+
+  @override
+  Widget build(BuildContext context) {
+    return Scaffold(
+      body: PengantinMobile(
+        scrollController: _scrollController,
+        selectedIndex: _selectedIndex,
+        isMuted: _isMuted,
+        pengantinKey: _pengantinKey,
+        acaraKey: _acaraKey,
+        loveStoryKey: _loveStoryKey,
+        fotoKey: _fotoKey,
+        ucapanKey: _ucapanKey,
+        giftKey: _giftKey,
+        onMenuItemTapped: _onMenuItemTapped,
+        onToggleMute: _toggleMute,
+      ),
+    );
+  }
+}
+
+// Wrapper page untuk PengantinDesktop
+class PengantinDesktopPage extends StatefulWidget {
+  final AudioPlayer audioPlayer;
+
+  const PengantinDesktopPage({Key? key, required this.audioPlayer})
+    : super(key: key);
+
+  @override
+  State<PengantinDesktopPage> createState() => _PengantinDesktopPageState();
+}
+
+class _PengantinDesktopPageState extends State<PengantinDesktopPage> {
+  final ScrollController _scrollController = ScrollController();
+  int _selectedIndex = 0;
+  bool _isMuted = false;
+
+  final GlobalKey _pengantinKey = GlobalKey();
+  final GlobalKey _acaraKey = GlobalKey();
+  final GlobalKey _loveStoryKey = GlobalKey();
+  final GlobalKey _fotoKey = GlobalKey();
+  final GlobalKey _ucapanKey = GlobalKey();
+  final GlobalKey _giftKey = GlobalKey();
+
+  @override
+  void dispose() {
+    _scrollController.dispose();
+    super.dispose();
+  }
+
+  void _scrollToSection(int index) {
+    GlobalKey? targetKey;
+    switch (index) {
+      case 0:
+        targetKey = _pengantinKey;
+        break;
+      case 1:
+        targetKey = _acaraKey;
+        break;
+      case 2:
+        targetKey = _loveStoryKey;
+        break;
+      case 3:
+        targetKey = _fotoKey;
+        break;
+      case 4:
+        targetKey = _ucapanKey;
+        break;
+      case 5:
+        targetKey = _giftKey;
+        break;
+    }
+
+    if (targetKey?.currentContext != null) {
+      Scrollable.ensureVisible(
+        targetKey!.currentContext!,
+        duration: Duration(milliseconds: 500),
+        curve: Curves.easeInOut,
+      );
+    }
+  }
+
+  void _onMenuItemTapped(int index) {
+    setState(() {
+      _selectedIndex = index;
+    });
+    _scrollToSection(index);
+  }
+
+  void _toggleMute() {
+    setState(() {
+      _isMuted = !_isMuted;
+    });
+    if (_isMuted) {
+      widget.audioPlayer.pause();
+    } else {
+      widget.audioPlayer.play();
+    }
+  }
+
+  @override
+  Widget build(BuildContext context) {
+    return Scaffold(
+      body: PengantinDesktop(
+        scrollController: _scrollController,
+        selectedIndex: _selectedIndex,
+        isMuted: _isMuted,
+        pengantinKey: _pengantinKey,
+        acaraKey: _acaraKey,
+        loveStoryKey: _loveStoryKey,
+        fotoKey: _fotoKey,
+        ucapanKey: _ucapanKey,
+        giftKey: _giftKey,
+        onMenuItemTapped: _onMenuItemTapped,
+        onToggleMute: _toggleMute,
       ),
     );
   }
