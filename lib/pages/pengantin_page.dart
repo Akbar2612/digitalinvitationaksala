@@ -311,152 +311,184 @@ class _CardPengantinPageState extends State<CardPengantinPage>
                         children: [
                           Container(
                             height: fixedHeight,
-                            padding: EdgeInsets.symmetric(horizontal: 20),
-                            child: Column(
-                              mainAxisAlignment: MainAxisAlignment.center,
+                            child: Stack(
                               children: [
-                                SizedBox(height: 180),
-                                FadeTransition(
-                                  opacity: _titleOpacity,
-                                  child: Text(
-                                    'The Highest Happiness On Earth\nIs The Happiness Of Marriage',
-                                    style: TextStyle(
-                                      fontSize: 10,
-                                      letterSpacing: 2.8,
-                                      color: Color(0xFFB0B0B0),
-                                      fontWeight: FontWeight.w400,
-                                    ),
-                                    textAlign: TextAlign.center,
+                                Positioned(
+                                  bottom: 100,
+                                  left: -60,
+                                  child: Image.asset(
+                                    'assets/images/Asset 1.png',
+                                    width: 250,
+                                    height: 250,
+                                    opacity: AlwaysStoppedAnimation(0.6),
                                   ),
                                 ),
-                                SizedBox(height: 16),
-
-                                // Groom name
-                                SlideTransition(
-                                  position: _groomSlide,
-                                  child: FadeTransition(
-                                    opacity: _groomOpacity,
-                                    child: Text(
-                                      groomName,
-                                      style: GoogleFonts.lobster(
-                                        fontSize: 24,
-                                        fontWeight: FontWeight.w300,
-                                        color: Color(0xFFF5F5F5),
-                                        letterSpacing: 1,
-                                      ),
-                                      textAlign: TextAlign.center,
+                                // Decoration Bottom Right
+                                Positioned(
+                                  bottom: 100,
+                                  right: -60,
+                                  child: Transform(
+                                    alignment: Alignment.center,
+                                    transform: Matrix4.rotationY(3.14159),
+                                    child: Image.asset(
+                                      'assets/images/Asset 1.png',
+                                      width: 250,
+                                      height: 250,
+                                      opacity: AlwaysStoppedAnimation(0.6),
                                     ),
                                   ),
                                 ),
-
-                                SizedBox(height: 6),
-
-                                // Groom Parents
-                                SlideTransition(
-                                  position: _groomParentSlide,
-                                  child: FadeTransition(
-                                    opacity: _groomParentOpacity,
-                                    child: Column(
-                                      children: [
-                                        Text(
-                                          "Putra dari Bapak " +
-                                              FatherparentsGroom +
-                                              " & " +
-                                              MotherparentsGroom,
+                                // Main Content
+                                Padding(
+                                  padding: EdgeInsets.symmetric(horizontal: 20),
+                                  child: Column(
+                                    mainAxisAlignment: MainAxisAlignment.start,
+                                    children: [
+                                      SizedBox(height: 36),
+                                      FadeTransition(
+                                        opacity: _titleOpacity,
+                                        child: Text(
+                                          'The Highest Happiness On Earth\nIs The Happiness Of Marriage',
                                           style: TextStyle(
                                             fontSize: 10,
-                                            color: Color(0xFFD0D0D0),
-                                            letterSpacing: 0.5,
-                                            height: 1.4,
+                                            letterSpacing: 2.8,
+                                            color: Color(0xFFB0B0B0),
+                                            fontWeight: FontWeight.w400,
                                           ),
                                           textAlign: TextAlign.center,
                                         ),
-                                        SizedBox(height: 4),
-                                        Text(
-                                          "Desa Mlati, Kecamatan Kedungpring, Kabupaten Lamongan",
-                                          style: TextStyle(
-                                            fontSize: 9,
-                                            color: Color(0xFFD0D0D0),
-                                            letterSpacing: 0.5,
-                                            height: 1.4,
-                                          ),
-                                          textAlign: TextAlign.center,
-                                        ),
-                                      ],
-                                    ),
-                                  ),
-                                ),
-
-                                SizedBox(height: 16),
-
-                                // Love Icon
-                                SlideTransition(
-                                  position: _loveSlide,
-                                  child: FadeTransition(
-                                    opacity: _loveOpacity,
-                                    child: Icon(
-                                      Icons.favorite,
-                                      color: Color(0xFFD4AF37),
-                                      size: 24,
-                                    ),
-                                  ),
-                                ),
-
-                                SizedBox(height: 16),
-
-                                // Bride name
-                                SlideTransition(
-                                  position: _brideSlide,
-                                  child: FadeTransition(
-                                    opacity: _brideOpacity,
-                                    child: Text(
-                                      brideName,
-                                      style: GoogleFonts.lobster(
-                                        fontSize: 24,
-                                        fontWeight: FontWeight.w300,
-                                        color: Color(0xFFF5F5F5),
-                                        letterSpacing: 1,
                                       ),
-                                      textAlign: TextAlign.center,
-                                    ),
-                                  ),
-                                ),
+                                      SizedBox(height: 16),
 
-                                SizedBox(height: 6),
+                                      // Groom name
+                                      SlideTransition(
+                                        position: _groomSlide,
+                                        child: FadeTransition(
+                                          opacity: _groomOpacity,
+                                          child: Text(
+                                            groomName,
+                                            style: GoogleFonts.lobster(
+                                              fontSize: 24,
+                                              fontWeight: FontWeight.w300,
+                                              color: Color(0xFFF5F5F5),
+                                              letterSpacing: 1,
+                                            ),
+                                            textAlign: TextAlign.center,
+                                          ),
+                                        ),
+                                      ),
 
-                                // Bride Parents
-                                SlideTransition(
-                                  position: _brideParentSlide,
-                                  child: FadeTransition(
-                                    opacity: _brideParentOpacity,
-                                    child: Column(
-                                      children: [
-                                        Text(
-                                          "Putri dari Bapak " +
-                                              FatherparentsBride +
-                                              "&" +
-                                              MotherparentsBride,
-                                          style: TextStyle(
-                                            fontSize: 10,
-                                            color: Color(0xFFD0D0D0),
-                                            letterSpacing: 0.5,
-                                            height: 1.4,
+                                      SizedBox(height: 6),
+
+                                      // Groom Parents
+                                      SlideTransition(
+                                        position: _groomParentSlide,
+                                        child: FadeTransition(
+                                          opacity: _groomParentOpacity,
+                                          child: Column(
+                                            children: [
+                                              Text(
+                                                "Putra dari Bapak " +
+                                                    FatherparentsGroom +
+                                                    " & " +
+                                                    MotherparentsGroom,
+                                                style: TextStyle(
+                                                  fontSize: 10,
+                                                  color: Color(0xFFD0D0D0),
+                                                  letterSpacing: 0.5,
+                                                  height: 1.4,
+                                                ),
+                                                textAlign: TextAlign.center,
+                                              ),
+                                              SizedBox(height: 4),
+                                              Text(
+                                                "Desa Mlati, Kecamatan Kedungpring, Kabupaten Lamongan",
+                                                style: TextStyle(
+                                                  fontSize: 9,
+                                                  color: Color(0xFFD0D0D0),
+                                                  letterSpacing: 0.5,
+                                                  height: 1.4,
+                                                ),
+                                                textAlign: TextAlign.center,
+                                              ),
+                                            ],
                                           ),
-                                          textAlign: TextAlign.center,
                                         ),
-                                        SizedBox(height: 4),
-                                        Text(
-                                          "Desa Gambuhan, Kecamatan Kalitengah, Kabupaten Lamongan",
-                                          style: TextStyle(
-                                            fontSize: 9,
-                                            color: Color(0xFFD0D0D0),
-                                            letterSpacing: 0.5,
-                                            height: 1.4,
+                                      ),
+
+                                      SizedBox(height: 16),
+
+                                      // Love Icon
+                                      SlideTransition(
+                                        position: _loveSlide,
+                                        child: FadeTransition(
+                                          opacity: _loveOpacity,
+                                          child: Icon(
+                                            Icons.favorite,
+                                            color: Color(0xFFD4AF37),
+                                            size: 24,
                                           ),
-                                          textAlign: TextAlign.center,
                                         ),
-                                      ],
-                                    ),
+                                      ),
+
+                                      SizedBox(height: 16),
+
+                                      // Bride name
+                                      SlideTransition(
+                                        position: _brideSlide,
+                                        child: FadeTransition(
+                                          opacity: _brideOpacity,
+                                          child: Text(
+                                            brideName,
+                                            style: GoogleFonts.lobster(
+                                              fontSize: 24,
+                                              fontWeight: FontWeight.w300,
+                                              color: Color(0xFFF5F5F5),
+                                              letterSpacing: 1,
+                                            ),
+                                            textAlign: TextAlign.center,
+                                          ),
+                                        ),
+                                      ),
+
+                                      SizedBox(height: 6),
+
+                                      // Bride Parents
+                                      SlideTransition(
+                                        position: _brideParentSlide,
+                                        child: FadeTransition(
+                                          opacity: _brideParentOpacity,
+                                          child: Column(
+                                            children: [
+                                              Text(
+                                                "Putri dari Bapak " +
+                                                    FatherparentsBride +
+                                                    " & " +
+                                                    MotherparentsBride,
+                                                style: TextStyle(
+                                                  fontSize: 10,
+                                                  color: Color(0xFFD0D0D0),
+                                                  letterSpacing: 0.5,
+                                                  height: 1.4,
+                                                ),
+                                                textAlign: TextAlign.center,
+                                              ),
+                                              SizedBox(height: 4),
+                                              Text(
+                                                "Desa Gambuhan, Kecamatan Kalitengah, Kabupaten Lamongan",
+                                                style: TextStyle(
+                                                  fontSize: 9,
+                                                  color: Color(0xFFD0D0D0),
+                                                  letterSpacing: 0.5,
+                                                  height: 1.4,
+                                                ),
+                                                textAlign: TextAlign.center,
+                                              ),
+                                            ],
+                                          ),
+                                        ),
+                                      ),
+                                    ],
                                   ),
                                 ),
                               ],
