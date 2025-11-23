@@ -252,6 +252,60 @@ class MusicPlaylist extends StatelessWidget {
             ],
           ),
           SizedBox(height: 6),
+          // Progress Bar
+          Column(
+            children: [
+              SliderTheme(
+                data: SliderThemeData(
+                  trackHeight: 2,
+                  thumbShape: RoundSliderThumbShape(enabledThumbRadius: 4),
+                  overlayShape: RoundSliderOverlayShape(overlayRadius: 8),
+                  activeTrackColor: _primaryColor,
+                  inactiveTrackColor: _primaryColor.withOpacity(0.2),
+                  thumbColor: _primaryColor,
+                  overlayColor: _primaryColor.withOpacity(0.2),
+                ),
+                child: Slider(
+                  value: controller.position.inSeconds.toDouble().clamp(
+                    0,
+                    controller.duration.inSeconds.toDouble().clamp(
+                      1,
+                      double.infinity,
+                    ),
+                  ),
+                  max: controller.duration.inSeconds.toDouble().clamp(
+                    1.0,
+                    double.infinity,
+                  ),
+                  onChanged: (v) =>
+                      controller.seek(Duration(seconds: v.toInt())),
+                ),
+              ),
+              Padding(
+                padding: EdgeInsets.symmetric(horizontal: 4),
+                child: Row(
+                  mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                  children: [
+                    Text(
+                      _formatDuration(controller.position),
+                      style: GoogleFonts.poppins(
+                        fontSize: 9,
+                        color: Colors.white70,
+                      ),
+                    ),
+                    Text(
+                      _formatDuration(controller.duration),
+                      style: GoogleFonts.poppins(
+                        fontSize: 9,
+                        color: Colors.white70,
+                      ),
+                    ),
+                  ],
+                ),
+              ),
+            ],
+          ),
+          SizedBox(height: 6),
           // Baris 2: Kontrol Musik
           Row(
             mainAxisAlignment: MainAxisAlignment.center,
