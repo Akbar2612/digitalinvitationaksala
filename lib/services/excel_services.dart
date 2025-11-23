@@ -15,11 +15,11 @@ class ExcelService {
   Future<String> downloadTemplate() async {
     try {
       print("🔧 Membuat Excel template...");
-      
+
       var excel = excel_pkg.Excel.createExcel();
       final defaultName = excel.getDefaultSheet();
       const targetName = 'Template Data Tamu';
-      
+
       if (defaultName != null && defaultName != targetName) {
         try {
           excel.rename(defaultName, targetName);
@@ -27,7 +27,7 @@ class ExcelService {
           print("⚠️ Tidak bisa rename sheet: $e");
         }
       }
-      
+
       var sheet = excel[targetName];
 
       // Header
@@ -36,7 +36,7 @@ class ExcelService {
         excel_pkg.TextCellValue('UNSUR'),
         excel_pkg.TextCellValue('ALAMAT'),
       ]);
-      
+
       // Contoh data
       sheet.appendRow([
         excel_pkg.TextCellValue('Contoh: Budi Santoso'),
@@ -48,7 +48,7 @@ class ExcelService {
       if (fileBytes == null) {
         throw Exception('Gagal membuat file template');
       }
-      
+
       const filename = 'Template_Data_Tamu.xlsx';
 
       if (kIsWeb) {
@@ -81,7 +81,7 @@ class ExcelService {
   Future<Map<String, int>?> importFromExcel() async {
     try {
       print("📂 Membuka file picker...");
-      
+
       FilePickerResult? result = await FilePicker.platform.pickFiles(
         type: FileType.custom,
         allowedExtensions: ['xlsx', 'xls'],
@@ -98,7 +98,7 @@ class ExcelService {
 
       // ✅ Handle bytes untuk Web dan Mobile
       Uint8List? bytes;
-      
+
       if (kIsWeb) {
         print("🌐 Membaca file dari Web...");
         bytes = result.files.single.bytes;
@@ -140,7 +140,7 @@ class ExcelService {
         for (var i = 1; i < sheet.maxRows; i++) {
           try {
             var row = sheet.row(i);
-            
+
             // Ambil data dari setiap kolom
             String name = '';
             String unsur = '';
@@ -151,12 +151,12 @@ class ExcelService {
               if (row.length > 0 && row[0]?.value != null) {
                 name = row[0]!.value.toString().trim();
               }
-              
+
               // Kolom 1: Unsur
               if (row.length > 1 && row[1]?.value != null) {
                 unsur = row[1]!.value.toString().trim();
               }
-              
+
               // Kolom 2: Alamat
               if (row.length > 2 && row[2]?.value != null) {
                 address = row[2]!.value.toString().trim();
@@ -168,8 +168,8 @@ class ExcelService {
               print("⏭️ Baris $i: Nama kosong, skip");
               continue;
             }
-            
-            if (name.toLowerCase().contains('contoh') || 
+
+            if (name.toLowerCase().contains('contoh') ||
                 name.toLowerCase().contains('nama')) {
               print("⏭️ Baris $i: Baris contoh/header, skip");
               continue;
@@ -179,7 +179,6 @@ class ExcelService {
             print("➕ Baris $i: Menambahkan '$name'");
             await _firestoreService.addGuest(name, unsur, address);
             successCount++;
-            
           } catch (e, stackTrace) {
             print("❌ Error pada baris $i: $e");
             print(stackTrace);
@@ -190,11 +189,10 @@ class ExcelService {
 
       print("✅ Import selesai. Berhasil: $successCount, Gagal: $errorCount");
       return {'success': successCount, 'error': errorCount};
-      
     } catch (e, stackTrace) {
       print("❌ Error di importFromExcel: $e");
       print(stackTrace);
-      
+
       // ✅ Jangan throw exception, return null agar bisa dihandle di UI
       return null;
     }
@@ -211,7 +209,7 @@ class ExcelService {
       var excel = excel_pkg.Excel.createExcel();
       final defaultName = excel.getDefaultSheet();
       const targetName = 'Data Tamu';
-      
+
       if (defaultName != null && defaultName != targetName) {
         try {
           excel.rename(defaultName, targetName);
@@ -219,7 +217,7 @@ class ExcelService {
           print("⚠️ Tidak bisa rename sheet: $e");
         }
       }
-      
+
       var sheet = excel[targetName];
 
       // Header
@@ -236,7 +234,7 @@ class ExcelService {
       for (var i = 0; i < guests.length; i++) {
         var guest = guests[i];
         final isShared = guest['isShared'] ?? false;
-        
+
         sheet.appendRow([
           excel_pkg.IntCellValue(i + 1),
           excel_pkg.TextCellValue(guest['name']?.toString() ?? ''),
@@ -251,8 +249,9 @@ class ExcelService {
       if (fileBytes == null) {
         throw Exception('Gagal membuat file Excel');
       }
-      
-      final filename = 'Data_Tamu_${DateTime.now().millisecondsSinceEpoch}.xlsx';
+
+      final filename =
+          'Data_Tamu_${DateTime.now().millisecondsSinceEpoch}.xlsx';
 
       if (kIsWeb) {
         print("🌐 Export untuk Web...");

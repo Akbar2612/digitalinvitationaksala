@@ -1,13 +1,15 @@
 import 'package:digitalinvitationaksala/shared/flowerside.dart';
+import 'package:digitalinvitationaksala/shared/widget_playlist.dart';
 import 'package:flutter/material.dart';
 import 'package:google_fonts/google_fonts.dart';
 import '../../data/wedding_data.dart';
 
-class HomeMobile extends StatelessWidget {
+class HomeMobile extends StatefulWidget {
   final String guestName;
   final String guestAddress;
   final AnimationController animationController;
   final VoidCallback onOpenInvitation;
+  final MusicPlaylistController musicController;
 
   const HomeMobile({
     Key? key,
@@ -15,7 +17,29 @@ class HomeMobile extends StatelessWidget {
     required this.guestAddress,
     required this.animationController,
     required this.onOpenInvitation,
+    required this.musicController,
   }) : super(key: key);
+
+  @override
+  State<HomeMobile> createState() => _HomeMobileState();
+}
+
+class _HomeMobileState extends State<HomeMobile> {
+  bool _showPlaylist = false;
+
+  void _togglePlaylist() {
+    setState(() {
+      _showPlaylist = !_showPlaylist;
+    });
+  }
+
+  void _handleOpenInvitation() {
+    // Play musik ketika tombol "Buka Undangan" diklik
+    widget.musicController.play();
+
+    // Panggil callback original
+    widget.onOpenInvitation();
+  }
 
   @override
   Widget build(BuildContext context) {
@@ -90,6 +114,51 @@ class HomeMobile extends StatelessWidget {
             children: [_buildAnimatedContent()],
           ),
         ),
+
+        // Tap outside to close playlist
+        if (_showPlaylist)
+          Positioned.fill(
+            child: GestureDetector(
+              onTap: () => setState(() => _showPlaylist = false),
+              behavior: HitTestBehavior.translucent,
+              child: Container(color: Colors.transparent),
+            ),
+          ),
+
+        // Playlist widget - animasi show/hide
+        Positioned(
+          bottom: 90,
+          right: 20,
+          left: 20,
+          child: AnimatedSlide(
+            offset: _showPlaylist ? Offset.zero : Offset(0, 0.5),
+            duration: Duration(milliseconds: 300),
+            curve: Curves.easeOutCubic,
+            child: AnimatedOpacity(
+              opacity: _showPlaylist ? 1.0 : 0.0,
+              duration: Duration(milliseconds: 200),
+              child: IgnorePointer(
+                ignoring: !_showPlaylist,
+                child: MusicPlaylist(
+                  controller: widget.musicController,
+                  primaryColor: Color(0xFFD4AF37),
+                  backgroundColor: Color(0xFF1A1A1A),
+                ),
+              ),
+            ),
+          ),
+        ),
+
+        // Music Button (Bottom Right)
+        Positioned(
+          bottom: 20,
+          right: 20,
+          child: MusicFloatingButton(
+            controller: widget.musicController,
+            showPlaylist: _showPlaylist,
+            onTap: _togglePlaylist,
+          ),
+        ),
       ],
     );
   }
@@ -159,7 +228,7 @@ class HomeMobile extends StatelessWidget {
 
     final animation = Tween<double>(begin: 0, end: 1).animate(
       CurvedAnimation(
-        parent: animationController,
+        parent: widget.animationController,
         curve: Interval(
           (textIndex * 150) / 3000,
           ((textIndex * 150) + 400) / 3000,
@@ -210,7 +279,7 @@ class HomeMobile extends StatelessWidget {
               mainAxisSize: MainAxisSize.min,
               children: [
                 _buildAnimatedText(
-                  text: guestName,
+                  text: widget.guestName,
                   style: TextStyle(
                     fontSize: 20,
                     fontWeight: FontWeight.bold,
@@ -219,10 +288,10 @@ class HomeMobile extends StatelessWidget {
                   ),
                   index: textIndex++,
                 ),
-                if (guestAddress.isNotEmpty) ...[
+                if (widget.guestAddress.isNotEmpty) ...[
                   SizedBox(height: 6),
                   _buildAnimatedText(
-                    text: guestAddress,
+                    text: widget.guestAddress,
                     style: TextStyle(fontSize: 14, color: Colors.white70),
                     index: textIndex++,
                   ),
@@ -239,7 +308,7 @@ class HomeMobile extends StatelessWidget {
     return AnimatedBuilder(
       animation: Tween<double>(begin: 0, end: 1).animate(
         CurvedAnimation(
-          parent: animationController,
+          parent: widget.animationController,
           curve: Interval(
             (textIndex * 150) / 3000,
             ((textIndex * 150) + 500) / 3000,
@@ -250,7 +319,7 @@ class HomeMobile extends StatelessWidget {
       builder: (context, child) {
         final animation = Tween<double>(begin: 0, end: 1).animate(
           CurvedAnimation(
-            parent: animationController,
+            parent: widget.animationController,
             curve: Interval(
               (textIndex * 150) / 3000,
               ((textIndex * 150) + 500) / 3000,
@@ -271,7 +340,7 @@ class HomeMobile extends StatelessWidget {
                   borderRadius: BorderRadius.circular(8),
                 ),
               ),
-              onPressed: onOpenInvitation,
+              onPressed: _handleOpenInvitation,
               child: Text(
                 'Buka Undangan',
                 style: TextStyle(
@@ -296,7 +365,7 @@ class HomeMobile extends StatelessWidget {
     final delay = index * 120;
     final animation = Tween<double>(begin: 0, end: 1).animate(
       CurvedAnimation(
-        parent: animationController,
+        parent: widget.animationController,
         curve: Interval(
           delay / totalDuration,
           (delay + 400) / totalDuration,

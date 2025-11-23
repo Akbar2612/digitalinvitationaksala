@@ -4,7 +4,6 @@ import 'package:digitalinvitationaksala/widgets/admin_kelola_komentar.dart';
 import 'package:digitalinvitationaksala/widgets/admin_kisah_cinta.dart';
 import 'package:flutter/material.dart';
 import 'package:google_fonts/google_fonts.dart';
-import 'package:just_audio/just_audio.dart';
 import '../widgets/admin_data_pernikahan.dart';
 import '../widgets/admin_tambah_tamu.dart';
 import '../widgets/admin_data_tamu.dart';
@@ -112,9 +111,7 @@ class _AdminPageState extends State<AdminPage> {
           onPressed: () {
             Navigator.push(
               context,
-              MaterialPageRoute(
-                builder: (context) => HomePage(audioPlayer: AudioPlayer()),
-              ),
+              MaterialPageRoute(builder: (context) => HomePage()),
             );
           },
         ),
@@ -670,9 +667,7 @@ class _AdminPageState extends State<AdminPage> {
             onTap: () {
               Navigator.push(
                 context,
-                MaterialPageRoute(
-                  builder: (context) => HomePage(audioPlayer: AudioPlayer()),
-                ),
+                MaterialPageRoute(builder: (context) => HomePage()),
               );
             },
             borderRadius: BorderRadius.circular(20),

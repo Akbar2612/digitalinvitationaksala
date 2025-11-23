@@ -1,4 +1,5 @@
 import 'package:digitalinvitationaksala/shared/bottom_nav.dart';
+import 'package:digitalinvitationaksala/shared/flowerside.dart';
 import 'package:digitalinvitationaksala/shared/mute_button.dart';
 import 'package:digitalinvitationaksala/widgets/acaralokasi_section.dart';
 import 'package:digitalinvitationaksala/widgets/ayat_section.dart';
@@ -190,7 +191,7 @@ class _PengantinDesktopState extends State<PengantinDesktop>
             children: [_buildHeroSection(), _buildContentSections()],
           ),
         ),
-        // Bottom Navigation (sama seperti mobile)
+        // Bottom Navigation
         Positioned(
           bottom: 0,
           left: 0,
@@ -217,7 +218,43 @@ class _PengantinDesktopState extends State<PengantinDesktop>
   Widget _buildHeroSection() {
     return Container(
       height: MediaQuery.of(context).size.height,
-      child: Stack(children: [_buildBackground(), _buildHeroContent()]),
+      child: Stack(
+        children: [
+          // Background
+          _buildBackground(),
+          Positioned(
+            bottom: 100,
+            left: -20,
+            child: Transform.rotate(
+              angle: 0,
+              child: FlowerCornerDecoration(
+                size: 180,
+                delay: Duration(milliseconds: 20),
+              ),
+            ),
+          ),
+
+          // Kanan bawah (flip horizontal)
+          Positioned(
+            bottom: 100,
+            right: -20,
+            child: Transform(
+              alignment: Alignment.center,
+              transform: Matrix4.identity()..scale(-1.0, 1.0),
+              child: Transform.rotate(
+                angle: 0,
+                child: FlowerCornerDecoration(
+                  size: 180,
+                  delay: Duration(milliseconds: 20),
+                ),
+              ),
+            ),
+          ),
+
+          // Content
+          _buildHeroContent(),
+        ],
+      ),
     );
   }
 

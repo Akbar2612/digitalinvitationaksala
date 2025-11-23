@@ -1,7 +1,6 @@
 import 'package:digitalinvitationaksala/shared/bottom_nav.dart';
-import 'package:digitalinvitationaksala/shared/flowerheader.dart';
 import 'package:digitalinvitationaksala/shared/flowerside.dart';
-import 'package:digitalinvitationaksala/shared/mute_button.dart';
+import 'package:digitalinvitationaksala/shared/widget_playlist.dart';
 import 'package:digitalinvitationaksala/widgets/acaralokasi_section.dart';
 import 'package:digitalinvitationaksala/widgets/ayat_section.dart';
 import 'package:digitalinvitationaksala/widgets/carousel_section.dart';
@@ -17,7 +16,7 @@ import '../data/wedding_data.dart';
 class PengantinMobile extends StatefulWidget {
   final ScrollController scrollController;
   final int selectedIndex;
-  final bool isMuted;
+  final MusicPlaylistController musicController;
   final GlobalKey<State> pengantinKey;
   final GlobalKey<State> acaraKey;
   final GlobalKey<State> loveStoryKey;
@@ -25,13 +24,12 @@ class PengantinMobile extends StatefulWidget {
   final GlobalKey<State> ucapanKey;
   final GlobalKey<State> giftKey;
   final Function(int) onMenuItemTapped;
-  final VoidCallback onToggleMute;
 
   const PengantinMobile({
     Key? key,
     required this.scrollController,
     required this.selectedIndex,
-    required this.isMuted,
+    required this.musicController,
     required this.pengantinKey,
     required this.acaraKey,
     required this.loveStoryKey,
@@ -39,7 +37,6 @@ class PengantinMobile extends StatefulWidget {
     required this.ucapanKey,
     required this.giftKey,
     required this.onMenuItemTapped,
-    required this.onToggleMute,
   }) : super(key: key);
 
   @override
@@ -67,6 +64,8 @@ class _PengantinMobileState extends State<PengantinMobile>
   late Animation<Offset> _loveSlide;
   late Animation<Offset> _brideSlide;
   late Animation<Offset> _brideParentSlide;
+
+  bool _showPlaylist = false;
 
   @override
   void initState() {
@@ -170,6 +169,12 @@ class _PengantinMobileState extends State<PengantinMobile>
     });
   }
 
+  void _togglePlaylist() {
+    setState(() {
+      _showPlaylist = !_showPlaylist;
+    });
+  }
+
   @override
   void dispose() {
     _titleController.dispose();
@@ -192,7 +197,8 @@ class _PengantinMobileState extends State<PengantinMobile>
             children: [_buildHeroSection(), _buildContentSections()],
           ),
         ),
-        // Gunakan shared widget
+
+        // Bottom Navigation
         Positioned(
           bottom: 0,
           left: 0,
@@ -202,13 +208,49 @@ class _PengantinMobileState extends State<PengantinMobile>
             onMenuItemTapped: widget.onMenuItemTapped,
           ),
         ),
+
+        // Tap outside to close playlist
+        if (_showPlaylist)
+          Positioned.fill(
+            child: GestureDetector(
+              onTap: () => setState(() => _showPlaylist = false),
+              behavior: HitTestBehavior.translucent,
+              child: Container(color: Colors.transparent),
+            ),
+          ),
+
+        // Playlist widget - animasi show/hide (4px di atas tombol music)
+        Positioned(
+          bottom: 154, // 100 (posisi tombol) + 50 (tinggi tombol) + 4 (spasi)
+          right: 20,
+          left: 20,
+          child: AnimatedSlide(
+            offset: _showPlaylist ? Offset.zero : Offset(0, 0.5),
+            duration: Duration(milliseconds: 300),
+            curve: Curves.easeOutCubic,
+            child: AnimatedOpacity(
+              opacity: _showPlaylist ? 1.0 : 0.0,
+              duration: Duration(milliseconds: 200),
+              child: IgnorePointer(
+                ignoring: !_showPlaylist,
+                child: MusicPlaylist(
+                  controller: widget.musicController,
+                  primaryColor: Color(0xFFD4AF37),
+                  backgroundColor: Color(0xFF1A1A1A),
+                ),
+              ),
+            ),
+          ),
+        ),
+
+        // Music Button (Bottom Right) - menggantikan Mute Button
         Positioned(
           bottom: 100,
           right: 20,
-          child: MuteButton(
-            isMuted: widget.isMuted,
-            onToggleMute: widget.onToggleMute,
-            size: 40,
+          child: MusicFloatingButton(
+            controller: widget.musicController,
+            showPlaylist: _showPlaylist,
+            onTap: _togglePlaylist,
           ),
         ),
       ],
@@ -220,9 +262,7 @@ class _PengantinMobileState extends State<PengantinMobile>
       height: MediaQuery.of(context).size.height,
       child: Stack(
         children: [
-          // Background
           _buildBackground(),
-          // Decorations
           // kiri
           Positioned(
             bottom: 0,
@@ -235,7 +275,6 @@ class _PengantinMobileState extends State<PengantinMobile>
               ),
             ),
           ),
-
           // kanan (flip horizontal)
           Positioned(
             bottom: 0,
@@ -252,7 +291,6 @@ class _PengantinMobileState extends State<PengantinMobile>
               ),
             ),
           ),
-          // Content
           _buildHeroContent(),
         ],
       ),

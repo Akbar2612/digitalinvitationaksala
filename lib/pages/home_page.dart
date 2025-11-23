@@ -1,8 +1,10 @@
 import 'package:digitalinvitationaksala/pages/home_desktop.dart';
 import 'package:digitalinvitationaksala/pages/pengantin_mobile.dart';
 import 'package:digitalinvitationaksala/pages/pengantin_desktop.dart';
+import 'package:digitalinvitationaksala/shared/widget_playlist.dart';
+import 'package:digitalinvitationaksala/shared/widget_playlist_data.dart'
+    show weddingPlaylist;
 import 'package:flutter/material.dart';
-import 'package:just_audio/just_audio.dart';
 import 'package:digitalinvitationaksala/services/firestore_service.dart';
 import 'package:digitalinvitationaksala/pages/home_mobile.dart';
 
@@ -26,11 +28,9 @@ class MockupContext extends InheritedWidget {
 }
 
 class HomePage extends StatefulWidget {
-  final AudioPlayer audioPlayer;
   final String? guestSlug;
 
-  const HomePage({Key? key, required this.audioPlayer, this.guestSlug})
-    : super(key: key);
+  const HomePage({Key? key, this.guestSlug}) : super(key: key);
 
   @override
   State<HomePage> createState() => _HomePageState();
@@ -40,12 +40,13 @@ class _HomePageState extends State<HomePage> with TickerProviderStateMixin {
   late AnimationController _animationController;
   final _firestoreService = FirestoreService();
 
+  final MusicPlaylistController _musicController = MusicPlaylistController();
+
   String guestName = 'Tamu Undangan';
   String guestAddress = '';
   bool isLoading = true;
   bool isImagesLoaded = false;
 
-  // State untuk mockup content (desktop)
   Widget? _mockupContent;
 
   @override
@@ -56,9 +57,11 @@ class _HomePageState extends State<HomePage> with TickerProviderStateMixin {
       vsync: this,
     );
 
+    // Initialize music controller dengan playlist
+    _musicController.initialize(weddingPlaylist);
+
     _loadGuestData();
 
-    // Preload images after first frame
     WidgetsBinding.instance.addPostFrameCallback((_) {
       _preloadImages();
     });
@@ -142,32 +145,26 @@ class _HomePageState extends State<HomePage> with TickerProviderStateMixin {
   @override
   void dispose() {
     _animationController.dispose();
+    _musicController.dispose();
     super.dispose();
-  }
-
-  Future<void> _playAudio() async {
-    try {
-      print('▶️ Playing audio...');
-      await widget.audioPlayer.play();
-      print('✅ Audio playing');
-    } catch (e) {
-      print('❌ Error playing audio: $e');
-    }
   }
 
   void _onOpenInvitation(BuildContext context) {
     final isMobile = MediaQuery.of(context).size.width < 768;
 
+    // Play musik saat buka undangan
+    _musicController.play();
+
     if (isMobile) {
-      // Mobile: Navigate to PengantinMobile directly
+      // Mobile: Navigate dengan membawa music controller
       Navigator.of(context).push(
         MaterialPageRoute(
           builder: (context) =>
-              PengantinMobilePage(audioPlayer: widget.audioPlayer),
+              PengantinMobilePage(musicController: _musicController),
         ),
       );
     } else {
-      // Desktop: Update mockup content to show PengantinDesktop
+      // Desktop: Update mockup content
       setState(() {
         _mockupContent = MockupContext(
           isInsideMockup: true,
@@ -175,13 +172,11 @@ class _HomePageState extends State<HomePage> with TickerProviderStateMixin {
             data: MediaQuery.of(
               context,
             ).copyWith(size: Size(340, 680), devicePixelRatio: 2.0),
-            child: PengantinDesktopPage(audioPlayer: widget.audioPlayer),
+            child: PengantinDesktopPage(musicController: _musicController),
           ),
         );
       });
     }
-
-    _playAudio();
   }
 
   @override
@@ -199,7 +194,6 @@ class _HomePageState extends State<HomePage> with TickerProviderStateMixin {
             ? _buildLoadingScreen()
             : LayoutBuilder(
                 builder: (context, constraints) {
-                  // Responsive breakpoint
                   final isMobile = constraints.maxWidth < 768;
 
                   return isMobile
@@ -207,12 +201,14 @@ class _HomePageState extends State<HomePage> with TickerProviderStateMixin {
                           guestName: guestName,
                           guestAddress: guestAddress,
                           animationController: _animationController,
+                          musicController: _musicController,
                           onOpenInvitation: () => _onOpenInvitation(context),
                         )
                       : HomeDesktop(
                           guestName: guestName,
                           guestAddress: guestAddress,
                           mockupContent: _mockupContent,
+                          musicController: _musicController,
                           onOpenInvitation: () => _onOpenInvitation(context),
                         );
                 },
@@ -245,9 +241,9 @@ class _HomePageState extends State<HomePage> with TickerProviderStateMixin {
 
 // Wrapper page untuk PengantinMobile
 class PengantinMobilePage extends StatefulWidget {
-  final AudioPlayer audioPlayer;
+  final MusicPlaylistController musicController;
 
-  const PengantinMobilePage({Key? key, required this.audioPlayer})
+  const PengantinMobilePage({Key? key, required this.musicController})
     : super(key: key);
 
   @override
@@ -257,7 +253,6 @@ class PengantinMobilePage extends StatefulWidget {
 class _PengantinMobilePageState extends State<PengantinMobilePage> {
   final ScrollController _scrollController = ScrollController();
   int _selectedIndex = 0;
-  bool _isMuted = false;
 
   final GlobalKey _pengantinKey = GlobalKey();
   final GlobalKey _acaraKey = GlobalKey();
@@ -311,24 +306,13 @@ class _PengantinMobilePageState extends State<PengantinMobilePage> {
     _scrollToSection(index);
   }
 
-  void _toggleMute() {
-    setState(() {
-      _isMuted = !_isMuted;
-    });
-    if (_isMuted) {
-      widget.audioPlayer.pause();
-    } else {
-      widget.audioPlayer.play();
-    }
-  }
-
   @override
   Widget build(BuildContext context) {
     return Scaffold(
       body: PengantinMobile(
         scrollController: _scrollController,
         selectedIndex: _selectedIndex,
-        isMuted: _isMuted,
+        musicController: widget.musicController, // ✅ TAMBAH INI
         pengantinKey: _pengantinKey,
         acaraKey: _acaraKey,
         loveStoryKey: _loveStoryKey,
@@ -336,17 +320,15 @@ class _PengantinMobilePageState extends State<PengantinMobilePage> {
         ucapanKey: _ucapanKey,
         giftKey: _giftKey,
         onMenuItemTapped: _onMenuItemTapped,
-        onToggleMute: _toggleMute,
       ),
     );
   }
 }
 
-// Wrapper page untuk PengantinDesktop
 class PengantinDesktopPage extends StatefulWidget {
-  final AudioPlayer audioPlayer;
+  final MusicPlaylistController musicController;
 
-  const PengantinDesktopPage({Key? key, required this.audioPlayer})
+  const PengantinDesktopPage({Key? key, required this.musicController})
     : super(key: key);
 
   @override
@@ -356,7 +338,6 @@ class PengantinDesktopPage extends StatefulWidget {
 class _PengantinDesktopPageState extends State<PengantinDesktopPage> {
   final ScrollController _scrollController = ScrollController();
   int _selectedIndex = 0;
-  bool _isMuted = false;
 
   final GlobalKey _pengantinKey = GlobalKey();
   final GlobalKey _acaraKey = GlobalKey();
@@ -411,31 +392,29 @@ class _PengantinDesktopPageState extends State<PengantinDesktopPage> {
   }
 
   void _toggleMute() {
-    setState(() {
-      _isMuted = !_isMuted;
-    });
-    if (_isMuted) {
-      widget.audioPlayer.pause();
-    } else {
-      widget.audioPlayer.play();
-    }
+    widget.musicController.toggle();
   }
 
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      body: PengantinDesktop(
-        scrollController: _scrollController,
-        selectedIndex: _selectedIndex,
-        isMuted: _isMuted,
-        pengantinKey: _pengantinKey,
-        acaraKey: _acaraKey,
-        loveStoryKey: _loveStoryKey,
-        fotoKey: _fotoKey,
-        ucapanKey: _ucapanKey,
-        giftKey: _giftKey,
-        onMenuItemTapped: _onMenuItemTapped,
-        onToggleMute: _toggleMute,
+      body: ListenableBuilder(
+        listenable: widget.musicController,
+        builder: (context, _) {
+          return PengantinDesktop(
+            scrollController: _scrollController,
+            selectedIndex: _selectedIndex,
+            isMuted: !widget.musicController.isPlaying,
+            pengantinKey: _pengantinKey,
+            acaraKey: _acaraKey,
+            loveStoryKey: _loveStoryKey,
+            fotoKey: _fotoKey,
+            ucapanKey: _ucapanKey,
+            giftKey: _giftKey,
+            onMenuItemTapped: _onMenuItemTapped,
+            onToggleMute: _toggleMute,
+          );
+        },
       ),
     );
   }

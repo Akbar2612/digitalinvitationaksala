@@ -1,4 +1,6 @@
 import 'package:digitalinvitationaksala/shared/flowerside.dart';
+import 'package:digitalinvitationaksala/shared/contact_dialog.dart';
+import 'package:digitalinvitationaksala/shared/widget_playlist.dart';
 import 'package:flutter/material.dart';
 import 'package:google_fonts/google_fonts.dart';
 import 'package:digitalinvitationaksala/data/wedding_data.dart';
@@ -8,6 +10,7 @@ class HomeDesktop extends StatelessWidget {
   final String guestAddress;
   final Widget? mockupContent;
   final VoidCallback onOpenInvitation;
+  final MusicPlaylistController musicController;
 
   const HomeDesktop({
     Key? key,
@@ -15,7 +18,15 @@ class HomeDesktop extends StatelessWidget {
     required this.guestAddress,
     this.mockupContent,
     required this.onOpenInvitation,
+    required this.musicController,
   }) : super(key: key);
+
+  void _handleOpenInvitation() {
+    // Play musik ketika tombol "Buka Undangan" diklik
+    musicController.play();
+    // Panggil callback original
+    onOpenInvitation();
+  }
 
   @override
   Widget build(BuildContext context) {
@@ -52,6 +63,23 @@ class HomeDesktop extends StatelessWidget {
             ],
           ),
         ),
+
+        // Music Player (Top Right)
+        Positioned(
+          top: 20,
+          right: 20,
+          child: Container(
+            constraints: BoxConstraints(maxWidth: 400),
+            child: MusicPlaylist(
+              controller: musicController,
+              primaryColor: Color(0xFFD4AF37),
+              backgroundColor: Color(0xFF1A1A1A),
+            ),
+          ),
+        ),
+
+        // Creative Credit (Bottom Right)
+        _buildCreativeCredit(context),
       ],
     );
   }
@@ -136,7 +164,7 @@ class HomeDesktop extends StatelessWidget {
 
   Widget _buildWeddingInfo() {
     return Column(
-      mainAxisAlignment: MainAxisAlignment.center,
+      mainAxisAlignment: MainAxisAlignment.end,
       crossAxisAlignment: CrossAxisAlignment.end,
       children: [
         Text(
@@ -148,7 +176,7 @@ class HomeDesktop extends StatelessWidget {
             letterSpacing: 4,
           ),
         ),
-        SizedBox(height: 24),
+        SizedBox(height: 8),
         Text(
           groomnickName,
           style: GoogleFonts.playfairDisplay(
@@ -172,7 +200,7 @@ class HomeDesktop extends StatelessWidget {
             height: 1.1,
           ),
         ),
-        SizedBox(height: 32),
+        SizedBox(height: 8),
         Text(
           'Selasa, 09 Desember 2025',
           style: GoogleFonts.montserrat(
@@ -182,7 +210,50 @@ class HomeDesktop extends StatelessWidget {
             letterSpacing: 1,
           ),
         ),
+        SizedBox(height: 32),
       ],
+    );
+  }
+
+  Widget _buildCreativeCredit(BuildContext context) {
+    return Positioned(
+      right: 20,
+      bottom: 20,
+      child: InkWell(
+        onTap: () => ContactDialog.show(context),
+        borderRadius: BorderRadius.circular(6),
+        child: Container(
+          padding: EdgeInsets.symmetric(horizontal: 10, vertical: 5),
+          decoration: BoxDecoration(
+            color: Colors.black.withOpacity(0.15),
+            borderRadius: BorderRadius.circular(6),
+            border: Border.all(
+              color: Color(0xFFD4AF37).withOpacity(0.15),
+              width: 0.5,
+            ),
+          ),
+          child: Row(
+            mainAxisSize: MainAxisSize.min,
+            children: [
+              Icon(
+                Icons.brush,
+                size: 10,
+                color: Color(0xFFD4AF37).withOpacity(0.6),
+              ),
+              SizedBox(width: 5),
+              Text(
+                'Creative by Aksala Creative Media',
+                style: GoogleFonts.poppins(
+                  fontSize: 9,
+                  color: Color(0xFFD4AF37).withOpacity(0.6),
+                  letterSpacing: 0.3,
+                  fontWeight: FontWeight.w300,
+                ),
+              ),
+            ],
+          ),
+        ),
+      ),
     );
   }
 
@@ -221,7 +292,7 @@ class HomeDesktop extends StatelessWidget {
       child: _MockupLanding(
         guestName: guestName,
         guestAddress: guestAddress,
-        onOpenInvitation: onOpenInvitation,
+        onOpenInvitation: _handleOpenInvitation,
       ),
     );
   }

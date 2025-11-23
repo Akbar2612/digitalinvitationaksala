@@ -39,20 +39,22 @@ class _AdminKelolaKomentarState extends State<AdminKelolaKomentar> {
 
   @override
   Widget build(BuildContext context) {
+    final isMobile = MediaQuery.of(context).size.width < 768;
+
     return Column(
       children: [
-        _buildHeaderSection(),
-        const SizedBox(height: 24),
-        _buildFilterSection(),
-        const SizedBox(height: 24),
-        Expanded(child: _buildKomentarList()),
+        _buildHeaderSection(isMobile),
+        SizedBox(height: isMobile ? 16 : 24),
+        _buildFilterSection(isMobile),
+        SizedBox(height: isMobile ? 16 : 24),
+        Expanded(child: _buildKomentarList(isMobile)),
       ],
     );
   }
 
-  Widget _buildHeaderSection() {
+  Widget _buildHeaderSection(bool isMobile) {
     return Container(
-      padding: const EdgeInsets.all(24),
+      padding: EdgeInsets.all(isMobile ? 16 : 24),
       decoration: BoxDecoration(
         gradient: LinearGradient(
           colors: [
@@ -69,7 +71,7 @@ class _AdminKelolaKomentarState extends State<AdminKelolaKomentar> {
           Row(
             children: [
               Container(
-                padding: const EdgeInsets.all(12),
+                padding: EdgeInsets.all(isMobile ? 8 : 12),
                 decoration: BoxDecoration(
                   gradient: LinearGradient(
                     colors: [
@@ -86,51 +88,53 @@ class _AdminKelolaKomentarState extends State<AdminKelolaKomentar> {
                     ),
                   ],
                 ),
-                child: const Icon(
+                child: Icon(
                   Icons.chat_bubble_outline,
                   color: Colors.white,
-                  size: 24,
+                  size: isMobile ? 20 : 24,
                 ),
               ),
-              const SizedBox(width: 16),
+              SizedBox(width: isMobile ? 12 : 16),
               Expanded(
                 child: Column(
                   crossAxisAlignment: CrossAxisAlignment.start,
                   children: [
                     Text(
-                      'KELOLA KOMENTAR & UCAPAN',
+                      'KELOLA KOMENTAR',
                       style: GoogleFonts.poppins(
-                        fontSize: 20,
+                        fontSize: isMobile ? 16 : 20,
                         fontWeight: FontWeight.w700,
                         color: widget.navyBlue,
                       ),
                     ),
-                    const SizedBox(height: 4),
-                    Text(
-                      'Kelola komentar dan ucapan dari tamu undangan',
-                      style: GoogleFonts.poppins(
-                        fontSize: 13,
-                        color: Colors.grey[600],
+                    if (!isMobile) ...[
+                      SizedBox(height: 4),
+                      Text(
+                        'Kelola komentar dan ucapan dari tamu undangan',
+                        style: GoogleFonts.poppins(
+                          fontSize: 13,
+                          color: Colors.grey[600],
+                        ),
                       ),
-                    ),
+                    ],
                   ],
                 ),
               ),
             ],
           ),
-          const SizedBox(height: 20),
-          _buildStatistikCards(),
+          SizedBox(height: isMobile ? 12 : 20),
+          _buildStatistikCards(isMobile),
         ],
       ),
     );
   }
 
-  Widget _buildStatistikCards() {
+  Widget _buildStatistikCards(bool isMobile) {
     return StreamBuilder<Map<String, int>>(
       stream: _getKehadiranStatsStream(),
       builder: (context, snapshot) {
         if (!snapshot.hasData) {
-          return const Center(child: CircularProgressIndicator());
+          return Center(child: CircularProgressIndicator());
         }
 
         final stats = snapshot.data!;
@@ -138,6 +142,60 @@ class _AdminKelolaKomentarState extends State<AdminKelolaKomentar> {
         final hadir = stats['hadir'] ?? 0;
         final tidakHadir = stats['tidakHadir'] ?? 0;
         final ragu = stats['ragu'] ?? 0;
+
+        if (isMobile) {
+          return Column(
+            children: [
+              Row(
+                children: [
+                  Expanded(
+                    child: _buildStatCard(
+                      'Total',
+                      total.toString(),
+                      Icons.chat_bubble,
+                      widget.navyBlue,
+                      isMobile,
+                    ),
+                  ),
+                  SizedBox(width: 8),
+                  Expanded(
+                    child: _buildStatCard(
+                      'Hadir',
+                      hadir.toString(),
+                      Icons.check_circle,
+                      Colors.green,
+                      isMobile,
+                    ),
+                  ),
+                ],
+              ),
+              SizedBox(height: 8),
+              Row(
+                children: [
+                  Expanded(
+                    child: _buildStatCard(
+                      'Tidak',
+                      tidakHadir.toString(),
+                      Icons.cancel,
+                      Colors.red,
+                      isMobile,
+                    ),
+                  ),
+                  SizedBox(width: 8),
+                  Expanded(
+                    child: _buildStatCard(
+                      'Ragu',
+                      ragu.toString(),
+                      Icons.help,
+                      widget.orange,
+                      isMobile,
+                    ),
+                  ),
+                ],
+              ),
+            ],
+          );
+        }
 
         return Row(
           children: [
@@ -147,33 +205,37 @@ class _AdminKelolaKomentarState extends State<AdminKelolaKomentar> {
                 total.toString(),
                 Icons.chat_bubble,
                 widget.navyBlue,
+                isMobile,
               ),
             ),
-            const SizedBox(width: 12),
+            SizedBox(width: 12),
             Expanded(
               child: _buildStatCard(
                 'Hadir',
                 hadir.toString(),
                 Icons.check_circle,
                 Colors.green,
+                isMobile,
               ),
             ),
-            const SizedBox(width: 12),
+            SizedBox(width: 12),
             Expanded(
               child: _buildStatCard(
                 'Tidak Hadir',
                 tidakHadir.toString(),
                 Icons.cancel,
                 Colors.red,
+                isMobile,
               ),
             ),
-            const SizedBox(width: 12),
+            SizedBox(width: 12),
             Expanded(
               child: _buildStatCard(
                 'Ragu',
                 ragu.toString(),
                 Icons.help,
                 widget.orange,
+                isMobile,
               ),
             ),
           ],
@@ -187,9 +249,10 @@ class _AdminKelolaKomentarState extends State<AdminKelolaKomentar> {
     String value,
     IconData icon,
     Color color,
+    bool isMobile,
   ) {
     return Container(
-      padding: const EdgeInsets.all(16),
+      padding: EdgeInsets.all(isMobile ? 10 : 16),
       decoration: BoxDecoration(
         color: Colors.white,
         borderRadius: BorderRadius.circular(10),
@@ -198,125 +261,252 @@ class _AdminKelolaKomentarState extends State<AdminKelolaKomentar> {
           BoxShadow(
             color: Colors.black.withOpacity(0.05),
             blurRadius: 6,
-            offset: const Offset(0, 2),
+            offset: Offset(0, 2),
           ),
         ],
       ),
       child: Column(
         children: [
-          Icon(icon, color: color, size: 28),
-          const SizedBox(height: 8),
+          Icon(icon, color: color, size: isMobile ? 20 : 28),
+          SizedBox(height: isMobile ? 4 : 8),
           Text(
             value,
             style: GoogleFonts.poppins(
-              fontSize: 24,
+              fontSize: isMobile ? 18 : 24,
               fontWeight: FontWeight.w700,
               color: color,
             ),
           ),
           Text(
             label,
-            style: GoogleFonts.poppins(fontSize: 11, color: Colors.grey[600]),
+            style: GoogleFonts.poppins(
+              fontSize: isMobile ? 9 : 11,
+              color: Colors.grey[600],
+            ),
             textAlign: TextAlign.center,
+            maxLines: 1,
+            overflow: TextOverflow.ellipsis,
           ),
         ],
       ),
     );
   }
 
-  Widget _buildFilterSection() {
+  Widget _buildFilterSection(bool isMobile) {
     return Padding(
-      padding: const EdgeInsets.symmetric(horizontal: 24),
-      child: Row(
-        children: [
-          Expanded(
-            flex: 2,
-            child: TextField(
-              controller: _searchController,
-              onChanged: (value) {
-                setState(() {
-                  _searchQuery = value.toLowerCase();
-                });
-              },
-              style: GoogleFonts.poppins(fontSize: 14, color: widget.navyBlue),
-              decoration: InputDecoration(
-                hintText: 'Cari nama atau ucapan...',
-                hintStyle: GoogleFonts.poppins(color: Colors.grey[400]),
-                prefixIcon: Icon(
-                  Icons.search,
-                  color: widget.lightBlue,
-                  size: 20,
+      padding: EdgeInsets.symmetric(horizontal: isMobile ? 16 : 24),
+      child: isMobile
+          ? Column(
+              children: [
+                TextField(
+                  controller: _searchController,
+                  onChanged: (value) =>
+                      setState(() => _searchQuery = value.toLowerCase()),
+                  style: GoogleFonts.poppins(
+                    fontSize: 13,
+                    color: widget.navyBlue,
+                  ),
+                  decoration: InputDecoration(
+                    hintText: 'Cari nama atau ucapan...',
+                    hintStyle: GoogleFonts.poppins(
+                      color: Colors.grey[400],
+                      fontSize: 12,
+                    ),
+                    prefixIcon: Icon(
+                      Icons.search,
+                      color: widget.lightBlue,
+                      size: 18,
+                    ),
+                    suffixIcon: _searchQuery.isNotEmpty
+                        ? IconButton(
+                            icon: Icon(Icons.clear, size: 18),
+                            onPressed: () {
+                              _searchController.clear();
+                              setState(() => _searchQuery = '');
+                            },
+                          )
+                        : null,
+                    filled: true,
+                    fillColor: Colors.white,
+                    contentPadding: EdgeInsets.symmetric(
+                      horizontal: 12,
+                      vertical: 10,
+                    ),
+                    border: OutlineInputBorder(
+                      borderRadius: BorderRadius.circular(8),
+                      borderSide: BorderSide(
+                        color: widget.lightGray,
+                        width: 1.5,
+                      ),
+                    ),
+                    enabledBorder: OutlineInputBorder(
+                      borderRadius: BorderRadius.circular(8),
+                      borderSide: BorderSide(
+                        color: widget.lightGray,
+                        width: 1.5,
+                      ),
+                    ),
+                    focusedBorder: OutlineInputBorder(
+                      borderRadius: BorderRadius.circular(8),
+                      borderSide: BorderSide(color: widget.lightBlue, width: 2),
+                    ),
+                  ),
                 ),
-                suffixIcon: _searchQuery.isNotEmpty
-                    ? IconButton(
-                        icon: const Icon(Icons.clear, size: 20),
-                        onPressed: () {
-                          _searchController.clear();
-                          setState(() {
-                            _searchQuery = '';
-                          });
-                        },
-                      )
-                    : null,
-                filled: true,
-                fillColor: Colors.white,
-                contentPadding: const EdgeInsets.symmetric(
-                  horizontal: 16,
-                  vertical: 14,
+                SizedBox(height: 8),
+                Container(
+                  width: double.infinity,
+                  padding: EdgeInsets.symmetric(horizontal: 12, vertical: 8),
+                  decoration: BoxDecoration(
+                    gradient: LinearGradient(
+                      colors: [
+                        widget.lightBlue.withOpacity(0.1),
+                        widget.orange.withOpacity(0.05),
+                      ],
+                    ),
+                    borderRadius: BorderRadius.circular(8),
+                    border: Border.all(
+                      color: widget.lightBlue.withOpacity(0.3),
+                      width: 1.5,
+                    ),
+                  ),
+                  child: DropdownButton<String>(
+                    value: _filterKehadiran,
+                    isExpanded: true,
+                    underline: SizedBox(),
+                    icon: Icon(
+                      Icons.filter_list,
+                      color: widget.lightBlue,
+                      size: 18,
+                    ),
+                    style: GoogleFonts.poppins(
+                      fontSize: 13,
+                      color: widget.navyBlue,
+                      fontWeight: FontWeight.w600,
+                    ),
+                    dropdownColor: Colors.white,
+                    items: ['Semua', 'Hadir', 'Tidak Hadir', 'Ragu']
+                        .map(
+                          (filter) => DropdownMenuItem(
+                            value: filter,
+                            child: Text(filter),
+                          ),
+                        )
+                        .toList(),
+                    onChanged: (value) =>
+                        setState(() => _filterKehadiran = value!),
+                  ),
                 ),
-                border: OutlineInputBorder(
-                  borderRadius: BorderRadius.circular(10),
-                  borderSide: BorderSide(color: widget.lightGray, width: 1.5),
+              ],
+            )
+          : Row(
+              children: [
+                Expanded(
+                  flex: 2,
+                  child: TextField(
+                    controller: _searchController,
+                    onChanged: (value) =>
+                        setState(() => _searchQuery = value.toLowerCase()),
+                    style: GoogleFonts.poppins(
+                      fontSize: 14,
+                      color: widget.navyBlue,
+                    ),
+                    decoration: InputDecoration(
+                      hintText: 'Cari nama atau ucapan...',
+                      hintStyle: GoogleFonts.poppins(color: Colors.grey[400]),
+                      prefixIcon: Icon(
+                        Icons.search,
+                        color: widget.lightBlue,
+                        size: 20,
+                      ),
+                      suffixIcon: _searchQuery.isNotEmpty
+                          ? IconButton(
+                              icon: Icon(Icons.clear, size: 20),
+                              onPressed: () {
+                                _searchController.clear();
+                                setState(() => _searchQuery = '');
+                              },
+                            )
+                          : null,
+                      filled: true,
+                      fillColor: Colors.white,
+                      contentPadding: EdgeInsets.symmetric(
+                        horizontal: 16,
+                        vertical: 14,
+                      ),
+                      border: OutlineInputBorder(
+                        borderRadius: BorderRadius.circular(10),
+                        borderSide: BorderSide(
+                          color: widget.lightGray,
+                          width: 1.5,
+                        ),
+                      ),
+                      enabledBorder: OutlineInputBorder(
+                        borderRadius: BorderRadius.circular(10),
+                        borderSide: BorderSide(
+                          color: widget.lightGray,
+                          width: 1.5,
+                        ),
+                      ),
+                      focusedBorder: OutlineInputBorder(
+                        borderRadius: BorderRadius.circular(10),
+                        borderSide: BorderSide(
+                          color: widget.lightBlue,
+                          width: 2,
+                        ),
+                      ),
+                    ),
+                  ),
                 ),
-                enabledBorder: OutlineInputBorder(
-                  borderRadius: BorderRadius.circular(10),
-                  borderSide: BorderSide(color: widget.lightGray, width: 1.5),
+                SizedBox(width: 12),
+                Container(
+                  padding: EdgeInsets.symmetric(horizontal: 16, vertical: 12),
+                  decoration: BoxDecoration(
+                    gradient: LinearGradient(
+                      colors: [
+                        widget.lightBlue.withOpacity(0.1),
+                        widget.orange.withOpacity(0.05),
+                      ],
+                    ),
+                    borderRadius: BorderRadius.circular(10),
+                    border: Border.all(
+                      color: widget.lightBlue.withOpacity(0.3),
+                      width: 1.5,
+                    ),
+                  ),
+                  child: DropdownButton<String>(
+                    value: _filterKehadiran,
+                    underline: SizedBox(),
+                    icon: Icon(
+                      Icons.filter_list,
+                      color: widget.lightBlue,
+                      size: 20,
+                    ),
+                    style: GoogleFonts.poppins(
+                      fontSize: 14,
+                      color: widget.navyBlue,
+                      fontWeight: FontWeight.w600,
+                    ),
+                    dropdownColor: Colors.white,
+                    items: ['Semua', 'Hadir', 'Tidak Hadir', 'Ragu']
+                        .map(
+                          (filter) => DropdownMenuItem(
+                            value: filter,
+                            child: Text(filter),
+                          ),
+                        )
+                        .toList(),
+                    onChanged: (value) =>
+                        setState(() => _filterKehadiran = value!),
+                  ),
                 ),
-                focusedBorder: OutlineInputBorder(
-                  borderRadius: BorderRadius.circular(10),
-                  borderSide: BorderSide(color: widget.lightBlue, width: 2),
-                ),
-              ),
+              ],
             ),
-          ),
-          const SizedBox(width: 12),
-          Container(
-            padding: const EdgeInsets.symmetric(horizontal: 16, vertical: 12),
-            decoration: BoxDecoration(
-              color: Colors.white,
-              borderRadius: BorderRadius.circular(10),
-              border: Border.all(color: widget.lightGray, width: 1.5),
-            ),
-            child: DropdownButton<String>(
-              value: _filterKehadiran,
-              underline: const SizedBox(),
-              icon: Icon(Icons.filter_list, color: widget.lightBlue, size: 20),
-              style: GoogleFonts.poppins(
-                fontSize: 14,
-                color: widget.navyBlue,
-                fontWeight: FontWeight.w600,
-              ),
-              items: ['Semua', 'Hadir', 'Tidak Hadir', 'Ragu']
-                  .map(
-                    (filter) =>
-                        DropdownMenuItem(value: filter, child: Text(filter)),
-                  )
-                  .toList(),
-              onChanged: (value) {
-                setState(() {
-                  _filterKehadiran = value!;
-                });
-              },
-            ),
-          ),
-        ],
-      ),
     );
   }
 
-  Widget _buildKomentarList() {
+  Widget _buildKomentarList(bool isMobile) {
     return Padding(
-      padding: const EdgeInsets.symmetric(horizontal: 24),
+      padding: EdgeInsets.symmetric(horizontal: isMobile ? 16 : 24),
       child: StreamBuilder<QuerySnapshot>(
         stream: _firestoreService.getAllUcapan(),
         builder: (context, snapshot) {
@@ -332,7 +522,7 @@ class _AdminKelolaKomentarState extends State<AdminKelolaKomentar> {
                 mainAxisAlignment: MainAxisAlignment.center,
                 children: [
                   Icon(Icons.error_outline, size: 64, color: Colors.red[300]),
-                  const SizedBox(height: 16),
+                  SizedBox(height: 16),
                   Text(
                     'Terjadi kesalahan saat memuat data',
                     style: GoogleFonts.poppins(
@@ -355,7 +545,7 @@ class _AdminKelolaKomentarState extends State<AdminKelolaKomentar> {
                     size: 80,
                     color: Colors.grey[300],
                   ),
-                  const SizedBox(height: 16),
+                  SizedBox(height: 16),
                   Text(
                     'Belum ada komentar',
                     style: GoogleFonts.poppins(
@@ -364,7 +554,7 @@ class _AdminKelolaKomentarState extends State<AdminKelolaKomentar> {
                       color: Colors.grey[400],
                     ),
                   ),
-                  const SizedBox(height: 8),
+                  SizedBox(height: 8),
                   Text(
                     'Komentar dari tamu akan muncul di sini',
                     style: GoogleFonts.poppins(
@@ -387,7 +577,6 @@ class _AdminKelolaKomentarState extends State<AdminKelolaKomentar> {
                 _searchQuery.isEmpty ||
                 name.contains(_searchQuery) ||
                 ucapan.contains(_searchQuery);
-
             bool matchFilter =
                 _filterKehadiran == 'Semua' || kehadiran == _filterKehadiran;
 
@@ -400,7 +589,7 @@ class _AdminKelolaKomentarState extends State<AdminKelolaKomentar> {
                 mainAxisAlignment: MainAxisAlignment.center,
                 children: [
                   Icon(Icons.search_off, size: 64, color: Colors.grey[300]),
-                  const SizedBox(height: 16),
+                  SizedBox(height: 16),
                   Text(
                     'Tidak ada hasil',
                     style: GoogleFonts.poppins(
@@ -415,12 +604,12 @@ class _AdminKelolaKomentarState extends State<AdminKelolaKomentar> {
           }
 
           return ListView.builder(
-            padding: const EdgeInsets.only(bottom: 24),
+            padding: EdgeInsets.only(bottom: 24),
             itemCount: filteredDocs.length,
             itemBuilder: (context, index) {
               final doc = filteredDocs[index];
               final data = doc.data() as Map<String, dynamic>;
-              return _buildKomentarCard(doc.id, data);
+              return _buildCompactKomentarCard(doc.id, data, isMobile);
             },
           );
         },
@@ -428,7 +617,11 @@ class _AdminKelolaKomentarState extends State<AdminKelolaKomentar> {
     );
   }
 
-  Widget _buildKomentarCard(String docId, Map<String, dynamic> data) {
+  Widget _buildCompactKomentarCard(
+    String docId,
+    Map<String, dynamic> data,
+    bool isMobile,
+  ) {
     final name = data['name'] ?? 'Anonim';
     final ucapan = data['ucapan'] ?? '';
     final kehadiran = data['kehadiran'] ?? 'Hadir';
@@ -452,264 +645,341 @@ class _AdminKelolaKomentarState extends State<AdminKelolaKomentar> {
         kehadiranIcon = Icons.help;
     }
 
-    return Container(
-      margin: const EdgeInsets.only(bottom: 12),
-      decoration: BoxDecoration(
-        color: Colors.white,
-        borderRadius: BorderRadius.circular(12),
-        border: Border.all(color: widget.lightGray, width: 1.5),
-        boxShadow: [
-          BoxShadow(
-            color: Colors.black.withOpacity(0.05),
-            blurRadius: 8,
-            offset: const Offset(0, 2),
-          ),
-        ],
-      ),
-      child: Column(
-        crossAxisAlignment: CrossAxisAlignment.start,
-        children: [
-          // Header
-          Container(
-            padding: const EdgeInsets.all(16),
-            decoration: BoxDecoration(
-              gradient: LinearGradient(
-                colors: [
-                  widget.lightBlue.withOpacity(0.05),
-                  widget.orange.withOpacity(0.02),
-                ],
-              ),
-              borderRadius: const BorderRadius.only(
-                topLeft: Radius.circular(12),
-                topRight: Radius.circular(12),
-              ),
-            ),
-            child: Row(
-              children: [
-                Container(
-                  padding: const EdgeInsets.all(10),
-                  decoration: BoxDecoration(
-                    gradient: LinearGradient(
-                      colors: [
-                        widget.lightBlue,
-                        widget.lightBlue.withOpacity(0.7),
-                      ],
-                    ),
-                    shape: BoxShape.circle,
-                  ),
-                  child: const Icon(
-                    Icons.person,
-                    color: Colors.white,
-                    size: 20,
-                  ),
-                ),
-                const SizedBox(width: 12),
-                Expanded(
-                  child: Column(
-                    crossAxisAlignment: CrossAxisAlignment.start,
-                    children: [
-                      Text(
-                        name,
-                        style: GoogleFonts.poppins(
-                          fontSize: 15,
-                          fontWeight: FontWeight.w600,
-                          color: widget.navyBlue,
-                        ),
-                      ),
-                      if (timestamp != null)
-                        Text(
-                          _formatTimestamp(timestamp),
-                          style: GoogleFonts.poppins(
-                            fontSize: 11,
-                            color: Colors.grey[500],
-                          ),
-                        ),
-                    ],
-                  ),
-                ),
-                Container(
-                  padding: const EdgeInsets.symmetric(
-                    horizontal: 12,
-                    vertical: 6,
-                  ),
-                  decoration: BoxDecoration(
-                    color: kehadiranColor.withOpacity(0.1),
-                    borderRadius: BorderRadius.circular(20),
-                    border: Border.all(color: kehadiranColor.withOpacity(0.3)),
-                  ),
-                  child: Row(
-                    mainAxisSize: MainAxisSize.min,
-                    children: [
-                      Icon(kehadiranIcon, size: 14, color: kehadiranColor),
-                      const SizedBox(width: 6),
-                      Text(
-                        kehadiran,
-                        style: GoogleFonts.poppins(
-                          fontSize: 11,
-                          fontWeight: FontWeight.w600,
-                          color: kehadiranColor,
-                        ),
-                      ),
-                    ],
-                  ),
-                ),
-              ],
-            ),
-          ),
-
-          // Ucapan
-          Padding(
-            padding: const EdgeInsets.all(16),
-            child: Text(
-              ucapan,
-              style: GoogleFonts.poppins(
-                fontSize: 14,
-                color: Colors.grey[700],
-                height: 1.5,
-              ),
-            ),
-          ),
-
-          // Balasan Admin (Jika Ada)
-          if (replies.isNotEmpty)
-            Container(
-              margin: const EdgeInsets.symmetric(horizontal: 16),
-              padding: const EdgeInsets.all(12),
-              decoration: BoxDecoration(
-                color: widget.lightBlue.withOpacity(0.05),
-                borderRadius: BorderRadius.circular(8),
-                border: Border.all(
-                  color: widget.lightBlue.withOpacity(0.2),
-                  width: 1,
-                ),
-              ),
-              child: Column(
+    if (isMobile) {
+      return Container(
+        margin: EdgeInsets.only(bottom: 8),
+        decoration: BoxDecoration(
+          color: Colors.white,
+          borderRadius: BorderRadius.circular(10),
+          border: Border.all(color: widget.lightGray, width: 1.5),
+        ),
+        child: Column(
+          children: [
+            Padding(
+              padding: EdgeInsets.all(12),
+              child: Row(
                 crossAxisAlignment: CrossAxisAlignment.start,
                 children: [
-                  Row(
-                    children: [
-                      Icon(
-                        Icons.admin_panel_settings,
-                        size: 16,
-                        color: widget.lightBlue,
+                  Container(
+                    padding: EdgeInsets.all(8),
+                    decoration: BoxDecoration(
+                      gradient: LinearGradient(
+                        colors: [
+                          widget.lightBlue,
+                          widget.lightBlue.withOpacity(0.7),
+                        ],
                       ),
-                      const SizedBox(width: 6),
-                      Text(
-                        'Balasan Admin',
-                        style: GoogleFonts.poppins(
-                          fontSize: 12,
-                          fontWeight: FontWeight.w600,
-                          color: widget.lightBlue,
-                        ),
-                      ),
-                    ],
+                      shape: BoxShape.circle,
+                    ),
+                    child: Icon(Icons.person, color: Colors.white, size: 16),
                   ),
-                  ...replies.map((reply) {
-                    final replyData = reply as Map<String, dynamic>;
-                    final replyText = replyData['text'] ?? '';
-                    final replyTimestamp = replyData['timestamp'] as Timestamp?;
-
-                    return Container(
-                      margin: const EdgeInsets.only(top: 8),
-                      padding: const EdgeInsets.all(10),
-                      decoration: BoxDecoration(
-                        color: Colors.white,
-                        borderRadius: BorderRadius.circular(6),
-                        border: Border.all(color: widget.lightGray),
-                      ),
-                      child: Column(
-                        crossAxisAlignment: CrossAxisAlignment.start,
-                        children: [
-                          Text(
-                            replyText,
-                            style: GoogleFonts.poppins(
-                              fontSize: 13,
-                              color: Colors.grey[700],
+                  SizedBox(width: 10),
+                  Expanded(
+                    child: Column(
+                      crossAxisAlignment: CrossAxisAlignment.start,
+                      children: [
+                        Row(
+                          children: [
+                            Expanded(
+                              child: Text(
+                                name,
+                                style: GoogleFonts.poppins(
+                                  fontSize: 13,
+                                  fontWeight: FontWeight.w600,
+                                  color: widget.navyBlue,
+                                ),
+                                maxLines: 1,
+                                overflow: TextOverflow.ellipsis,
+                              ),
                             ),
-                          ),
-                          if (replyTimestamp != null) ...[
-                            const SizedBox(height: 6),
-                            Text(
-                              _formatTimestamp(replyTimestamp),
-                              style: GoogleFonts.poppins(
-                                fontSize: 10,
-                                color: Colors.grey[500],
+                            Container(
+                              padding: EdgeInsets.symmetric(
+                                horizontal: 8,
+                                vertical: 3,
+                              ),
+                              decoration: BoxDecoration(
+                                color: kehadiranColor.withOpacity(0.1),
+                                borderRadius: BorderRadius.circular(12),
+                                border: Border.all(
+                                  color: kehadiranColor.withOpacity(0.3),
+                                ),
+                              ),
+                              child: Row(
+                                mainAxisSize: MainAxisSize.min,
+                                children: [
+                                  Icon(
+                                    kehadiranIcon,
+                                    size: 10,
+                                    color: kehadiranColor,
+                                  ),
+                                  SizedBox(width: 4),
+                                  Text(
+                                    kehadiran,
+                                    style: GoogleFonts.poppins(
+                                      fontSize: 9,
+                                      fontWeight: FontWeight.w600,
+                                      color: kehadiranColor,
+                                    ),
+                                  ),
+                                ],
                               ),
                             ),
                           ],
+                        ),
+                        if (timestamp != null)
+                          Text(
+                            _formatTimestamp(timestamp),
+                            style: GoogleFonts.poppins(
+                              fontSize: 10,
+                              color: Colors.grey[500],
+                            ),
+                          ),
+                        SizedBox(height: 6),
+                        Text(
+                          ucapan,
+                          style: GoogleFonts.poppins(
+                            fontSize: 12,
+                            color: Colors.grey[700],
+                            height: 1.4,
+                          ),
+                          maxLines: 2,
+                          overflow: TextOverflow.ellipsis,
+                        ),
+                        if (replies.isNotEmpty) ...[
+                          SizedBox(height: 6),
+                          Container(
+                            padding: EdgeInsets.all(6),
+                            decoration: BoxDecoration(
+                              color: widget.lightBlue.withOpacity(0.08),
+                              borderRadius: BorderRadius.circular(6),
+                            ),
+                            child: Row(
+                              children: [
+                                Icon(
+                                  Icons.reply,
+                                  size: 10,
+                                  color: widget.lightBlue,
+                                ),
+                                SizedBox(width: 4),
+                                Expanded(
+                                  child: Text(
+                                    '${replies.length} balasan admin',
+                                    style: GoogleFonts.poppins(
+                                      fontSize: 10,
+                                      color: widget.lightBlue,
+                                      fontWeight: FontWeight.w600,
+                                    ),
+                                  ),
+                                ),
+                              ],
+                            ),
+                          ),
                         ],
+                      ],
+                    ),
+                  ),
+                ],
+              ),
+            ),
+            Container(
+              padding: EdgeInsets.symmetric(horizontal: 12, vertical: 8),
+              decoration: BoxDecoration(
+                color: widget.lightGray.withOpacity(0.3),
+                borderRadius: BorderRadius.only(
+                  bottomLeft: Radius.circular(10),
+                  bottomRight: Radius.circular(10),
+                ),
+              ),
+              child: Row(
+                mainAxisAlignment: MainAxisAlignment.end,
+                children: [
+                  TextButton.icon(
+                    onPressed: () => _showReplyDialog(docId, name, ucapan),
+                    icon: Icon(Icons.reply, size: 14),
+                    label: Text(
+                      'Balas',
+                      style: GoogleFonts.poppins(
+                        fontSize: 11,
+                        fontWeight: FontWeight.w600,
                       ),
-                    );
-                  }).toList(),
+                    ),
+                    style: TextButton.styleFrom(
+                      foregroundColor: widget.lightBlue,
+                      padding: EdgeInsets.symmetric(
+                        horizontal: 10,
+                        vertical: 4,
+                      ),
+                    ),
+                  ),
+                  SizedBox(width: 4),
+                  TextButton.icon(
+                    onPressed: () => _showDeleteConfirmation(docId, name),
+                    icon: Icon(Icons.delete_outline, size: 14),
+                    label: Text(
+                      'Hapus',
+                      style: GoogleFonts.poppins(
+                        fontSize: 11,
+                        fontWeight: FontWeight.w600,
+                      ),
+                    ),
+                    style: TextButton.styleFrom(
+                      foregroundColor: Colors.red,
+                      padding: EdgeInsets.symmetric(
+                        horizontal: 10,
+                        vertical: 4,
+                      ),
+                    ),
+                  ),
+                ],
+              ),
+            ),
+          ],
+        ),
+      );
+    }
+
+    // Desktop - Compact 1 Row
+    return Container(
+      margin: EdgeInsets.only(bottom: 8),
+      decoration: BoxDecoration(
+        color: Colors.white,
+        borderRadius: BorderRadius.circular(10),
+        border: Border.all(color: widget.lightGray, width: 1.5),
+        boxShadow: [
+          BoxShadow(
+            color: Colors.black.withOpacity(0.03),
+            blurRadius: 6,
+            offset: Offset(0, 2),
+          ),
+        ],
+      ),
+      child: Padding(
+        padding: EdgeInsets.symmetric(horizontal: 16, vertical: 12),
+        child: Row(
+          children: [
+            // Avatar
+            Container(
+              padding: EdgeInsets.all(10),
+              decoration: BoxDecoration(
+                gradient: LinearGradient(
+                  colors: [widget.lightBlue, widget.lightBlue.withOpacity(0.7)],
+                ),
+                shape: BoxShape.circle,
+              ),
+              child: Icon(Icons.person, color: Colors.white, size: 18),
+            ),
+            SizedBox(width: 12),
+
+            // Nama & Time
+            SizedBox(
+              width: 140,
+              child: Column(
+                crossAxisAlignment: CrossAxisAlignment.start,
+                children: [
+                  Text(
+                    name,
+                    style: GoogleFonts.poppins(
+                      fontSize: 13,
+                      fontWeight: FontWeight.w600,
+                      color: widget.navyBlue,
+                    ),
+                    maxLines: 1,
+                    overflow: TextOverflow.ellipsis,
+                  ),
+                  if (timestamp != null)
+                    Text(
+                      _formatTimestamp(timestamp),
+                      style: GoogleFonts.poppins(
+                        fontSize: 10,
+                        color: Colors.grey[500],
+                      ),
+                    ),
                 ],
               ),
             ),
 
-          const SizedBox(height: 12),
+            SizedBox(width: 12),
 
-          // Action Buttons
-          Container(
-            padding: const EdgeInsets.symmetric(horizontal: 16, vertical: 12),
-            decoration: BoxDecoration(
-              color: widget.lightGray.withOpacity(0.3),
-              borderRadius: const BorderRadius.only(
-                bottomLeft: Radius.circular(12),
-                bottomRight: Radius.circular(12),
+            // Ucapan
+            Expanded(
+              child: Column(
+                crossAxisAlignment: CrossAxisAlignment.start,
+                children: [
+                  Text(
+                    ucapan,
+                    style: GoogleFonts.poppins(
+                      fontSize: 13,
+                      color: Colors.grey[700],
+                    ),
+                    maxLines: 1,
+                    overflow: TextOverflow.ellipsis,
+                  ),
+                  if (replies.isNotEmpty)
+                    Text(
+                      '${replies.length} balasan',
+                      style: GoogleFonts.poppins(
+                        fontSize: 10,
+                        color: widget.lightBlue,
+                        fontWeight: FontWeight.w600,
+                      ),
+                    ),
+                ],
               ),
             ),
-            child: Row(
-              mainAxisAlignment: MainAxisAlignment.end,
+
+            SizedBox(width: 12),
+
+            // Status Kehadiran
+            Container(
+              padding: EdgeInsets.symmetric(horizontal: 10, vertical: 5),
+              decoration: BoxDecoration(
+                color: kehadiranColor.withOpacity(0.1),
+                borderRadius: BorderRadius.circular(16),
+                border: Border.all(color: kehadiranColor.withOpacity(0.3)),
+              ),
+              child: Row(
+                mainAxisSize: MainAxisSize.min,
+                children: [
+                  Icon(kehadiranIcon, size: 12, color: kehadiranColor),
+                  SizedBox(width: 6),
+                  Text(
+                    kehadiran,
+                    style: GoogleFonts.poppins(
+                      fontSize: 11,
+                      fontWeight: FontWeight.w600,
+                      color: kehadiranColor,
+                    ),
+                  ),
+                ],
+              ),
+            ),
+
+            SizedBox(width: 12),
+
+            // Action Buttons
+            Row(
               children: [
-                OutlinedButton.icon(
+                IconButton(
                   onPressed: () => _showReplyDialog(docId, name, ucapan),
-                  icon: const Icon(Icons.reply, size: 16),
-                  label: Text(
-                    'Balas',
-                    style: GoogleFonts.poppins(
-                      fontSize: 12,
-                      fontWeight: FontWeight.w600,
-                    ),
-                  ),
-                  style: OutlinedButton.styleFrom(
-                    foregroundColor: widget.lightBlue,
-                    side: BorderSide(color: widget.lightBlue, width: 1.5),
-                    padding: const EdgeInsets.symmetric(
-                      horizontal: 16,
-                      vertical: 8,
-                    ),
-                    shape: RoundedRectangleBorder(
-                      borderRadius: BorderRadius.circular(8),
-                    ),
-                  ),
+                  icon: Icon(Icons.reply, size: 18),
+                  tooltip: 'Balas',
+                  color: widget.lightBlue,
+                  padding: EdgeInsets.all(8),
+                  constraints: BoxConstraints(),
                 ),
-                const SizedBox(width: 8),
-                ElevatedButton.icon(
+                SizedBox(width: 4),
+                IconButton(
                   onPressed: () => _showDeleteConfirmation(docId, name),
-                  icon: const Icon(Icons.delete_outline, size: 16),
-                  label: Text(
-                    'Hapus',
-                    style: GoogleFonts.poppins(
-                      fontSize: 12,
-                      fontWeight: FontWeight.w600,
-                    ),
-                  ),
-                  style: ElevatedButton.styleFrom(
-                    backgroundColor: Colors.red,
-                    foregroundColor: Colors.white,
-                    padding: const EdgeInsets.symmetric(
-                      horizontal: 16,
-                      vertical: 8,
-                    ),
-                    shape: RoundedRectangleBorder(
-                      borderRadius: BorderRadius.circular(8),
-                    ),
-                    elevation: 0,
-                  ),
+                  icon: Icon(Icons.delete_outline, size: 18),
+                  tooltip: 'Hapus',
+                  color: Colors.red,
+                  padding: EdgeInsets.all(8),
+                  constraints: BoxConstraints(),
                 ),
               ],
             ),
-          ),
-        ],
+          ],
+        ),
       ),
     );
   }
@@ -719,22 +989,54 @@ class _AdminKelolaKomentarState extends State<AdminKelolaKomentar> {
 
     showDialog(
       context: context,
+      barrierColor: Colors.black54,
       builder: (context) => AlertDialog(
         backgroundColor: Colors.white,
         shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(16)),
-        title: Row(
-          children: [
-            Icon(Icons.reply, color: widget.lightBlue),
-            const SizedBox(width: 12),
-            Text(
-              'Balas Komentar',
-              style: GoogleFonts.poppins(
-                fontSize: 18,
-                fontWeight: FontWeight.w600,
-                color: widget.navyBlue,
-              ),
+        title: Container(
+          padding: EdgeInsets.all(12),
+          decoration: BoxDecoration(
+            gradient: LinearGradient(
+              colors: [
+                widget.lightBlue.withOpacity(0.1),
+                widget.orange.withOpacity(0.05),
+              ],
             ),
-          ],
+            borderRadius: BorderRadius.circular(8),
+          ),
+          child: Row(
+            children: [
+              Container(
+                padding: EdgeInsets.all(8),
+                decoration: BoxDecoration(
+                  gradient: LinearGradient(
+                    colors: [
+                      widget.lightBlue,
+                      widget.lightBlue.withOpacity(0.7),
+                    ],
+                  ),
+                  borderRadius: BorderRadius.circular(8),
+                  boxShadow: [
+                    BoxShadow(
+                      color: widget.lightBlue.withOpacity(0.3),
+                      blurRadius: 8,
+                      spreadRadius: 1,
+                    ),
+                  ],
+                ),
+                child: Icon(Icons.reply, color: Colors.white, size: 20),
+              ),
+              SizedBox(width: 12),
+              Text(
+                'Balas Komentar',
+                style: GoogleFonts.poppins(
+                  fontSize: 18,
+                  fontWeight: FontWeight.w700,
+                  color: widget.navyBlue,
+                ),
+              ),
+            ],
+          ),
         ),
         content: SingleChildScrollView(
           child: Column(
@@ -742,23 +1044,35 @@ class _AdminKelolaKomentarState extends State<AdminKelolaKomentar> {
             crossAxisAlignment: CrossAxisAlignment.start,
             children: [
               Container(
-                padding: const EdgeInsets.all(12),
+                padding: EdgeInsets.all(12),
                 decoration: BoxDecoration(
-                  color: widget.lightGray.withOpacity(0.5),
+                  gradient: LinearGradient(
+                    colors: [
+                      widget.lightGray.withOpacity(0.3),
+                      widget.lightBlue.withOpacity(0.05),
+                    ],
+                  ),
                   borderRadius: BorderRadius.circular(8),
+                  border: Border.all(color: widget.lightBlue.withOpacity(0.2)),
                 ),
                 child: Column(
                   crossAxisAlignment: CrossAxisAlignment.start,
                   children: [
-                    Text(
-                      'Dari: $name',
-                      style: GoogleFonts.poppins(
-                        fontSize: 13,
-                        fontWeight: FontWeight.w600,
-                        color: widget.navyBlue,
-                      ),
+                    Row(
+                      children: [
+                        Icon(Icons.person, size: 16, color: widget.lightBlue),
+                        SizedBox(width: 6),
+                        Text(
+                          'Dari: $name',
+                          style: GoogleFonts.poppins(
+                            fontSize: 13,
+                            fontWeight: FontWeight.w600,
+                            color: widget.navyBlue,
+                          ),
+                        ),
+                      ],
                     ),
-                    const SizedBox(height: 8),
+                    SizedBox(height: 8),
                     Text(
                       ucapan,
                       style: GoogleFonts.poppins(
@@ -770,16 +1084,16 @@ class _AdminKelolaKomentarState extends State<AdminKelolaKomentar> {
                   ],
                 ),
               ),
-              const SizedBox(height: 16),
+              SizedBox(height: 16),
               Text(
                 'Tulis balasan Anda:',
                 style: GoogleFonts.poppins(
                   fontSize: 13,
-                  fontWeight: FontWeight.w500,
-                  color: Colors.grey[700],
+                  fontWeight: FontWeight.w600,
+                  color: widget.navyBlue,
                 ),
               ),
-              const SizedBox(height: 8),
+              SizedBox(height: 8),
               TextField(
                 controller: replyController,
                 maxLines: 4,
@@ -794,11 +1108,17 @@ class _AdminKelolaKomentarState extends State<AdminKelolaKomentar> {
                     borderRadius: BorderRadius.circular(8),
                     borderSide: BorderSide(color: widget.lightGray),
                   ),
+                  enabledBorder: OutlineInputBorder(
+                    borderRadius: BorderRadius.circular(8),
+                    borderSide: BorderSide(color: widget.lightGray, width: 1.5),
+                  ),
                   focusedBorder: OutlineInputBorder(
                     borderRadius: BorderRadius.circular(8),
                     borderSide: BorderSide(color: widget.lightBlue, width: 2),
                   ),
-                  contentPadding: const EdgeInsets.all(12),
+                  filled: true,
+                  fillColor: Colors.grey[50],
+                  contentPadding: EdgeInsets.all(12),
                 ),
                 style: GoogleFonts.poppins(fontSize: 13),
               ),
@@ -806,17 +1126,22 @@ class _AdminKelolaKomentarState extends State<AdminKelolaKomentar> {
           ),
         ),
         actions: [
-          TextButton(
+          OutlinedButton(
             onPressed: () {
               replyController.dispose();
               Navigator.pop(context);
             },
+            style: OutlinedButton.styleFrom(
+              foregroundColor: Colors.grey[700],
+              side: BorderSide(color: widget.lightGray, width: 1.5),
+              padding: EdgeInsets.symmetric(horizontal: 20, vertical: 10),
+              shape: RoundedRectangleBorder(
+                borderRadius: BorderRadius.circular(8),
+              ),
+            ),
             child: Text(
               'Batal',
-              style: GoogleFonts.poppins(
-                color: Colors.grey[600],
-                fontWeight: FontWeight.w600,
-              ),
+              style: GoogleFonts.poppins(fontWeight: FontWeight.w600),
             ),
           ),
           ElevatedButton.icon(
@@ -836,7 +1161,7 @@ class _AdminKelolaKomentarState extends State<AdminKelolaKomentar> {
                 _showErrorSnackbar('Gagal mengirim balasan: ${e.toString()}');
               }
             },
-            icon: const Icon(Icons.send, size: 16),
+            icon: Icon(Icons.send, size: 16),
             label: Text(
               'Kirim Balasan',
               style: GoogleFonts.poppins(
@@ -847,10 +1172,12 @@ class _AdminKelolaKomentarState extends State<AdminKelolaKomentar> {
             style: ElevatedButton.styleFrom(
               backgroundColor: widget.lightBlue,
               foregroundColor: Colors.white,
-              padding: const EdgeInsets.symmetric(horizontal: 16, vertical: 10),
+              padding: EdgeInsets.symmetric(horizontal: 16, vertical: 10),
+              elevation: 2,
               shape: RoundedRectangleBorder(
                 borderRadius: BorderRadius.circular(8),
               ),
+              shadowColor: widget.lightBlue.withOpacity(0.5),
             ),
           ),
         ],
@@ -861,67 +1188,110 @@ class _AdminKelolaKomentarState extends State<AdminKelolaKomentar> {
   void _showDeleteConfirmation(String docId, String name) {
     showDialog(
       context: context,
+      barrierColor: widget.navyBlue.withOpacity(0.3),
       builder: (context) => AlertDialog(
+        backgroundColor: Colors.white,
         shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(16)),
-        title: Row(
-          children: [
-            const Icon(Icons.warning_amber_rounded, color: Colors.red),
-            const SizedBox(width: 12),
-            Text(
-              'Konfirmasi Hapus',
-              style: GoogleFonts.poppins(
-                fontSize: 18,
-                fontWeight: FontWeight.w600,
-                color: widget.navyBlue,
-              ),
+        title: Container(
+          padding: EdgeInsets.all(12),
+          decoration: BoxDecoration(
+            gradient: LinearGradient(
+              colors: [
+                Colors.red.withOpacity(0.1),
+                Colors.orange.withOpacity(0.05),
+              ],
             ),
-          ],
+            borderRadius: BorderRadius.circular(8),
+          ),
+          child: Row(
+            children: [
+              Container(
+                padding: EdgeInsets.all(8),
+                decoration: BoxDecoration(
+                  color: Colors.red,
+                  borderRadius: BorderRadius.circular(8),
+                  boxShadow: [
+                    BoxShadow(
+                      color: Colors.red.withOpacity(0.3),
+                      blurRadius: 8,
+                      spreadRadius: 1,
+                    ),
+                  ],
+                ),
+                child: Icon(
+                  Icons.warning_amber_rounded,
+                  color: Colors.white,
+                  size: 20,
+                ),
+              ),
+              SizedBox(width: 12),
+              Text(
+                'Konfirmasi Hapus',
+                style: GoogleFonts.poppins(
+                  fontSize: 18,
+                  fontWeight: FontWeight.w700,
+                  color: widget.navyBlue,
+                ),
+              ),
+            ],
+          ),
         ),
         content: RichText(
           text: TextSpan(
             style: GoogleFonts.poppins(fontSize: 14, color: Colors.grey[700]),
             children: [
-              const TextSpan(
+              TextSpan(
                 text: 'Apakah Anda yakin ingin menghapus komentar dari ',
               ),
               TextSpan(
                 text: name,
-                style: const TextStyle(fontWeight: FontWeight.w600),
+                style: TextStyle(
+                  fontWeight: FontWeight.w700,
+                  color: widget.navyBlue,
+                ),
               ),
-              const TextSpan(text: '? Tindakan ini tidak dapat dibatalkan.'),
+              TextSpan(text: '? Tindakan ini tidak dapat dibatalkan.'),
             ],
           ),
         ),
         actions: [
-          TextButton(
+          OutlinedButton(
             onPressed: () => Navigator.pop(context),
-            child: Text(
-              'Batal',
-              style: GoogleFonts.poppins(
-                color: Colors.grey[600],
-                fontWeight: FontWeight.w600,
-              ),
-            ),
-          ),
-          ElevatedButton(
-            onPressed: () async {
-              Navigator.pop(context);
-              await _deleteKomentar(docId, name);
-            },
-            style: ElevatedButton.styleFrom(
-              backgroundColor: Colors.red,
-              foregroundColor: Colors.white,
-              padding: const EdgeInsets.symmetric(horizontal: 20, vertical: 10),
+            style: OutlinedButton.styleFrom(
+              foregroundColor: Colors.grey[700],
+              side: BorderSide(color: widget.lightGray, width: 1.5),
+              padding: EdgeInsets.symmetric(horizontal: 20, vertical: 10),
               shape: RoundedRectangleBorder(
                 borderRadius: BorderRadius.circular(8),
               ),
             ),
             child: Text(
+              'Batal',
+              style: GoogleFonts.poppins(fontWeight: FontWeight.w600),
+            ),
+          ),
+          ElevatedButton.icon(
+            onPressed: () async {
+              Navigator.pop(context);
+              await _deleteKomentar(docId, name);
+            },
+            icon: Icon(Icons.delete_forever, size: 18),
+            label: Text(
               'Hapus',
               style: GoogleFonts.poppins(
                 fontSize: 13,
                 fontWeight: FontWeight.w600,
               ),
+            ),
+            style: ElevatedButton.styleFrom(
+              backgroundColor: Colors.red,
+              foregroundColor: Colors.white,
+              padding: EdgeInsets.symmetric(horizontal: 20, vertical: 10),
+              elevation: 2,
+              shape: RoundedRectangleBorder(
+                borderRadius: BorderRadius.circular(8),
+              ),
+              shadowColor: Colors.red.withOpacity(0.5),
             ),
           ),
         ],
@@ -955,11 +1325,11 @@ class _AdminKelolaKomentarState extends State<AdminKelolaKomentar> {
     if (difference.inDays > 7) {
       return '${date.day}/${date.month}/${date.year}';
     } else if (difference.inDays > 0) {
-      return '${difference.inDays} hari yang lalu';
+      return '${difference.inDays} hari lalu';
     } else if (difference.inHours > 0) {
-      return '${difference.inHours} jam yang lalu';
+      return '${difference.inHours} jam lalu';
     } else if (difference.inMinutes > 0) {
-      return '${difference.inMinutes} menit yang lalu';
+      return '${difference.inMinutes} menit lalu';
     } else {
       return 'Baru saja';
     }
@@ -999,11 +1369,11 @@ class _AdminKelolaKomentarState extends State<AdminKelolaKomentar> {
     ScaffoldMessenger.of(context).showSnackBar(
       SnackBar(
         content: Text(message, style: GoogleFonts.poppins(fontSize: 13)),
-        backgroundColor: const Color(0xFF10B981),
+        backgroundColor: Color(0xFF10B981),
         behavior: SnackBarBehavior.floating,
         shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(8)),
-        margin: const EdgeInsets.all(16),
-        duration: const Duration(seconds: 3),
+        margin: EdgeInsets.all(16),
+        duration: Duration(seconds: 3),
       ),
     );
   }
@@ -1014,11 +1384,11 @@ class _AdminKelolaKomentarState extends State<AdminKelolaKomentar> {
     ScaffoldMessenger.of(context).showSnackBar(
       SnackBar(
         content: Text(message, style: GoogleFonts.poppins(fontSize: 13)),
-        backgroundColor: const Color(0xFFEF4444),
+        backgroundColor: Color(0xFFEF4444),
         behavior: SnackBarBehavior.floating,
         shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(8)),
-        margin: const EdgeInsets.all(16),
-        duration: const Duration(seconds: 4),
+        margin: EdgeInsets.all(16),
+        duration: Duration(seconds: 4),
       ),
     );
   }

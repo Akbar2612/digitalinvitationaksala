@@ -37,36 +37,35 @@ class BottomNavMobile extends StatelessWidget {
           child: Row(
             mainAxisAlignment: MainAxisAlignment.spaceEvenly,
             children: [
-              _buildMenuButton(icon: Icons.home, label: 'HOME', index: 0),
               _buildMenuButton(
                 icon: Icons.favorite,
                 label: 'PENGANTIN',
-                index: 1,
+                index: 0,
               ),
               _buildMenuButton(
                 icon: Icons.calendar_month,
                 label: 'ACARA\n& LOKASI',
-                index: 2,
+                index: 1,
               ),
               _buildMenuButton(
                 icon: Icons.favorite_border,
                 label: 'LOVE\nSTORY',
-                index: 3,
+                index: 2,
               ),
               _buildMenuButton(
                 icon: Icons.photo_library,
                 label: 'FOTO',
-                index: 4,
+                index: 3,
               ),
               _buildMenuButton(
                 icon: Icons.chat_sharp,
                 label: 'UCAPAN',
-                index: 5,
+                index: 4,
               ),
               _buildMenuButton(
                 icon: Icons.card_giftcard,
                 label: 'WEEDING\nGIFT',
-                index: 6,
+                index: 5,
               ),
             ],
           ),

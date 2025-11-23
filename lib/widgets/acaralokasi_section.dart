@@ -27,9 +27,60 @@ class _AcaraLokasiSectionState extends State<AcaraLokasiSection> {
   }
 
   void _calculateTimeLeft() {
-    final eventDateTime = DateTime(2025, 12, 9, 9, 0, 0);
-    final now = DateTime.now();
-    _timeLeft = eventDateTime.difference(now);
+    try {
+      final datePattern = RegExp(r'(\d{1,2})\s+(\w+)\s+(\d{4})');
+      final match = datePattern.firstMatch(ResepsiDate);
+
+      if (match == null) {
+        throw Exception('Format tanggal tidak valid');
+      }
+
+      final day = int.parse(match.group(1)!);
+      final monthName = match.group(2)!;
+      final year = int.parse(match.group(3)!);
+
+      final monthMap = {
+        'Januari': 1,
+        'Februari': 2,
+        'Maret': 3,
+        'April': 4,
+        'Mei': 5,
+        'Juni': 6,
+        'Juli': 7,
+        'Agustus': 8,
+        'September': 9,
+        'Oktober': 10,
+        'November': 11,
+        'Desember': 12,
+      };
+
+      final month = monthMap[monthName] ?? 1;
+
+      final timePattern = RegExp(r'(\d{1,2})[\.:](\d{2})');
+      final timeMatch = timePattern.firstMatch(AkadTime);
+
+      if (timeMatch == null) {
+        throw Exception('Format waktu tidak valid');
+      }
+
+      final hour = int.parse(timeMatch.group(1)!);
+      final minute = int.parse(timeMatch.group(2)!);
+
+      final eventDateTime = DateTime(year, month, day, hour, minute, 0);
+      final now = DateTime.now();
+      _timeLeft = eventDateTime.difference(now);
+
+      if (_timeLeft.isNegative) {
+        _timeLeft = Duration.zero;
+      }
+    } catch (e) {
+      print('Error parsing date/time: $e');
+      print('ResepsiDate: $ResepsiDate');
+      print('AkadTime: $AkadTime');
+      final eventDateTime = DateTime(2025, 12, 9, 9, 0, 0);
+      final now = DateTime.now();
+      _timeLeft = eventDateTime.difference(now);
+    }
   }
 
   @override
@@ -61,7 +112,6 @@ class _AcaraLokasiSectionState extends State<AcaraLokasiSection> {
       child: Column(
         crossAxisAlignment: CrossAxisAlignment.center,
         children: [
-          // ===== ACARA SECTION =====
           Text(
             'Acara Pernikahan',
             style: GoogleFonts.lobster(
@@ -73,7 +123,6 @@ class _AcaraLokasiSectionState extends State<AcaraLokasiSection> {
           ),
           SizedBox(height: 10),
 
-          // Date with intro text
           Text(
             'Dengan memohon rahmat dan ridho Allah SWT, kami mengharap kehadiran Bapak / Ibu / Saudara / i pada acara pernikahan kami',
             style: GoogleFonts.roboto(
@@ -86,13 +135,12 @@ class _AcaraLokasiSectionState extends State<AcaraLokasiSection> {
           ),
           SizedBox(height: 12),
 
-          // Date
           Text(
             ResepsiDate,
-            style: GoogleFonts.roboto(
-              fontSize: 16,
+            style: GoogleFonts.lobster(
+              fontSize: 20,
               fontWeight: FontWeight.w400,
-              color: Color(0xFFF5F5F5),
+              color: Color(0xFFD4AF37),
               letterSpacing: 0.5,
             ),
             textAlign: TextAlign.center,
@@ -109,7 +157,6 @@ class _AcaraLokasiSectionState extends State<AcaraLokasiSection> {
           ),
           SizedBox(height: 12),
 
-          // Countdown Section
           Column(
             children: [
               Text(
@@ -217,11 +264,9 @@ class _AcaraLokasiSectionState extends State<AcaraLokasiSection> {
           ),
           SizedBox(height: 10),
 
-          // Location Icon
           Icon(Icons.location_on_outlined, color: Color(0xFFF5F5F5), size: 28),
           SizedBox(height: 8),
 
-          // Location details
           Text(
             'Rumah Mempelai Wanita',
             style: GoogleFonts.roboto(
@@ -246,7 +291,6 @@ class _AcaraLokasiSectionState extends State<AcaraLokasiSection> {
 
           SizedBox(height: 12),
 
-          // Button
           ElevatedButton.icon(
             onPressed: _openMaps,
             icon: Icon(Icons.directions, size: 16),

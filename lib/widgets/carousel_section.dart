@@ -6,58 +6,26 @@ class CarouselSection extends StatefulWidget {
   State<CarouselSection> createState() => _CarouselSectionState();
 }
 
-class _CarouselSectionState extends State<CarouselSection> with SingleTickerProviderStateMixin {
-  late PageController _pageController;
+class _CarouselSectionState extends State<CarouselSection>
+    with SingleTickerProviderStateMixin {
   late AnimationController _animationController;
-  int _currentIndex = 0;
-  bool _showGallery = false;
 
-  final List<String> imageUrls = [
-    'assets/images/mainbg.jpg',
-    'assets/images/secondbg.jpg',
-  ];
-
-  final List<String> galleryImages = [
-    'assets/images/mainbg.jpg',
-    'assets/images/secondbg.jpg',
-    'assets/images/mainbg.jpg',
-    'assets/images/secondbg.jpg',
-    'assets/images/mainbg.jpg',
-    'assets/images/secondbg.jpg',
-        'assets/images/mainbg.jpg',
-    'assets/images/secondbg.jpg',
-    'assets/images/mainbg.jpg',
-    'assets/images/secondbg.jpg',
-        'assets/images/mainbg.jpg',
-    'assets/images/secondbg.jpg',
-    'assets/images/mainbg.jpg',
-    'assets/images/secondbg.jpg',
+  final List<Map<String, dynamic>> galleryImages = [
+    {'image': 'assets/images/landscape3.jpeg', 'type': 'landscape'},
+    {'image': 'assets/images/potrait1.jpeg', 'type': 'portrait'},
+    {'image': 'assets/images/potrait2.jpeg', 'type': 'portrait'},
+    {'image': 'assets/images/landscape1.jpeg', 'type': 'landscape'},
+    {'image': 'assets/images/landscape2.jpeg', 'type': 'landscape'},
   ];
 
   @override
   void initState() {
     super.initState();
-    _pageController = PageController(viewportFraction: 0.88);
     _animationController = AnimationController(
-      duration: Duration(milliseconds: 300),
+      duration: Duration(milliseconds: 600),
       vsync: this,
     );
-    _autoPlay();
     _animationController.forward();
-  }
-
-  void _autoPlay() {
-    Future.delayed(Duration(seconds: 5), () {
-      if (mounted && _pageController.hasClients) {
-        int nextPage = _currentIndex + 1;
-        _pageController.animateToPage(
-          nextPage,
-          duration: Duration(milliseconds: 600),
-          curve: Curves.easeInOutCubic,
-        );
-        _autoPlay();
-      }
-    });
   }
 
   void _showFullImage(String imagePath) {
@@ -113,407 +81,236 @@ class _CarouselSectionState extends State<CarouselSection> with SingleTickerProv
 
   @override
   void dispose() {
-    _pageController.dispose();
     _animationController.dispose();
     super.dispose();
   }
 
   @override
   Widget build(BuildContext context) {
-    return Stack(
-      children: [
-        Container(
-          height: 500,
-          child: Stack(
-            children: [
-              // Carousel with scale effect
-              PageView.builder(
-                controller: _pageController,
-                onPageChanged: (index) {
-                  setState(() {
-                    _currentIndex = index % imageUrls.length;
-                  });
-                },
-                itemBuilder: (context, index) {
-                  final imageUrl = imageUrls[index % imageUrls.length];
-                  return AnimatedBuilder(
-                    animation: _pageController,
-                    builder: (context, child) {
-                      double value = 1.0;
-                      if (_pageController.position.haveDimensions) {
-                        value = _pageController.page! - index;
-                        value = (1 - (value.abs() * 0.15)).clamp(0.85, 1.0);
-                      }
-                      return Transform.scale(
-                        scale: value,
-                        child: child,
-                      );
-                    },
-                    child: Container(
-                      margin: EdgeInsets.symmetric(horizontal: 8, vertical: 40),
-                      decoration: BoxDecoration(
-                        borderRadius: BorderRadius.circular(28),
-                        boxShadow: [
-                          BoxShadow(
-                            color: Colors.black.withOpacity(0.35),
-                            blurRadius: 25,
-                            spreadRadius: 2,
-                            offset: Offset(0, 10),
-                          ),
+    return FadeTransition(
+      opacity: _animationController,
+      child: Container(
+        padding: EdgeInsets.symmetric(vertical: 40),
+        child: Column(
+          children: [
+            // Header Section
+            Padding(
+              padding: EdgeInsets.only(bottom: 30),
+              child: Column(
+                children: [
+                  Text(
+                    'Our Gallery',
+                    style: GoogleFonts.greatVibes(
+                      fontSize: 36,
+                      letterSpacing: 1.2,
+                      color: Color(0xFFFFFBF5),
+                      fontWeight: FontWeight.w400,
+                      shadows: [
+                        Shadow(
+                          color: Colors.black.withOpacity(0.3),
+                          offset: Offset(0, 2),
+                          blurRadius: 4,
+                        ),
+                      ],
+                    ),
+                  ),
+                  SizedBox(height: 8),
+                  Container(
+                    width: 60,
+                    height: 2,
+                    decoration: BoxDecoration(
+                      gradient: LinearGradient(
+                        colors: [
+                          Colors.transparent,
+                          Color(0xFFD4AF37),
+                          Colors.transparent,
                         ],
                       ),
-                      child: ClipRRect(
-                        borderRadius: BorderRadius.circular(28),
-                        child: Stack(
-                          fit: StackFit.expand,
-                          children: [
-                            Image.asset(
-                              imageUrl,
-                              fit: BoxFit.cover,
-                              errorBuilder: (context, error, stackTrace) {
-                                return Container(
-                                  decoration: BoxDecoration(
-                                    gradient: LinearGradient(
-                                      begin: Alignment.topLeft,
-                                      end: Alignment.bottomRight,
-                                      colors: [
-                                        Color(0xFF2d2d2d),
-                                        Color(0xFF1a1a1a),
-                                      ],
-                                    ),
-                                  ),
-                                  child: Icon(
-                                    Icons.photo_library_rounded,
-                                    size: 80,
-                                    color: Color(0xFF4a4a4a),
-                                  ),
-                                );
-                              },
-                            ),
-                            // Enhanced gradient overlay
-                            Container(
-                              decoration: BoxDecoration(
-                                gradient: LinearGradient(
-                                  begin: Alignment.topCenter,
-                                  end: Alignment.bottomCenter,
-                                  colors: [
-                                    Colors.transparent,
-                                    Colors.black.withOpacity(0.3),
-                                    Colors.black.withOpacity(0.85),
-                                  ],
-                                  stops: [0.4, 0.7, 1.0],
-                                ),
-                              ),
-                            ),
-                            // Navigation buttons inside photo
-                            Positioned(
-                              left: 12,
-                              top: 0,
-                              bottom: 0,
-                              child: Center(
-                                child: GestureDetector(
-                                  onTap: () {
-                                    _pageController.previousPage(
-                                      duration: Duration(milliseconds: 400),
-                                      curve: Curves.easeInOut,
-                                    );
-                                  },
-                                  child: Container(
-                                    padding: EdgeInsets.all(6),
-                                    decoration: BoxDecoration(
-                                      color: Colors.black.withOpacity(0.3),
-                                      shape: BoxShape.circle,
-                                      border: Border.all(
-                                        color: Colors.white.withOpacity(0.4),
-                                        width: 1,
-                                      ),
-                                    ),
-                                    child: Icon(
-                                      Icons.chevron_left_rounded,
-                                      color: Colors.white,
-                                      size: 20,
-                                    ),
-                                  ),
-                                ),
-                              ),
-                            ),
-                            Positioned(
-                              right: 12,
-                              top: 0,
-                              bottom: 0,
-                              child: Center(
-                                child: GestureDetector(
-                                  onTap: () {
-                                    _pageController.nextPage(
-                                      duration: Duration(milliseconds: 400),
-                                      curve: Curves.easeInOut,
-                                    );
-                                  },
-                                  child: Container(
-                                    padding: EdgeInsets.all(6),
-                                    decoration: BoxDecoration(
-                                      color: Colors.black.withOpacity(0.3),
-                                      shape: BoxShape.circle,
-                                      border: Border.all(
-                                        color: Colors.white.withOpacity(0.4),
-                                        width: 1,
-                                      ),
-                                    ),
-                                    child: Icon(
-                                      Icons.chevron_right_rounded,
-                                      color: Colors.white,
-                                      size: 20,
-                                    ),
-                                  ),
-                                ),
-                              ),
-                            ),
-                          ],
-                        ),
+                    ),
+                  ),
+                  SizedBox(height: 12),
+                  Text(
+                    'Koleksi Momen Indah Kami',
+                    style: TextStyle(
+                      fontSize: 13,
+                      color: Color(0xFFB0B0B0),
+                      letterSpacing: 1.5,
+                    ),
+                  ),
+                ],
+              ),
+            ),
+
+            // Masonry Gallery dengan ukuran acak
+            _buildMasonryGallery(),
+          ],
+        ),
+      ),
+    );
+  }
+
+  Widget _buildMasonryGallery() {
+    return LayoutBuilder(
+      builder: (context, constraints) {
+        final spacing = 12.0;
+        List<Widget> galleryItems = [];
+
+        for (int i = 0; i < galleryImages.length; i++) {
+          final item = galleryImages[i];
+          final type = item['type'];
+
+          // Untuk landscape, buat full width
+          if (type == 'landscape') {
+            galleryItems.add(
+              _buildGalleryItem(item['image'], type, constraints.maxWidth),
+            );
+            galleryItems.add(SizedBox(height: spacing));
+          } else {
+            // Untuk portrait, buat 2 kolom
+            if (i + 1 < galleryImages.length &&
+                galleryImages[i + 1]['type'] == 'portrait') {
+              // Ada 2 portrait berurutan, buat row
+              final nextItem = galleryImages[i + 1];
+              final columnWidth = (constraints.maxWidth - spacing) / 2;
+
+              galleryItems.add(
+                Row(
+                  crossAxisAlignment: CrossAxisAlignment.start,
+                  children: [
+                    Expanded(
+                      child: _buildGalleryItem(
+                        item['image'],
+                        type,
+                        columnWidth,
                       ),
+                    ),
+                    SizedBox(width: spacing),
+                    Expanded(
+                      child: _buildGalleryItem(
+                        nextItem['image'],
+                        nextItem['type'],
+                        columnWidth,
+                      ),
+                    ),
+                  ],
+                ),
+              );
+              galleryItems.add(SizedBox(height: spacing));
+              i++; // Skip next item karena sudah diproses
+            } else {
+              // Portrait tunggal, buat 1 kolom centered
+              final columnWidth = (constraints.maxWidth - spacing) / 2;
+              galleryItems.add(
+                Row(
+                  children: [
+                    Expanded(
+                      child: _buildGalleryItem(
+                        item['image'],
+                        type,
+                        columnWidth,
+                      ),
+                    ),
+                    SizedBox(width: spacing),
+                    Expanded(child: SizedBox()), // Spacer
+                  ],
+                ),
+              );
+              galleryItems.add(SizedBox(height: spacing));
+            }
+          }
+        }
+
+        return Column(children: galleryItems);
+      },
+    );
+  }
+
+  Widget _buildGalleryItem(String imagePath, String type, double width) {
+    // Tentukan height berdasarkan type
+    double height;
+    switch (type) {
+      case 'landscape':
+        height = width / (16 / 9); // Aspect ratio 16:9
+        break;
+      case 'portrait':
+        height = width / (3 / 4); // Aspect ratio 3:4
+        break;
+      case 'square':
+        height = width; // Aspect ratio 1:1
+        break;
+      default:
+        height = width;
+    }
+
+    return GestureDetector(
+      onTap: () => _showFullImage(imagePath),
+      child: Container(
+        width: width,
+        height: height,
+        decoration: BoxDecoration(
+          borderRadius: BorderRadius.circular(16),
+          boxShadow: [
+            BoxShadow(
+              color: Colors.black.withOpacity(0.4),
+              blurRadius: 12,
+              offset: Offset(0, 4),
+            ),
+          ],
+        ),
+        child: ClipRRect(
+          borderRadius: BorderRadius.circular(16),
+          child: Stack(
+            fit: StackFit.expand,
+            children: [
+              Image.asset(
+                imagePath,
+                fit: BoxFit.cover,
+                errorBuilder: (context, error, stackTrace) {
+                  return Container(
+                    decoration: BoxDecoration(
+                      gradient: LinearGradient(
+                        begin: Alignment.topLeft,
+                        end: Alignment.bottomRight,
+                        colors: [Color(0xFF2d2d2d), Color(0xFF1a1a1a)],
+                      ),
+                    ),
+                    child: Icon(
+                      Icons.photo_library_rounded,
+                      size: 40,
+                      color: Color(0xFF4a4a4a),
                     ),
                   );
                 },
               ),
-              
-              // Enhanced overlay text with animation
-              Positioned(
-                bottom: 80,
-                left: 0,
-                right: 0,
-                child: FadeTransition(
-                  opacity: _animationController,
-                  child: Column(
-                    children: [
-                      Text(
-                        'Our Special Moments',
-                        style: GoogleFonts.greatVibes(
-                          fontSize: 28,
-                          letterSpacing: 1.2,
-                          color: Color(0xFFFFFBF5),
-                          fontWeight: FontWeight.w400,
-                          shadows: [
-                            Shadow(
-                              color: Colors.black.withOpacity(0.6),
-                              offset: Offset(0, 2),
-                              blurRadius: 8,
-                            ),
-                          ],
-                        ),
-                      ),
-                      SizedBox(height: 12),
-                      
-                      // Gallery Button
-                      GestureDetector(
-                        onTap: () {
-                          setState(() {
-                            _showGallery = !_showGallery;
-                          });
-                        },
-                        child: Container(
-                          padding: EdgeInsets.symmetric(horizontal: 20, vertical: 8),
-                          decoration: BoxDecoration(
-                            color: Colors.white.withOpacity(0.15),
-                            borderRadius: BorderRadius.circular(20),
-                            border: Border.all(
-                              color: Colors.white.withOpacity(0.3),
-                              width: 1,
-                            ),
-                          ),
-                          child: Row(
-                            mainAxisSize: MainAxisSize.min,
-                            children: [
-                              Icon(
-                                Icons.photo_library_rounded,
-                                color: Colors.white,
-                                size: 16,
-                              ),
-                              SizedBox(width: 6),
-                              Text(
-                                'Foto Galeri',
-                                style: TextStyle(
-                                  color: Colors.white,
-                                  fontSize: 13,
-                                  fontWeight: FontWeight.w500,
-                                  letterSpacing: 0.5,
-                                ),
-                              ),
-                            ],
-                          ),
-                        ),
-                      ),
-                      
-                      SizedBox(height: 12),
-                      
-                      // Enhanced indicator dots
-                      Container(
-                        padding: EdgeInsets.symmetric(horizontal: 16, vertical: 8),
-                        decoration: BoxDecoration(
-                          color: Colors.black.withOpacity(0.25),
-                          borderRadius: BorderRadius.circular(20),
-                        ),
-                        child: Row(
-                          mainAxisSize: MainAxisSize.min,
-                          mainAxisAlignment: MainAxisAlignment.center,
-                          children: List.generate(
-                            imageUrls.length,
-                            (index) => AnimatedContainer(
-                              duration: Duration(milliseconds: 300),
-                              margin: EdgeInsets.symmetric(horizontal: 5),
-                              width: _currentIndex == index ? 32 : 8,
-                              height: 8,
-                              decoration: BoxDecoration(
-                                borderRadius: BorderRadius.circular(4),
-                                color: _currentIndex == index
-                                    ? Color(0xFFFFFBF5)
-                                    : Color(0xFFFFFBF5).withOpacity(0.35),
-                                boxShadow: _currentIndex == index
-                                    ? [
-                                        BoxShadow(
-                                          color: Colors.white.withOpacity(0.4),
-                                          blurRadius: 8,
-                                          spreadRadius: 1,
-                                        ),
-                                      ]
-                                    : [],
-                              ),
-                            ),
-                          ),
-                        ),
-                      ),
-                    ],
+              // Hover overlay effect
+              Container(
+                decoration: BoxDecoration(
+                  gradient: LinearGradient(
+                    begin: Alignment.topCenter,
+                    end: Alignment.bottomCenter,
+                    colors: [Colors.transparent, Colors.black.withOpacity(0.3)],
+                  ),
+                ),
+              ),
+              // Zoom icon indicator
+              Center(
+                child: Container(
+                  padding: EdgeInsets.all(8),
+                  decoration: BoxDecoration(
+                    color: Colors.black.withOpacity(0.3),
+                    shape: BoxShape.circle,
+                  ),
+                  child: Icon(
+                    Icons.zoom_in_rounded,
+                    color: Colors.white.withOpacity(0.8),
+                    size: 24,
                   ),
                 ),
               ),
             ],
           ),
         ),
-        
-        // Floating Gallery Card
-        if (_showGallery)
-          Positioned.fill(
-            child: GestureDetector(
-              onTap: () {
-                setState(() {
-                  _showGallery = false;
-                });
-              },
-              child: Container(
-                color: Colors.transparent,
-                child: Center(
-                  child: GestureDetector(
-                    onTap: () {}, // Prevent closing when tapping card
-                    child: Container(
-                      margin: EdgeInsets.symmetric(horizontal: 20),
-                      constraints: BoxConstraints(maxWidth: 400, maxHeight: 500),
-                      decoration: BoxDecoration(
-                        color: Color(0xFF1a1a1a),
-                        borderRadius: BorderRadius.circular(20),
-                        boxShadow: [
-                          BoxShadow(
-                            color: Colors.black.withOpacity(0.5),
-                            blurRadius: 30,
-                            spreadRadius: 5,
-                          ),
-                        ],
-                      ),
-                      child: Column(
-                        mainAxisSize: MainAxisSize.min,
-                        children: [
-                          // Header
-                          Padding(
-                            padding: EdgeInsets.all(20),
-                            child: Row(
-                              mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                              children: [
-                                Text(
-                                  'Galeri Foto',
-                                  style: GoogleFonts.poppins(
-                                    fontSize: 18,
-                                    fontWeight: FontWeight.w600,
-                                    color: Colors.white,
-                                  ),
-                                ),
-                                GestureDetector(
-                                  onTap: () {
-                                    setState(() {
-                                      _showGallery = false;
-                                    });
-                                  },
-                                  child: Container(
-                                    padding: EdgeInsets.all(6),
-                                    decoration: BoxDecoration(
-                                      color: Colors.white.withOpacity(0.1),
-                                      shape: BoxShape.circle,
-                                    ),
-                                    child: Icon(
-                                      Icons.close_rounded,
-                                      color: Colors.white,
-                                      size: 20,
-                                    ),
-                                  ),
-                                ),
-                              ],
-                            ),
-                          ),
-                          
-                          // Gallery Grid
-                          Expanded(
-                            child: Padding(
-                              padding: EdgeInsets.symmetric(horizontal: 20),
-                              child: GridView.builder(
-                                padding: EdgeInsets.only(bottom: 20),
-                                gridDelegate: SliverGridDelegateWithFixedCrossAxisCount(
-                                  crossAxisCount: 3,
-                                  crossAxisSpacing: 8,
-                                  mainAxisSpacing: 8,
-                                  childAspectRatio: 1,
-                                ),
-                                itemCount: galleryImages.length,
-                                itemBuilder: (context, index) {
-                                  return GestureDetector(
-                                    onTap: () => _showFullImage(galleryImages[index]),
-                                    child: Container(
-                                      decoration: BoxDecoration(
-                                        borderRadius: BorderRadius.circular(12),
-                                        boxShadow: [
-                                          BoxShadow(
-                                            color: Colors.black.withOpacity(0.3),
-                                            blurRadius: 8,
-                                          ),
-                                        ],
-                                      ),
-                                      child: ClipRRect(
-                                        borderRadius: BorderRadius.circular(12),
-                                        child: Image.asset(
-                                          galleryImages[index],
-                                          fit: BoxFit.cover,
-                                          errorBuilder: (context, error, stackTrace) {
-                                            return Container(
-                                              color: Color(0xFF2d2d2d),
-                                              child: Icon(
-                                                Icons.image,
-                                                color: Color(0xFF4a4a4a),
-                                              ),
-                                            );
-                                          },
-                                        ),
-                                      ),
-                                    ),
-                                  );
-                                },
-                              ),
-                            ),
-                          ),
-                        ],
-                      ),
-                    ),
-                  ),
-                ),
-              ),
-            ),
-          ),
-      ],
+      ),
     );
   }
 }

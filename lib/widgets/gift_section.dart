@@ -6,53 +6,58 @@ import 'package:google_fonts/google_fonts.dart';
 class WeddingGiftSection extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
-    return Padding(
-      padding: EdgeInsets.symmetric(horizontal: 20, vertical: 32),
-      child: Column(
-        crossAxisAlignment: CrossAxisAlignment.center,
-        children: [
-          // Title
-          Text(
-            'Wedding Gift',
-            style: GoogleFonts.robotoSlab(
-              fontSize: 28,
-              fontWeight: FontWeight.w600,
-              color: Color(0xFFF5F5F5),
-              letterSpacing: 0.5,
-            ),
-          ),
-          
-          SizedBox(height: 12),
-          
-          Text(
-            'Doa Restu Anda merupakan karunia yang sangat berarti bagi kami.\nDan jika memberi adalah ungkapan tanda kasih Anda,\nAnda dapat memberi kado secara cashless.',
-            style: GoogleFonts.roboto(
-              fontSize: 13,
-              fontWeight: FontWeight.w400,
-              color: Color(0xFFE0E0E0),
-              height: 1.6,
-            ),
-            textAlign: TextAlign.center,
-          ),
+    return Center(
+      child: ConstrainedBox(
+        constraints: BoxConstraints(maxWidth: 600), // Batas maksimal lebar
+        child: Padding(
+          padding: EdgeInsets.symmetric(horizontal: 20, vertical: 32),
+          child: Column(
+            crossAxisAlignment: CrossAxisAlignment.center,
+            children: [
+              // Title
+              Text(
+                'Wedding Gift',
+                style: GoogleFonts.robotoSlab(
+                  fontSize: 28,
+                  fontWeight: FontWeight.w600,
+                  color: Color(0xFFF5F5F5),
+                  letterSpacing: 0.5,
+                ),
+              ),
 
-          SizedBox(height: 28),
+              SizedBox(height: 12),
 
-          // Card 1
-          _buildBankCard(
-            context: context,
-            accountNumber: accountNumberBride,
-            accountName: brideName,
+              Text(
+                'Doa Restu Anda merupakan karunia yang sangat berarti bagi kami.\nDan jika memberi adalah ungkapan tanda kasih Anda,\nAnda dapat memberi kado secara cashless.',
+                style: GoogleFonts.roboto(
+                  fontSize: 13,
+                  fontWeight: FontWeight.w400,
+                  color: Color(0xFFE0E0E0),
+                  height: 1.6,
+                ),
+                textAlign: TextAlign.center,
+              ),
+
+              SizedBox(height: 28),
+
+              // Card 1
+              _buildBankCard(
+                context: context,
+                accountNumber: accountNumberBride,
+                accountName: brideName,
+              ),
+
+              SizedBox(height: 16),
+
+              // Card 2
+              _buildBankCard(
+                context: context,
+                accountNumber: accountNumberGroom,
+                accountName: groomName,
+              ),
+            ],
           ),
-
-          SizedBox(height: 16),
-
-          // Card 2
-          _buildBankCard(
-            context: context,
-            accountNumber: accountNumberGroom,
-            accountName: groomName,
-          ),
-        ],
+        ),
       ),
     );
   }
@@ -63,20 +68,17 @@ class WeddingGiftSection extends StatelessWidget {
     required String accountName,
   }) {
     return Container(
+      width: double.infinity, // Memastikan card mengisi lebar yang tersedia
       padding: EdgeInsets.all(20),
       decoration: BoxDecoration(
         color: Color(0xFFF5F5F5).withOpacity(0.05),
         borderRadius: BorderRadius.circular(12),
-        border: Border.all(
-          color: Color(0xFFF5F5F5).withOpacity(0.1),
-          width: 1,
-        ),
+        border: Border.all(color: Color(0xFFF5F5F5).withOpacity(0.1), width: 1),
       ),
       child: Column(
         children: [
           // Bank Logo & Name
-          Row(
-            mainAxisAlignment: MainAxisAlignment.center,
+          Column(
             children: [
               Container(
                 padding: EdgeInsets.all(8),
@@ -97,7 +99,7 @@ class WeddingGiftSection extends StatelessWidget {
                   ),
                 ),
               ),
-              SizedBox(width: 12),
+              SizedBox(height: 12),
               Text(
                 'Bank Rakyat Indonesia',
                 style: GoogleFonts.robotoSlab(
@@ -106,6 +108,7 @@ class WeddingGiftSection extends StatelessWidget {
                   color: Color(0xFFF5F5F5),
                   letterSpacing: 0.3,
                 ),
+                textAlign: TextAlign.center,
               ),
             ],
           ),
@@ -113,21 +116,21 @@ class WeddingGiftSection extends StatelessWidget {
           SizedBox(height: 16),
 
           // Divider
-          Container(
-            height: 1,
-            color: Color(0xFFF5F5F5).withOpacity(0.1),
-          ),
+          Container(height: 1, color: Color(0xFFF5F5F5).withOpacity(0.1)),
 
           SizedBox(height: 16),
 
           // Account Number
-          Text(
-            accountNumber,
-            style: GoogleFonts.robotoMono(
-              fontSize: 18,
-              fontWeight: FontWeight.w600,
-              color: Color(0xFFF5F5F5),
-              letterSpacing: 1.2,
+          FittedBox(
+            fit: BoxFit.scaleDown,
+            child: Text(
+              accountNumber,
+              style: GoogleFonts.robotoMono(
+                fontSize: 18,
+                fontWeight: FontWeight.w600,
+                color: Color(0xFFF5F5F5),
+                letterSpacing: 1.2,
+              ),
             ),
           ),
 
@@ -173,11 +176,7 @@ class WeddingGiftSection extends StatelessWidget {
               child: Row(
                 mainAxisSize: MainAxisSize.min,
                 children: [
-                  Icon(
-                    Icons.copy,
-                    size: 16,
-                    color: Color(0xFFF5F5F5),
-                  ),
+                  Icon(Icons.copy, size: 16, color: Color(0xFFF5F5F5)),
                   SizedBox(width: 8),
                   Text(
                     'Salin Nomor Rekening',
