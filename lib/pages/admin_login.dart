@@ -66,17 +66,23 @@ class _AdminLoginPageState extends State<AdminLoginPage>
   }
 
   Future<void> _checkAutoLogin() async {
-    final prefs = await SharedPreferences.getInstance();
-    final savedUsername = prefs.getString('saved_username');
-    final savedPassword = prefs.getString('saved_password');
-    final rememberMe = prefs.getBool('remember_me') ?? false;
+    try {
+      final prefs = await SharedPreferences.getInstance();
+      final savedUsername = prefs.getString('saved_username');
+      final savedPassword = prefs.getString('saved_password');
+      final rememberMe = prefs.getBool('remember_me') ?? false;
 
-    if (rememberMe && savedUsername != null && savedPassword != null) {
-      _usernameController.text = savedUsername;
-      _passwordController.text = savedPassword;
-      setState(() {
-        _rememberMe = true;
-      });
+      if (rememberMe && savedUsername != null && savedPassword != null) {
+        _usernameController.text = savedUsername;
+        _passwordController.text = savedPassword;
+        setState(() {
+          _rememberMe = true;
+        });
+      }
+    } catch (e) {
+      print('Error checking auto login: $e');
+      // Jika SharedPreferences gagal, aplikasi tetap bisa jalan
+      // User hanya perlu login manual
     }
   }
 
@@ -111,17 +117,22 @@ class _AdminLoginPageState extends State<AdminLoginPage>
       if (storedPassword == _passwordController.text.trim()) {
         // Simpan session jika remember me dicentang
         if (_rememberMe) {
-          final prefs = await SharedPreferences.getInstance();
-          await prefs.setString(
-            'saved_username',
-            _usernameController.text.trim(),
-          );
-          await prefs.setString(
-            'saved_password',
-            _passwordController.text.trim(),
-          );
-          await prefs.setBool('remember_me', true);
-          await prefs.setString('user_role', role);
+          try {
+            final prefs = await SharedPreferences.getInstance();
+            await prefs.setString(
+              'saved_username',
+              _usernameController.text.trim(),
+            );
+            await prefs.setString(
+              'saved_password',
+              _passwordController.text.trim(),
+            );
+            await prefs.setBool('remember_me', true);
+            await prefs.setString('user_role', role);
+          } catch (e) {
+            print('Error saving preferences: $e');
+            // Lanjutkan login meskipun gagal save preferences
+          }
         }
 
         // Login berhasil
