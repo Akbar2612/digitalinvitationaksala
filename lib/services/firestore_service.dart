@@ -3,6 +3,124 @@ import 'package:cloud_firestore/cloud_firestore.dart';
 class FirestoreService {
   final FirebaseFirestore _db = FirebaseFirestore.instance;
 
+  // ==================== USER AUTHENTICATION ====================
+
+  /// Membuat user baru di Firestore
+  Future<void> createUser({
+    required String username,
+    required String password,
+    required String role, // 'super_admin', 'admin', 'user'
+    String? email,
+    String? fullName,
+  }) async {
+    try {
+      await _db.collection('users').doc(username).set({
+        'username': username,
+        'password': password, // Di production, gunakan password hashing!
+        'role': role,
+        'email': email,
+        'fullName': fullName,
+        'isActive': true,
+        'createdAt': FieldValue.serverTimestamp(),
+        'lastLogin': null,
+      });
+      print('✅ User berhasil dibuat: $username');
+    } catch (e) {
+      print('❌ Error creating user: $e');
+      rethrow;
+    }
+  }
+
+  /// Mendapatkan data user berdasarkan username
+  Future<DocumentSnapshot> getUserByUsername(String username) async {
+    try {
+      return await _db.collection('users').doc(username).get();
+    } catch (e) {
+      print('Error getting user: $e');
+      rethrow;
+    }
+  }
+
+  /// Update last login timestamp
+  Future<void> updateLastLogin(String username) async {
+    try {
+      await _db.collection('users').doc(username).update({
+        'lastLogin': FieldValue.serverTimestamp(),
+      });
+    } catch (e) {
+      print('Error updating last login: $e');
+    }
+  }
+
+  /// Verifikasi login user
+  Future<Map<String, dynamic>?> verifyLogin(
+    String username,
+    String password,
+  ) async {
+    try {
+      final doc = await _db.collection('users').doc(username).get();
+
+      if (!doc.exists) {
+        return null;
+      }
+
+      final userData = doc.data() as Map<String, dynamic>;
+
+      // Cek apakah user aktif
+      if (userData['isActive'] != true) {
+        throw Exception('User tidak aktif');
+      }
+
+      // Verifikasi password
+      if (userData['password'] == password) {
+        // Update last login
+        await updateLastLogin(username);
+        return userData;
+      }
+
+      return null;
+    } catch (e) {
+      print('Error verifying login: $e');
+      rethrow;
+    }
+  }
+
+  /// Mendapatkan semua users (untuk super admin)
+  Stream<QuerySnapshot> getAllUsers() {
+    return _db
+        .collection('users')
+        .orderBy('createdAt', descending: true)
+        .snapshots();
+  }
+
+  /// Update user status (active/inactive)
+  Future<void> updateUserStatus(String username, bool isActive) async {
+    try {
+      await _db.collection('users').doc(username).update({
+        'isActive': isActive,
+        'updatedAt': FieldValue.serverTimestamp(),
+      });
+    } catch (e) {
+      print('Error updating user status: $e');
+      rethrow;
+    }
+  }
+
+  /// Change password
+  Future<void> changePassword(String username, String newPassword) async {
+    try {
+      await _db.collection('users').doc(username).update({
+        'password': newPassword, // Di production, gunakan password hashing!
+        'passwordChangedAt': FieldValue.serverTimestamp(),
+      });
+    } catch (e) {
+      print('Error changing password: $e');
+      rethrow;
+    }
+  }
+
+  // ==================== EXISTING METHODS ====================
+
   Future<void> addGuest(String name, String unsur, String address) async {
     final slug = name.replaceAll(' ', '');
     await _db.collection('guests').doc(slug).set({
@@ -283,6 +401,14 @@ class FirestoreService {
     } catch (e) {
       print('Error checking kisah cinta penutup: $e');
       return false;
+    }
+  }
+
+  Future<void> updateGuest(String guestId, Map<String, dynamic> data) async {
+    try {
+      await _db.collection('guests').doc(guestId).update(data);
+    } catch (e) {
+      throw Exception('Failed to update guest: $e');
     }
   }
 

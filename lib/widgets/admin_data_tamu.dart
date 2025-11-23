@@ -42,6 +42,12 @@ class _AdminDataTamuState extends State<AdminDataTamu> {
   final LayerLink _unsurLayerLink = LayerLink();
   final LayerLink _statusLayerLink = LayerLink();
   OverlayEntry? _overlayEntry;
+  // Edit Dialog Controllers
+  final TextEditingController _editNameController = TextEditingController();
+  final TextEditingController _editUnsurController = TextEditingController();
+  final TextEditingController _editAddressController = TextEditingController();
+  final _editFormKey = GlobalKey<FormState>();
+  bool _editIsShared = false;
 
   @override
   void initState() {
@@ -58,6 +64,9 @@ class _AdminDataTamuState extends State<AdminDataTamu> {
   @override
   void dispose() {
     _searchController.dispose();
+    _editNameController.dispose();
+    _editUnsurController.dispose();
+    _editAddressController.dispose();
     _removeOverlay();
     super.dispose();
   }
@@ -117,6 +126,389 @@ class _AdminDataTamuState extends State<AdminDataTamu> {
 
       return true;
     }).toList();
+  }
+
+  void _showEditDialog(QueryDocumentSnapshot guest) {
+    final data = guest.data() as Map<String, dynamic>;
+
+    // Populate controllers with current data
+    _editNameController.text = data['name'] ?? '';
+    _editUnsurController.text = data['unsur'] ?? '';
+    _editAddressController.text = data['address'] ?? '';
+    _editIsShared = data['isShared'] ?? false;
+
+    showDialog(
+      context: context,
+      builder: (context) => StatefulBuilder(
+        builder: (context, setDialogState) => AlertDialog(
+          backgroundColor: Colors.white,
+          shape: RoundedRectangleBorder(
+            borderRadius: BorderRadius.circular(16),
+          ),
+          title: Row(
+            children: [
+              Icon(Icons.edit, color: widget.orange, size: 28),
+              SizedBox(width: 12),
+              Text(
+                'Edit Tamu',
+                style: GoogleFonts.poppins(
+                  fontWeight: FontWeight.w600,
+                  color: widget.navyBlue,
+                  fontSize: 18,
+                ),
+              ),
+            ],
+          ),
+          content: SingleChildScrollView(
+            child: Form(
+              key: _editFormKey,
+              child: Column(
+                mainAxisSize: MainAxisSize.min,
+                crossAxisAlignment: CrossAxisAlignment.start,
+                children: [
+                  // Nama Field
+                  Text(
+                    'Nama Tamu',
+                    style: GoogleFonts.poppins(
+                      fontSize: 13,
+                      fontWeight: FontWeight.w600,
+                      color: widget.navyBlue,
+                    ),
+                  ),
+                  SizedBox(height: 8),
+                  TextFormField(
+                    controller: _editNameController,
+                    decoration: InputDecoration(
+                      hintText: 'Masukkan nama tamu',
+                      hintStyle: GoogleFonts.poppins(
+                        fontSize: 13,
+                        color: Colors.grey[400],
+                      ),
+                      prefixIcon: Icon(
+                        Icons.person,
+                        size: 20,
+                        color: widget.lightBlue,
+                      ),
+                      filled: true,
+                      fillColor: Colors.grey[50],
+                      border: OutlineInputBorder(
+                        borderRadius: BorderRadius.circular(8),
+                        borderSide: BorderSide(color: Colors.grey[200]!),
+                      ),
+                      enabledBorder: OutlineInputBorder(
+                        borderRadius: BorderRadius.circular(8),
+                        borderSide: BorderSide(color: Colors.grey[200]!),
+                      ),
+                      focusedBorder: OutlineInputBorder(
+                        borderRadius: BorderRadius.circular(8),
+                        borderSide: BorderSide(
+                          color: widget.lightBlue,
+                          width: 1.5,
+                        ),
+                      ),
+                      contentPadding: EdgeInsets.symmetric(
+                        horizontal: 12,
+                        vertical: 12,
+                      ),
+                    ),
+                    style: GoogleFonts.poppins(fontSize: 13),
+                    validator: (value) {
+                      if (value == null || value.trim().isEmpty) {
+                        return 'Nama tidak boleh kosong';
+                      }
+                      return null;
+                    },
+                  ),
+
+                  SizedBox(height: 16),
+
+                  // Unsur Field
+                  Text(
+                    'Unsur',
+                    style: GoogleFonts.poppins(
+                      fontSize: 13,
+                      fontWeight: FontWeight.w600,
+                      color: widget.navyBlue,
+                    ),
+                  ),
+                  SizedBox(height: 8),
+                  TextFormField(
+                    controller: _editUnsurController,
+                    decoration: InputDecoration(
+                      hintText: 'Masukkan unsur',
+                      hintStyle: GoogleFonts.poppins(
+                        fontSize: 13,
+                        color: Colors.grey[400],
+                      ),
+                      prefixIcon: Icon(
+                        Icons.group,
+                        size: 20,
+                        color: widget.lightBlue,
+                      ),
+                      filled: true,
+                      fillColor: Colors.grey[50],
+                      border: OutlineInputBorder(
+                        borderRadius: BorderRadius.circular(8),
+                        borderSide: BorderSide(color: Colors.grey[200]!),
+                      ),
+                      enabledBorder: OutlineInputBorder(
+                        borderRadius: BorderRadius.circular(8),
+                        borderSide: BorderSide(color: Colors.grey[200]!),
+                      ),
+                      focusedBorder: OutlineInputBorder(
+                        borderRadius: BorderRadius.circular(8),
+                        borderSide: BorderSide(
+                          color: widget.lightBlue,
+                          width: 1.5,
+                        ),
+                      ),
+                      contentPadding: EdgeInsets.symmetric(
+                        horizontal: 12,
+                        vertical: 12,
+                      ),
+                    ),
+                    style: GoogleFonts.poppins(fontSize: 13),
+                  ),
+
+                  SizedBox(height: 16),
+
+                  // Alamat Field
+                  Text(
+                    'Alamat',
+                    style: GoogleFonts.poppins(
+                      fontSize: 13,
+                      fontWeight: FontWeight.w600,
+                      color: widget.navyBlue,
+                    ),
+                  ),
+                  SizedBox(height: 8),
+                  TextFormField(
+                    controller: _editAddressController,
+                    maxLines: 3,
+                    decoration: InputDecoration(
+                      hintText: 'Masukkan alamat',
+                      hintStyle: GoogleFonts.poppins(
+                        fontSize: 13,
+                        color: Colors.grey[400],
+                      ),
+                      prefixIcon: Padding(
+                        padding: EdgeInsets.only(bottom: 50),
+                        child: Icon(
+                          Icons.location_on,
+                          size: 20,
+                          color: widget.lightBlue,
+                        ),
+                      ),
+                      filled: true,
+                      fillColor: Colors.grey[50],
+                      border: OutlineInputBorder(
+                        borderRadius: BorderRadius.circular(8),
+                        borderSide: BorderSide(color: Colors.grey[200]!),
+                      ),
+                      enabledBorder: OutlineInputBorder(
+                        borderRadius: BorderRadius.circular(8),
+                        borderSide: BorderSide(color: Colors.grey[200]!),
+                      ),
+                      focusedBorder: OutlineInputBorder(
+                        borderRadius: BorderRadius.circular(8),
+                        borderSide: BorderSide(
+                          color: widget.lightBlue,
+                          width: 1.5,
+                        ),
+                      ),
+                      contentPadding: EdgeInsets.symmetric(
+                        horizontal: 12,
+                        vertical: 12,
+                      ),
+                    ),
+                    style: GoogleFonts.poppins(fontSize: 13),
+                  ),
+
+                  SizedBox(height: 16),
+
+                  // Status Field
+                  Text(
+                    'Status Undangan',
+                    style: GoogleFonts.poppins(
+                      fontSize: 13,
+                      fontWeight: FontWeight.w600,
+                      color: widget.navyBlue,
+                    ),
+                  ),
+                  SizedBox(height: 8),
+                  Container(
+                    decoration: BoxDecoration(
+                      color: Colors.grey[50],
+                      borderRadius: BorderRadius.circular(8),
+                      border: Border.all(color: Colors.grey[200]!),
+                    ),
+                    child: Row(
+                      children: [
+                        Expanded(
+                          child: InkWell(
+                            onTap: () {
+                              setDialogState(() {
+                                _editIsShared = false;
+                              });
+                            },
+                            borderRadius: BorderRadius.circular(8),
+                            child: Container(
+                              padding: EdgeInsets.symmetric(vertical: 12),
+                              decoration: BoxDecoration(
+                                color: !_editIsShared
+                                    ? Colors.red.withOpacity(0.1)
+                                    : Colors.transparent,
+                                borderRadius: BorderRadius.circular(8),
+                                border: !_editIsShared
+                                    ? Border.all(color: Colors.red, width: 1.5)
+                                    : null,
+                              ),
+                              child: Row(
+                                mainAxisAlignment: MainAxisAlignment.center,
+                                children: [
+                                  Icon(
+                                    Icons.cancel,
+                                    size: 18,
+                                    color: !_editIsShared
+                                        ? Colors.red
+                                        : Colors.grey[400],
+                                  ),
+                                  SizedBox(width: 8),
+                                  Text(
+                                    'Belum Terkirim',
+                                    style: GoogleFonts.poppins(
+                                      fontSize: 13,
+                                      fontWeight: !_editIsShared
+                                          ? FontWeight.w600
+                                          : FontWeight.w400,
+                                      color: !_editIsShared
+                                          ? Colors.red
+                                          : Colors.grey[600],
+                                    ),
+                                  ),
+                                ],
+                              ),
+                            ),
+                          ),
+                        ),
+                        SizedBox(width: 8),
+                        Expanded(
+                          child: InkWell(
+                            onTap: () {
+                              setDialogState(() {
+                                _editIsShared = true;
+                              });
+                            },
+                            borderRadius: BorderRadius.circular(8),
+                            child: Container(
+                              padding: EdgeInsets.symmetric(vertical: 12),
+                              decoration: BoxDecoration(
+                                color: _editIsShared
+                                    ? Color(0xFF10B981).withOpacity(0.1)
+                                    : Colors.transparent,
+                                borderRadius: BorderRadius.circular(8),
+                                border: _editIsShared
+                                    ? Border.all(
+                                        color: Color(0xFF10B981),
+                                        width: 1.5,
+                                      )
+                                    : null,
+                              ),
+                              child: Row(
+                                mainAxisAlignment: MainAxisAlignment.center,
+                                children: [
+                                  Icon(
+                                    Icons.check_circle,
+                                    size: 18,
+                                    color: _editIsShared
+                                        ? Color(0xFF10B981)
+                                        : Colors.grey[400],
+                                  ),
+                                  SizedBox(width: 8),
+                                  Text(
+                                    'Terkirim',
+                                    style: GoogleFonts.poppins(
+                                      fontSize: 13,
+                                      fontWeight: _editIsShared
+                                          ? FontWeight.w600
+                                          : FontWeight.w400,
+                                      color: _editIsShared
+                                          ? Color(0xFF10B981)
+                                          : Colors.grey[600],
+                                    ),
+                                  ),
+                                ],
+                              ),
+                            ),
+                          ),
+                        ),
+                      ],
+                    ),
+                  ),
+                ],
+              ),
+            ),
+          ),
+          actions: [
+            TextButton(
+              onPressed: () {
+                Navigator.pop(context);
+                _editNameController.clear();
+                _editUnsurController.clear();
+                _editAddressController.clear();
+              },
+              child: Text(
+                'Batal',
+                style: GoogleFonts.poppins(
+                  color: Colors.grey[600],
+                  fontWeight: FontWeight.w600,
+                ),
+              ),
+            ),
+            ElevatedButton(
+              onPressed: () => _handleEditGuest(guest.id),
+              style: ElevatedButton.styleFrom(
+                backgroundColor: widget.orange,
+                foregroundColor: Colors.white,
+                shape: RoundedRectangleBorder(
+                  borderRadius: BorderRadius.circular(8),
+                ),
+                padding: EdgeInsets.symmetric(horizontal: 24, vertical: 12),
+              ),
+              child: Text(
+                'Simpan',
+                style: GoogleFonts.poppins(fontWeight: FontWeight.w600),
+              ),
+            ),
+          ],
+        ),
+      ),
+    );
+  }
+
+  Future<void> _handleEditGuest(String guestId) async {
+    if (!_editFormKey.currentState!.validate()) {
+      return;
+    }
+
+    try {
+      await _firestoreService.updateGuest(guestId, {
+        'name': _editNameController.text.trim(),
+        'unsur': _editUnsurController.text.trim(),
+        'address': _editAddressController.text.trim(),
+        'isShared': _editIsShared,
+      });
+
+      Navigator.pop(context);
+      _editNameController.clear();
+      _editUnsurController.clear();
+      _editAddressController.clear();
+
+      _showSuccessSnackbar('Data tamu berhasil diperbarui');
+    } catch (e) {
+      Navigator.pop(context);
+      _showErrorSnackbar('Gagal memperbarui tamu: ${e.toString()}');
+    }
   }
 
   @override
@@ -704,6 +1096,15 @@ class _AdminDataTamuState extends State<AdminDataTamu> {
                       ),
                     ),
                     SizedBox(width: 4),
+                    SizedBox(width: 4),
+                    Expanded(
+                      child: _buildCompactActionButton(
+                        icon: Icons.edit,
+                        label: 'Edit',
+                        color: widget.orange,
+                        onPressed: () => _showEditDialog(guest),
+                      ),
+                    ),
                     Expanded(
                       child: _buildCompactActionButton(
                         icon: Icons.delete_outline,
@@ -941,6 +1342,14 @@ class _AdminDataTamuState extends State<AdminDataTamu> {
                               tooltip: 'Kirim WhatsApp',
                               onPressed: () => _handleShareWhatsApp(guest),
                             ),
+                            SizedBox(width: 4),
+                            _buildActionButton(
+                              icon: Icons.edit,
+                              tooltip: 'Edit',
+                              color: widget.orange,
+                              onPressed: () => _showEditDialog(guest),
+                            ),
+
                             SizedBox(width: 4),
                             _buildActionButton(
                               icon: Icons.delete,

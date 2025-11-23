@@ -1,16 +1,19 @@
+import 'package:digitalinvitationaksala/pages/admin_login.dart';
 import 'package:flutter/material.dart';
 import 'package:google_fonts/google_fonts.dart';
 import 'package:firebase_core/firebase_core.dart';
 import 'dart:html' as html;
 import 'firebase_options.dart';
 import 'pages/home_page.dart';
-import 'pages/admin_page.dart';
 import 'data/wedding_data.dart';
 
 void main() async {
   WidgetsFlutterBinding.ensureInitialized();
 
+  // Inisialisasi Firebase terlebih dahulu
   await Firebase.initializeApp(options: DefaultFirebaseOptions.currentPlatform);
+
+  print('🔄 Firebase initialized successfully!');
 
   print('🔄 Loading wedding data from Firestore...');
   await WeddingData.instance.loadFromFirestore();
@@ -98,14 +101,14 @@ class _WeddingInviteAppState extends State<WeddingInviteApp> {
         ),
       ),
       home: _getHomePage(),
-      routes: {'/admin': (context) => const AdminPage()},
+      routes: {'/admin': (context) => const AdminLoginPage()},
     );
   }
 
   Widget _getHomePage() {
     final path = html.window.location.pathname;
     if (path == '/admin') {
-      return const AdminPage();
+      return const AdminLoginPage();
     }
 
     return HomePage(guestSlug: guestSlug);
