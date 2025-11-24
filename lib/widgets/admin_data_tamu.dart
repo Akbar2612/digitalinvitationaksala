@@ -1581,24 +1581,27 @@ class _AdminDataTamuState extends State<AdminDataTamu> {
 
     final message =
         '''
-Assalamu'alaikum Warahmatullahi Wabarakatuh,
+Assalamu'alaikum Wr. Wb.
+Bismillahirrahmanirrahim.
 
-Dengan penuh rasa hormat, kami mengundang Bapak/Ibu/Saudara/i 
-*$name* 
-untuk hadir dan memberikan doa restu pada acara pernikahan Kami.
+Yth. *$name*
+______________________________
 
-Link undangan digital: 
+Tanpa mengurangi rasa hormat, perkenankan kami mengundang Bapak/Ibu/Saudara/i, teman sekaligus sahabat, untuk menghadiri acara pernikahan kami:
+
+*Akbar & Wulan*
+
+Berikut link undangan kami, untuk info lengkap dari acara bisa kunjungi:
+
 $link
-(Untuk hasil terbaik, silakan buka menggunakan Google Chrome)
 
-Kehadiran Bapak/Ibu/Saudara/i akan menjadi kebahagiaan tersendiri bagi kami.
+Merupakan suatu kebahagiaan bagi kami apabila Bapak/Ibu/Saudara/i berkenan untuk hadir dan memberikan doa restu.
 
-Mohon maaf, undangan ini hanya kami bagikan melalui pesan ini. Terima kasih atas perhatian dan kesediaannya.
+Mohon maaf perihal undangan hanya dibagikan melalui pesan ini. Terima kasih banyak atas perhatiannya.
 
-Wassalamu'alaikum Warahmatullahi Wabarakatuh
+Wassalamu'alaikum Wr. Wb.
 
-Salam hormat,
-Akbar & Wulan
+Terima Kasih.
   ''';
 
     final encodedMessage = Uri.encodeComponent(message);
