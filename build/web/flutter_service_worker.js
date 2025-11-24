@@ -3,9 +3,9 @@ const MANIFEST = 'flutter-app-manifest';
 const TEMP = 'flutter-temp-cache';
 const CACHE_NAME = 'flutter-app-cache';
 
-const RESOURCES = {"assets/AssetManifest.bin": "880ffc1e71a7d4924594ca7a95b1a8f8",
-"assets/AssetManifest.bin.json": "7f83f3c0129dd2ad568591710aab2e46",
-"assets/AssetManifest.json": "98c06cf884a01953dcfd246b1aecc64f",
+const RESOURCES = {"assets/AssetManifest.bin": "ed9ea00ebcdc8ea3617be7f8e2eadf38",
+"assets/AssetManifest.bin.json": "421cbf781eb1abd776284bf1f82b120c",
+"assets/AssetManifest.json": "fbdc4e8ff56fd1a63a10c5c0312ff2ac",
 "assets/assets/images/akbar.png": "18ef1b240d503d2237ef2b20d131d22d",
 "assets/assets/images/Asset%25201.png": "899bc8342d28e065850e92e181a0e9c9",
 "assets/assets/images/Asset%252010.png": "d50006856f63fa25748e20f299eb7ee5",
@@ -21,6 +21,7 @@ const RESOURCES = {"assets/AssetManifest.bin": "880ffc1e71a7d4924594ca7a95b1a8f8
 "assets/assets/images/Asset%25209.png": "e34ec731b96271a60babbcefbd9ff6d6",
 "assets/assets/images/bgcard.jpg": "5db9a6d6520aa16a76e15a541f28f2f0",
 "assets/assets/images/bri.png": "b531e157832f734eb9d1621f8a4bce25",
+"assets/assets/images/imagepreview.jpg": "c99d5bca63ba99967556589ff49c9c97",
 "assets/assets/images/landscape1.jpeg": "a40553075d1ce7c063c29f285a55fe8d",
 "assets/assets/images/landscape2.jpeg": "ccc336f2dbddd1ac1421d61da886de64",
 "assets/assets/images/landscape3.jpeg": "f12e072d6b22ff17e6cf537b03ce46a2",
@@ -56,13 +57,13 @@ const RESOURCES = {"assets/AssetManifest.bin": "880ffc1e71a7d4924594ca7a95b1a8f8
 "canvaskit/skwasm.wasm": "39dd80367a4e71582d234948adc521c0",
 "favicon.png": "1fc190034bda2520662071b4fa2ce37c",
 "flutter.js": "83d881c1dbb6d6bcd6b42e274605b69c",
-"flutter_bootstrap.js": "ee673f534c370638c4deea86fe4ee42f",
+"flutter_bootstrap.js": "bf7b4d24173e25a77f045917a39278d0",
 "icons/Icon-192.png": "ac9a721a12bbc803b44f645561ecb1e1",
 "icons/Icon-512.png": "96e752610906ba2a93c65f8abe1645f1",
 "icons/Icon-maskable-192.png": "c457ef57daa1d16f64b27b786ec2ea3c",
 "icons/Icon-maskable-512.png": "301a7604d45b3e739efc881eb04896ea",
-"index.html": "4c57932564bce41f5a4a7b3823b2b521",
-"/": "4c57932564bce41f5a4a7b3823b2b521",
+"index.html": "afbf5217148801428999beaea95ca56e",
+"/": "afbf5217148801428999beaea95ca56e",
 "main.dart.js": "5ddcd8ad64d18c02754bec9aa1467fd0",
 "manifest.json": "e5db2427c83ff2d57aae36c25c684c17",
 "version.json": "ed5c44ae657a6ff85b2e1e023da2bff1"};
