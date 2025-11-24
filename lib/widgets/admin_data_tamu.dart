@@ -1,8 +1,11 @@
+import 'dart:io';
+
 import 'package:digitalinvitationaksala/services/excel_services.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:google_fonts/google_fonts.dart';
 import 'package:cloud_firestore/cloud_firestore.dart';
+import 'package:screenshot/screenshot.dart';
 import 'package:url_launcher/url_launcher.dart';
 import '../services/firestore_service.dart';
 
@@ -48,6 +51,7 @@ class _AdminDataTamuState extends State<AdminDataTamu> {
   final TextEditingController _editAddressController = TextEditingController();
   final _editFormKey = GlobalKey<FormState>();
   bool _editIsShared = false;
+  final ScreenshotController _screenshotController = ScreenshotController();
 
   @override
   void initState() {
@@ -1595,7 +1599,7 @@ Wassalamu'alaikum Warahmatullahi Wabarakatuh
 
 Salam hormat,
 Akbar & Wulan
-    ''';
+  ''';
 
     final encodedMessage = Uri.encodeComponent(message);
     final whatsappUrl = 'https://wa.me/?text=$encodedMessage';
