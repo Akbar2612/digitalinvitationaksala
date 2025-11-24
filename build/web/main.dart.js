@@ -53746,7 +53746,7 @@ k=h.h(0,"link")
 j=h.h(0,"name")
 if(k==null||J.jd(k)){n.lW("Link tidak tersedia")
 s=1
-break}m=A.hy("https://wa.me/?text="+A.na(2,"Assalamu'alaikum Warahmatullahi Wabarakatuh,\n\nDengan penuh rasa hormat, kami mengundang Bapak/Ibu/Saudara/i \n*"+A.f(j)+"* \nuntuk hadir dan memberikan doa restu pada acara pernikahan Kami.\n\nLink undangan digital: \n"+A.f(k)+"\n(Untuk hasil terbaik, silakan buka menggunakan Google Chrome)\n\nKehadiran Bapak/Ibu/Saudara/i akan menjadi kebahagiaan tersendiri bagi kami.\n\nMohon maaf, undangan ini hanya kami bagikan melalui pesan ini. Terima kasih atas perhatian dan kesediaannya.\n\nWassalamu'alaikum Warahmatullahi Wabarakatuh\n\nSalam hormat,\nAkbar & Wulan\n  ",B.aa,!1),0,null)
+break}m=A.hy("https://wa.me/?text="+A.na(2,"Assalamu'alaikum Wr. Wb.\nBismillahirrahmanirrahim.\n\nYth. *"+A.f(j)+"*\n______________________________\n\nTanpa mengurangi rasa hormat, perkenankan kami mengundang Bapak/Ibu/Saudara/i, teman sekaligus sahabat, untuk menghadiri acara pernikahan kami:\n\n*Akbar & Wulan*\n\nBerikut link undangan kami, untuk info lengkap dari acara bisa kunjungi:\n\n"+A.f(k)+"\n\nMerupakan suatu kebahagiaan bagi kami apabila Bapak/Ibu/Saudara/i berkenan untuk hadir dan memberikan doa restu.\n\nMohon maaf perihal undangan hanya dibagikan melalui pesan ini. Terima kasih banyak atas perhatiannya.\n\nWassalamu'alaikum Wr. Wb.\n\nTerima Kasih.\n  ",B.aa,!1),0,null)
 p=4
 s=10
 return A.v(A.Oj(m),$async$p0)
